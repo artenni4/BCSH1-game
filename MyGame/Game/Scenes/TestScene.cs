@@ -19,17 +19,19 @@ namespace MyGame.Game.Scenes
 
         public TestScene(GraphicsDeviceManager graphics) : base(graphics)
         {
+            var graphicsDevice = graphics.GraphicsDevice;
+
             // add entities
             EcsEntity entity = new();
             var entityTransfrom = entity.AddComponent<Transform>();
             entityTransfrom.Position = new Vector2(0, 100);
-            entityTransfrom.Scale = 0.5f;
+            entityTransfrom.Scale = 10f;
 
             entityAnimation = entity.AddComponent<Animation>();
             entityAnimation.PreviousStart = TimeSpan.Zero;
             entityAnimation.IsCycled = true;
-            entityAnimation.Frames = AnimationHelper.GenerateBoundsForAtlasHorizontal(2, 2, 476, 542, 2, 5440);
-            entityAnimation.Speed = 24f;
+            entityAnimation.Frames = AnimationHelper.GenerateBoundsForAtlasHorizontal(0, 0, 32, 32, 10);
+            entityAnimation.Speed = 5f;
             //entityTexture = entity.AddComponent<Image>();
             entity.AddComponent<Player>().Speed = 500f;
             Entities.Add(entity);
@@ -40,7 +42,7 @@ namespace MyGame.Game.Scenes
             Entities.Add(camera);
 
             // add systems
-            Systems.Add(new Renderer(graphics));
+            Systems.Add(new Renderer(graphicsDevice));
 
             var eventSystem = new EventSystem();
             eventSystem.PushHandler(new CharacterInputHandler(entity));
@@ -50,7 +52,7 @@ namespace MyGame.Game.Scenes
         public override void LoadContent(ContentManager content)
         {
             //entityTexture.Texture2D = content.Load<Texture2D>("ball");
-            entityAnimation.Texture2D = content.Load<Texture2D>("spritesheet");
+            entityAnimation.Texture2D = content.Load<Texture2D>("warrior");
         }
     }
 }

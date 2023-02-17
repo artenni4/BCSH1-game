@@ -1,4 +1,5 @@
-﻿using MyGame.Game.ECS.Components;
+﻿using Microsoft.Xna.Framework.Graphics;
+using MyGame.Game.ECS.Components;
 using SharpDX.Direct2D1.Effects;
 using System;
 using System.Collections.Generic;
@@ -13,17 +14,15 @@ namespace MyGame.Game.ECS.Systems
     /// </summary>
     internal class Renderer : EcsSystem
     {
-        private readonly GraphicsDeviceManager _graphics;
         private readonly GraphicsDevice _graphicsDevice;
         private readonly SpriteBatch _spriteBatch;
 
         private const float virtualWidth = 1366f;
         private const float virtualHeight = 768f;
 
-        public Renderer(GraphicsDeviceManager graphics)
+        public Renderer(GraphicsDevice graphicsDevice)
         {
-            _graphics = graphics;
-            _graphicsDevice = _graphics.GraphicsDevice;
+            _graphicsDevice = graphicsDevice;
             _spriteBatch = new SpriteBatch(_graphicsDevice);
         }
 
@@ -56,7 +55,8 @@ namespace MyGame.Game.ECS.Systems
             // create transform matrix for a camera, basically how camera sees the world
             var cameraMatrix = GetTransformMatrix(viewport, cameraTransform, camera);
 
-            _spriteBatch.Begin(transformMatrix: cameraMatrix);
+            // NOTE: SamplerState.PointClamp - pixelates textures on scale
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: cameraMatrix);
             foreach (var entity in entities.Where(e => e.ContainsComponents<Transform>()))
             {
                 var transform = entity.GetComponent<Transform>();
