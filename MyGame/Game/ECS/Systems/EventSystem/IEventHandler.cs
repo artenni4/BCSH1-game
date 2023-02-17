@@ -6,6 +6,12 @@ namespace MyGame.Game.ECS.Systems.EventSystem
 {
     internal interface IEventHandler
     {
-        void OnEvent<T>(T @event) where T : EventBase;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="event"></param>
+        /// <returns>Shows whether event is handled and should not be propagated further in the stack of event handlers</returns>
+        bool OnEvent<T>(T @event) where T : EventBase;
     }
 }

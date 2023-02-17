@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Animation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Player.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EcsSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\KeyboardEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\Handlers\CharacterInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventBase.cs" />

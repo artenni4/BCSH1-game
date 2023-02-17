@@ -43,7 +43,7 @@ namespace MyGame.Game.Scenes
             Systems.Add(new Renderer(graphics));
 
             var eventSystem = new EventSystem();
-            eventSystem.EventHandlers.Push(new CharacterInputHandler(entity));
+            eventSystem.PushHandler(new CharacterInputHandler(entity));
             Systems.Add(eventSystem);
         }
 

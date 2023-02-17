@@ -18,13 +18,8 @@ namespace MyGame.Game.ECS.Systems.Handlers
             _playerEntity = playerEntity;
         }
 
-        public void OnEvent<T>(T @event) where T : EventBase
+        public bool OnEvent<T>(T @event) where T : EventBase
         {
-            if (@event.EventGroup != EventGroup.InputEvent)
-            {
-                return;
-            }
-
             if (@event is KeyboardEvent keyboardEvent)
             {
                 var playerComponent = _playerEntity.GetComponent<Player>();
@@ -33,8 +28,10 @@ namespace MyGame.Game.ECS.Systems.Handlers
                 var input = InputHelper.GetInputAxisNormalized(keyboardEvent.KeyboardState);
                 playerTransform.Position += input * playerComponent.Speed * (float)keyboardEvent.GameTime.ElapsedGameTime.TotalSeconds;
 
-                @event.IsHandled = true;
+                return true;
             }
+
+            return false;
         }
     }
 }
