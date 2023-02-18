@@ -4,6 +4,7 @@ using SharpDX.Direct2D1.Effects;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -26,7 +27,7 @@ namespace MyGame.Game.ECS.Systems
             _spriteBatch = new SpriteBatch(_graphicsDevice);
         }
 
-        public override void Draw(GameTime gameTime, IList<EcsEntity> entities)
+        public override void Draw(GameTime gameTime, ICollection<EcsEntity> entities)
         {
             _graphicsDevice.Clear(Color.Wheat);
             
@@ -72,18 +73,10 @@ namespace MyGame.Game.ECS.Systems
                 if (entity.GetComponent<Animation>() is Animation animation)
                 {
                     // calculate frame
-                    ulong rectIndex;
-                    if (animation.PreviousStart is null)
-                    {
-                        rectIndex = 0;
-                    }
-                    else
-                    {
-                        rectIndex = Convert.ToUInt64((gameTime.TotalGameTime - animation.PreviousStart.Value).TotalSeconds * animation.Speed);
-                    }
+                    ulong rectIndex = Convert.ToUInt64((gameTime.TotalGameTime - animation.PreviousStart).TotalSeconds * animation.Speed);
 
                     // if animation played one cycle
-                    ulong framesCount = Convert.ToUInt64(animation.Frames.Length);
+                    ulong framesCount = Convert.ToUInt64(animation.StateFrames.Length);
                     if (rectIndex >= framesCount)
                     {
                         if (animation.IsCycled)
@@ -95,9 +88,9 @@ namespace MyGame.Game.ECS.Systems
                             rectIndex = framesCount - 1;
                         }
                     }
-                    
-                    _spriteBatch.Draw(animation.Texture2D, position, animation.Frames[rectIndex], Color.White, transform.Rotation,
-                        Vector2.Zero, transform.Scale, SpriteEffects.None, transform.ZIndex);
+                    var spriteEffect = animation.FlipHorizontally ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                    _spriteBatch.Draw(animation.Texture2D, position, animation.StateFrames[rectIndex], Color.White, transform.Rotation,
+                        Vector2.Zero, transform.Scale, spriteEffect, transform.ZIndex);
                 }
             }
             _spriteBatch.End();

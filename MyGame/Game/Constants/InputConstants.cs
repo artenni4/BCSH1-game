@@ -10,5 +10,7 @@ namespace MyGame.Game.Constants
         public const Keys Down = Keys.S;
         public const Keys Left = Keys.A;
         public const Keys Right = Keys.D;
+
+        public const Keys Gesture = Keys.G;
     }
 }

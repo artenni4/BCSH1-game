@@ -14,7 +14,24 @@ namespace MyGame.Game.ECS.Components
         /// <summary>
         /// Rectangles with animation
         /// </summary>
-        public Rectangle[] Frames { get; set; }
+        public Rectangle[][] Frames { get; set; }
+
+        /// <summary>
+        /// Shows the state of animation (index of row in Frames)
+        /// </summary>
+        public int State { get; set; }
+
+        /// <summary>
+        /// Gets frames depending on current animation state
+        /// </summary>
+        public Rectangle[] StateFrames => Frames[State];
+
+        public float AnimationDuration => StateFrames.Length / Speed;
+
+        /// <summary>
+        /// Indicates whether the texture should be flipped horizontally
+        /// </summary>
+        public bool FlipHorizontally { get; set; }
 
         /// <summary>
         /// Speed of animation in frames/second
@@ -29,6 +46,6 @@ namespace MyGame.Game.ECS.Components
         /// <summary>
         /// Timestamp of last time the animation was started
         /// </summary>
-        public TimeSpan? PreviousStart { get; set; }
+        public TimeSpan PreviousStart { get; set; }
     }
 }

@@ -8,12 +8,14 @@ namespace MyGame.Game.ECS.Systems.EventSystem
     {
         public override EventGroup EventGroup => EventGroup.InputEvent;
 
+        public Keys[] ReleasedKeys { get; }
         public KeyboardState KeyboardState { get; }
         public GameTime GameTime { get; }
 
-        public KeyboardEvent(KeyboardState keyboardState, GameTime gameTime)
+        public KeyboardEvent(KeyboardState keyboardState, Keys[] releasedKeys, GameTime gameTime)
         {
             KeyboardState = keyboardState;
+            ReleasedKeys = releasedKeys;
             GameTime = gameTime;
         }
     }

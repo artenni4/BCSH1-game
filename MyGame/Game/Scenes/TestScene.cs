@@ -28,12 +28,11 @@ namespace MyGame.Game.Scenes
             entityTransfrom.Scale = 10f;
 
             entityAnimation = entity.AddComponent<Animation>();
-            entityAnimation.PreviousStart = TimeSpan.Zero;
             entityAnimation.IsCycled = true;
-            entityAnimation.Frames = AnimationHelper.GenerateBoundsForAtlasHorizontal(0, 0, 32, 32, 10);
-            entityAnimation.Speed = 5f;
+            entityAnimation.Frames = AnimationHelper.GenerateBoundsForAnimationAtlas(0, 0, 32, 32, 10, 5); //AnimationHelper.GenerateBoundsForAtlasHorizontal(0, 0, 32, 32, 10);
+            entityAnimation.Speed = 7f;
             //entityTexture = entity.AddComponent<Image>();
-            entity.AddComponent<Player>().Speed = 500f;
+            entity.AddComponent<Player>().Speed = 400f;
             Entities.Add(entity);
 
             EcsEntity camera = new();
@@ -45,8 +44,10 @@ namespace MyGame.Game.Scenes
             Systems.Add(new Renderer(graphicsDevice));
 
             var eventSystem = new EventSystem();
-            eventSystem.PushHandler(new CharacterInputHandler(entity));
+            var characterHandler = new CharacterInputHandler(entity);
+            eventSystem.PushHandler(characterHandler);
             Systems.Add(eventSystem);
+            Systems.Add(characterHandler);
         }
 
         public override void LoadContent(ContentManager content)

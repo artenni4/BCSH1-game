@@ -12,9 +12,9 @@ namespace MyGame.Game.Scenes
         /// <summary>
         /// List of all entities incorporated on the scene
         /// </summary>
-        private readonly IList<EcsEntity> entities;
+        private readonly ICollection<EcsEntity> entities;
 
-        protected IList<EcsEntity> Entities => entities;
+        protected ICollection<EcsEntity> Entities => entities;
 
         /// <summary>
         /// List of systems that scene executes

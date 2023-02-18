@@ -10,6 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\EntityAnimationTrigger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\EntityAnimationState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\InputConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Animation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Player.cs" />
@@ -24,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\AnimationHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\InputHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Scenes\TestScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\StateMachine\StateMachine.cs" />
     <Compile Include="..\MyGame\Game\ECS\Components\Image.cs" />
     <Compile Include="..\MyGame\Game\ECS\Systems\Renderer.cs" />
     <Compile Include="..\MyGame\Game\ECS\Components\TopDownCamera.cs" />
@@ -35,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\" />
     <Folder Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\Handlers\" />
   </ItemGroup>
   <ItemGroup>
