@@ -22,39 +22,54 @@ namespace MyGame.Game.ECS.Systems.Handlers
             _playerEntity = playerEntity;
             _playerStateMachine = new StateMachine<EntityAnimationState, EntityAnimationTrigger>.Builder(EntityAnimationState.IdleRight)
                 .State(EntityAnimationState.IdleRight)
-                    .TransitionTo(EntityAnimationState.WalkRight).On(EntityAnimationTrigger.RightPressed)
-                    .TransitionTo(EntityAnimationState.WalkLeft).On(EntityAnimationTrigger.LeftPressed)
-                    .TransitionTo(EntityAnimationState.GestureRight).On(EntityAnimationTrigger.GesturePressed)
-                    .TransitionTo(EntityAnimationState.AttackRight).On(EntityAnimationTrigger.AttackPressed)
-                    .TransitionTo(EntityAnimationState.DeathRight).On(EntityAnimationTrigger.Died)
-                    .OnEnter(OnEnterHandler)
+                    .TransitionTo(EntityAnimationState.WalkRight).OnTrigger(EntityAnimationTrigger.RightPressed)
+                    .TransitionTo(EntityAnimationState.WalkLeft).OnTrigger(EntityAnimationTrigger.LeftPressed)
+                    .TransitionTo(EntityAnimationState.GestureRight).OnTrigger(EntityAnimationTrigger.GesturePressed)
+                    .TransitionTo(EntityAnimationState.AttackRight).OnTrigger(EntityAnimationTrigger.AttackPressed)
+                    .TransitionTo(EntityAnimationState.DeathRight).OnTrigger(EntityAnimationTrigger.Died)
                 .State(EntityAnimationState.IdleLeft)
-                    .TransitionTo(EntityAnimationState.WalkRight).On(EntityAnimationTrigger.RightPressed)
-                    .TransitionTo(EntityAnimationState.WalkLeft).On(EntityAnimationTrigger.LeftPressed)
-                    .TransitionTo(EntityAnimationState.GestureLeft).On(EntityAnimationTrigger.GesturePressed)
-                    .TransitionTo(EntityAnimationState.AttackLeft).On(EntityAnimationTrigger.AttackPressed)
-                    .TransitionTo(EntityAnimationState.DeathLeft).On(EntityAnimationTrigger.Died)
-                    .OnEnter(OnEnterHandler)
+                    .TransitionTo(EntityAnimationState.WalkRight).OnTrigger(EntityAnimationTrigger.RightPressed)
+                    .TransitionTo(EntityAnimationState.WalkLeft).OnTrigger(EntityAnimationTrigger.LeftPressed)
+                    .TransitionTo(EntityAnimationState.GestureLeft).OnTrigger(EntityAnimationTrigger.GesturePressed)
+                    .TransitionTo(EntityAnimationState.AttackLeft).OnTrigger(EntityAnimationTrigger.AttackPressed)
+                    .TransitionTo(EntityAnimationState.DeathLeft).OnTrigger(EntityAnimationTrigger.Died)
                 .State(EntityAnimationState.WalkRight)
-                    .TransitionTo(EntityAnimationState.IdleRight).On(EntityAnimationTrigger.RightReleased)
-                    .OnEnter(OnEnterHandler)
+                    .TransitionTo(EntityAnimationState.IdleRight).OnTrigger(EntityAnimationTrigger.RightReleased)
                 .State(EntityAnimationState.WalkLeft)
-                    .TransitionTo(EntityAnimationState.IdleLeft).On(EntityAnimationTrigger.LeftReleased)
-                    .OnEnter(OnEnterHandler)
+                    .TransitionTo(EntityAnimationState.IdleLeft).OnTrigger(EntityAnimationTrigger.LeftReleased)
                 .State(EntityAnimationState.GestureRight)
                     .TransitionTo(EntityAnimationState.IdleRight).After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().AnimationDuration))
-                    .OnEnter(OnEnterHandler)
                 .State(EntityAnimationState.GestureLeft)
                     .TransitionTo(EntityAnimationState.IdleLeft).After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().AnimationDuration))
-                    .OnEnter(OnEnterHandler)
+                .GlobalOnEnter(OnEnterHandler)
+                .GlobalOnUpdate(OnUpdateHandler)
                 .Build();
         }
 
-        public void OnEnterHandler(StateMachine<EntityAnimationState, EntityAnimationTrigger>.TransitionInfo transition)
+        private void OnEnterHandler(StateMachine<EntityAnimationState, EntityAnimationTrigger>.TransitionInfo transition)
         {
             var animation = _playerEntity.GetComponent<Animation>();
             (animation.State, animation.FlipHorizontally) = MapState(transition.CurrentState);
             animation.TimePlayed = TimeSpan.Zero;
+        }
+
+        private void OnUpdateHandler(EntityAnimationState state, TimeSpan timeSpan)
+        {
+            var playerComponent = _playerEntity.GetComponent<Player>();
+            var playerTransform = _playerEntity.GetComponent<Transform>();
+
+            // TODO allow go up and down
+            //var input = InputHelper.GetInputAxisNormalized(keyboardEvent.KeyboardState);
+            float x = 0;
+            if (state == EntityAnimationState.WalkLeft)
+            {
+                x = -1;
+            }
+            else if (state == EntityAnimationState.WalkRight)
+            {
+                x = 1f;
+            }
+            playerTransform.Position += new Vector2(x, 0) * playerComponent.Speed * (float)timeSpan.TotalSeconds;
         }
 
         private static (int, bool) MapState(EntityAnimationState enumState)
@@ -71,7 +86,7 @@ namespace MyGame.Game.ECS.Systems.Handlers
                 EntityAnimationState.AttackRight => (3, false),
                 EntityAnimationState.DeathLeft => (4, true),
                 EntityAnimationState.DeathRight => (4, false),
-                _ => (-1, default),
+                _ => throw new ApplicationException("Bad animation state mapping"),
             };
         }
 
@@ -79,9 +94,6 @@ namespace MyGame.Game.ECS.Systems.Handlers
         {
             if (@event is KeyboardEvent keyboardEvent)
             {
-                var playerComponent = _playerEntity.GetComponent<Player>();
-                var playerTransform = _playerEntity.GetComponent<Transform>();
-
                 if (keyboardEvent.ReleasedKeys.Contains(InputConstants.Left))
                 {
                     _playerStateMachine.Trigger(EntityAnimationTrigger.LeftReleased);
@@ -103,13 +115,8 @@ namespace MyGame.Game.ECS.Systems.Handlers
                 {
                     _playerStateMachine.Trigger(EntityAnimationTrigger.GesturePressed);
                 }
-
-                var input = InputHelper.GetInputAxisNormalized(keyboardEvent.KeyboardState);
-                playerTransform.Position += input * playerComponent.Speed * (float)keyboardEvent.GameTime.ElapsedGameTime.TotalSeconds;
-
                 return true;
             }
-
             return false;
         }
 
