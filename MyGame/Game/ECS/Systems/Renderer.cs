@@ -72,8 +72,17 @@ namespace MyGame.Game.ECS.Systems
 
                 if (entity.GetComponent<Animation>() is Animation animation)
                 {
+                    if (animation.IsPlaying)
+                    {
+                        animation.TimePlayed += gameTime.ElapsedGameTime;
+                    }
+                    else
+                    {
+                        animation.TimePlayed = TimeSpan.Zero;
+                    }
+
                     // calculate frame
-                    ulong rectIndex = Convert.ToUInt64((gameTime.TotalGameTime - animation.PreviousStart).TotalSeconds * animation.Speed);
+                    ulong rectIndex = Convert.ToUInt64(animation.TimePlayed.TotalSeconds * animation.Speed);
 
                     // if animation played one cycle
                     ulong framesCount = Convert.ToUInt64(animation.StateFrames.Length);
@@ -88,6 +97,7 @@ namespace MyGame.Game.ECS.Systems
                             rectIndex = framesCount - 1;
                         }
                     }
+                    Debug.Write($"{rectIndex}\n");
                     var spriteEffect = animation.FlipHorizontally ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
                     _spriteBatch.Draw(animation.Texture2D, position, animation.StateFrames[rectIndex], Color.White, transform.Rotation,
                         Vector2.Zero, transform.Scale, spriteEffect, transform.ZIndex);

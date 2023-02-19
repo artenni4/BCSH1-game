@@ -44,8 +44,13 @@ namespace MyGame.Game.ECS.Components
         public bool IsCycled { get; set; }
 
         /// <summary>
-        /// Timestamp of last time the animation was started
+        /// Whether the animation is playing
         /// </summary>
-        public TimeSpan PreviousStart { get; set; }
+        public bool IsPlaying { get; set; }
+
+        /// <summary>
+        /// How much time is animation playing
+        /// </summary>
+        public TimeSpan TimePlayed { get; set; }
     }
 }

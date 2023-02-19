@@ -28,6 +28,7 @@ namespace MyGame.Game.Scenes
             entityTransfrom.Scale = 10f;
 
             entityAnimation = entity.AddComponent<Animation>();
+            entityAnimation.IsPlaying = true;
             entityAnimation.IsCycled = true;
             entityAnimation.Frames = AnimationHelper.GenerateBoundsForAnimationAtlas(0, 0, 32, 32, 10, 5); //AnimationHelper.GenerateBoundsForAtlasHorizontal(0, 0, 32, 32, 10);
             entityAnimation.Speed = 7f;

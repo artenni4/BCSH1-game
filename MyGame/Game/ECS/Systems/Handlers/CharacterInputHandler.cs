@@ -27,39 +27,51 @@ namespace MyGame.Game.ECS.Systems.Handlers
                     .TransitionTo(EntityAnimationState.GestureRight).On(EntityAnimationTrigger.GesturePressed)
                     .TransitionTo(EntityAnimationState.AttackRight).On(EntityAnimationTrigger.AttackPressed)
                     .TransitionTo(EntityAnimationState.DeathRight).On(EntityAnimationTrigger.Died)
-                    .OnEnter(t => { var a = _playerEntity.GetComponent<Animation>(); a.State = MapState(t.CurrentState); a.FlipHorizontally = false; })
+                    .OnEnter(OnEnterHandler)
                 .State(EntityAnimationState.IdleLeft)
                     .TransitionTo(EntityAnimationState.WalkRight).On(EntityAnimationTrigger.RightPressed)
                     .TransitionTo(EntityAnimationState.WalkLeft).On(EntityAnimationTrigger.LeftPressed)
                     .TransitionTo(EntityAnimationState.GestureLeft).On(EntityAnimationTrigger.GesturePressed)
                     .TransitionTo(EntityAnimationState.AttackLeft).On(EntityAnimationTrigger.AttackPressed)
                     .TransitionTo(EntityAnimationState.DeathLeft).On(EntityAnimationTrigger.Died)
-                    .OnEnter(t => { var a = _playerEntity.GetComponent<Animation>(); a.State = MapState(t.CurrentState); a.FlipHorizontally = true; })
+                    .OnEnter(OnEnterHandler)
                 .State(EntityAnimationState.WalkRight)
                     .TransitionTo(EntityAnimationState.IdleRight).On(EntityAnimationTrigger.RightReleased)
-                    .OnEnter(t => { var a = _playerEntity.GetComponent<Animation>(); a.State = MapState(t.CurrentState); a.FlipHorizontally = false; })
+                    .OnEnter(OnEnterHandler)
                 .State(EntityAnimationState.WalkLeft)
                     .TransitionTo(EntityAnimationState.IdleLeft).On(EntityAnimationTrigger.LeftReleased)
-                    .OnEnter(t => { var a = _playerEntity.GetComponent<Animation>(); a.State = MapState(t.CurrentState); a.FlipHorizontally = true; })
+                    .OnEnter(OnEnterHandler)
                 .State(EntityAnimationState.GestureRight)
                     .TransitionTo(EntityAnimationState.IdleRight).After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().AnimationDuration))
-                    .OnEnter(t => { var a = _playerEntity.GetComponent<Animation>(); a.State = MapState(t.CurrentState); a.FlipHorizontally = false; })
+                    .OnEnter(OnEnterHandler)
                 .State(EntityAnimationState.GestureLeft)
                     .TransitionTo(EntityAnimationState.IdleLeft).After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().AnimationDuration))
-                    .OnEnter(t => { var a = _playerEntity.GetComponent<Animation>(); a.State = MapState(t.CurrentState); a.FlipHorizontally = true; })
+                    .OnEnter(OnEnterHandler)
                 .Build();
         }
 
-        private static int MapState(EntityAnimationState enumState)
+        public void OnEnterHandler(StateMachine<EntityAnimationState, EntityAnimationTrigger>.TransitionInfo transition)
+        {
+            var animation = _playerEntity.GetComponent<Animation>();
+            (animation.State, animation.FlipHorizontally) = MapState(transition.CurrentState);
+            animation.TimePlayed = TimeSpan.Zero;
+        }
+
+        private static (int, bool) MapState(EntityAnimationState enumState)
         {
             return enumState switch
             {
-                EntityAnimationState.IdleLeft or EntityAnimationState.IdleRight => 0,
-                EntityAnimationState.GestureLeft or EntityAnimationState.GestureRight => 1,
-                EntityAnimationState.WalkLeft or EntityAnimationState.WalkRight => 2,
-                EntityAnimationState.AttackLeft or EntityAnimationState.AttackRight => 3,
-                EntityAnimationState.DeathLeft or EntityAnimationState.DeathRight => 4,
-                _ => -1,
+                EntityAnimationState.IdleLeft => (0, true),
+                EntityAnimationState.IdleRight => (0, false),
+                EntityAnimationState.GestureLeft => (1, true),
+                EntityAnimationState.GestureRight => (1, false),
+                EntityAnimationState.WalkLeft => (2, true),
+                EntityAnimationState.WalkRight => (2, false),
+                EntityAnimationState.AttackLeft => (3, true),
+                EntityAnimationState.AttackRight => (3, false),
+                EntityAnimationState.DeathLeft => (4, true),
+                EntityAnimationState.DeathRight => (4, false),
+                _ => (-1, default),
             };
         }
 
