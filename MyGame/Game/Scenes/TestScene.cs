@@ -14,7 +14,7 @@ namespace MyGame.Game.Scenes
 {
     internal class TestScene : SceneBase
     {
-        private Animation entityAnimation;
+        private readonly Animation entityAnimation;
         //private Image entityTexture;
 
         public TestScene(GraphicsDeviceManager graphics) : base(graphics)
@@ -25,7 +25,7 @@ namespace MyGame.Game.Scenes
             EcsEntity entity = new();
             var entityTransfrom = entity.AddComponent<Transform>();
             entityTransfrom.Position = new Vector2(0, 100);
-            entityTransfrom.Scale = 10f;
+            entityTransfrom.Scale = 5f;
 
             entityAnimation = entity.AddComponent<Animation>();
             entityAnimation.IsPlaying = true;
@@ -33,7 +33,7 @@ namespace MyGame.Game.Scenes
             entityAnimation.Frames = AnimationHelper.GenerateBoundsForAnimationAtlas(0, 0, 32, 32, 10, 5); //AnimationHelper.GenerateBoundsForAtlasHorizontal(0, 0, 32, 32, 10);
             entityAnimation.Speed = 7f;
             //entityTexture = entity.AddComponent<Image>();
-            entity.AddComponent<Player>().Speed = 400f;
+            entity.AddComponent<Player>().Speed = 200f;
             Entities.Add(entity);
 
             EcsEntity camera = new();
