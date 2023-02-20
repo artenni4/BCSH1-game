@@ -8,8 +8,8 @@ namespace MyGame.Game.ECS.Systems.EventSystem
     internal class EventSystem : EcsSystem, IEventSystem
     {
         private readonly Stack<IEventHandler> _eventHandlers = new();
-        private KeyboardState _previousState;
-
+        private KeyboardState _previousKeyboardState;
+        private MouseState _previousMouseState;
 
         public IEventHandler PopHandler() => _eventHandlers.Pop();
 
@@ -30,20 +30,34 @@ namespace MyGame.Game.ECS.Systems.EventSystem
 
         public override void Update(GameTime gameTime, ICollection<EcsEntity> entities)
         {
+            // keyboard input
             var keyboardState = Keyboard.GetState();
-
-            var releasedKeys = _previousState.GetPressedKeys().Except(keyboardState.GetPressedKeys()).ToArray();
-            foreach (var handler in _eventHandlers)
+            var releasedKeys = _previousKeyboardState.GetPressedKeys().Except(keyboardState.GetPressedKeys()).ToArray();
+            if (keyboardState.GetPressedKeyCount() > 0 || releasedKeys.Length > 0)
             {
-                if (keyboardState.GetPressedKeyCount() > 0 || releasedKeys.Length > 0)
-                {
-                    if (handler.OnEvent(new KeyboardEvent(keyboardState, releasedKeys, gameTime)))
-                    {
-                        break;
-                    }
-                }
+                SendEvent(new KeyboardEvent(keyboardState, releasedKeys, gameTime));
             }
-            _previousState = keyboardState;
+            _previousKeyboardState = keyboardState;
+
+            // mouse input
+            var mouseState = Mouse.GetState();
+            if (TryGetMouseStateChange(mouseState, _previousMouseState, out var mouseEvent))
+            {
+                SendEvent(mouseEvent);
+            }
+            _previousMouseState = mouseState;
+        }
+
+        public static bool TryGetMouseStateChange(MouseState current, MouseState prev, out MouseEvent mouseEvent)
+        {
+            if (current.LeftButton != prev.LeftButton || current.RightButton != prev.RightButton || current.MiddleButton != prev.MiddleButton ||
+                current.Position != prev.Position || current.ScrollWheelValue != prev.ScrollWheelValue)
+            {
+                mouseEvent = new MouseEvent(current);
+                return true;
+            }
+            mouseEvent = null;
+            return false;
         }
     }
 }

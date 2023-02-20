@@ -97,7 +97,7 @@ namespace MyGame.Game.ECS.Systems
                             rectIndex = framesCount - 1;
                         }
                     }
-                    Debug.Write($"{rectIndex}\n");
+
                     var spriteEffect = animation.FlipHorizontally ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
                     _spriteBatch.Draw(animation.Texture2D, position, animation.StateFrames[rectIndex], Color.White, transform.Rotation,
                         Vector2.Zero, transform.Scale, spriteEffect, transform.ZIndex);

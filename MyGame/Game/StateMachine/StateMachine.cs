@@ -45,7 +45,7 @@ namespace MyGame.Game.StateMachine
         /// </summary>
         /// <param name="trigger">Tigger for change</param>
         /// <exception cref="Exception">Exception thrown if trigger is set to change state to more than one defined state</exception>
-        public void Trigger(TTrigger trigger)
+        public bool Trigger(TTrigger trigger)
         {
             var prevState = State;
             bool changed = false; // ensure only one transition is bound to the trigger
@@ -61,7 +61,9 @@ namespace MyGame.Game.StateMachine
                         changed = true;
                     }
                 }
+                return true;
             }
+            return false;
         }
 
         /// <summary>
@@ -134,6 +136,12 @@ namespace MyGame.Game.StateMachine
                 return this;
             }
 
+            public Builder DeadEnd()
+            {
+                _machine._triggerTransitions.Add(_currentState, new List<KeyValuePair<TTrigger, TState>>());
+                return this;
+            }
+
             public ITransitionBuilder TransitionTo(TState nextState)
             {
                 _nextState = nextState;
@@ -194,6 +202,7 @@ namespace MyGame.Game.StateMachine
         {
             Builder OnEnter(Action<TransitionInfo> onEnter);
             ITransitionBuilder TransitionTo(TState nextState);
+            Builder DeadEnd();
         }
 
         public interface ITransitionBuilder
