@@ -64,13 +64,13 @@ namespace MyGame.Game.ECS.Systems
                 var position = new Vector2(transform.Position.X, -transform.Position.Y); // invert Y pos for camera
 
 
-                if (entity.GetComponent<Image>() is Image image)
+                if (entity.TryGetComponent<Image>(out var image))
                 {
                     _spriteBatch.Draw(image.Texture2D, position, null, Color.White, transform.Rotation,
                         new Vector2(image.Texture2D.Width / 2, image.Texture2D.Height / 2), transform.Scale, SpriteEffects.None, transform.ZIndex);
                 }
 
-                if (entity.GetComponent<Animation>() is Animation animation)
+                if (entity.TryGetComponent<Animation>(out var animation))
                 {
                     if (animation.IsPlaying)
                     {

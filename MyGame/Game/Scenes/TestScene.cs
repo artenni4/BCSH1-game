@@ -15,7 +15,7 @@ namespace MyGame.Game.Scenes
     internal class TestScene : SceneBase
     {
         private readonly Animation entityAnimation;
-        //private Image entityTexture;
+        private readonly Image followerTexture;
 
         public TestScene(GraphicsDeviceManager graphics) : base(graphics)
         {
@@ -36,6 +36,18 @@ namespace MyGame.Game.Scenes
             entity.AddComponent<Player>().Speed = 200f;
             Entities.Add(entity);
 
+            EcsEntity follower = new();
+            var followerTransform = follower.AddComponent<Transform>();
+            followerTransform.Position = new Vector2(0, -100);
+            followerTransform.Scale = 0.7f;
+
+            followerTexture = follower.AddComponent<Image>();
+            var playerFollower = follower.AddComponent<FollowPlayer>();
+            playerFollower.Player = entity;
+            playerFollower.MinDistanceToTarget = 150f;
+            playerFollower.Speed = 150f;
+            Entities.Add(follower);
+
             EcsEntity camera = new();
             camera.AddComponent<Transform>();
             camera.AddComponent<TopDownCamera>();
@@ -43,6 +55,7 @@ namespace MyGame.Game.Scenes
 
             // add systems
             Systems.Add(new Renderer(graphicsDevice));
+            Systems.Add(new AiController());
 
             var eventSystem = new EventSystem();
             var characterHandler = new CharacterInputHandler(entity);
@@ -53,7 +66,7 @@ namespace MyGame.Game.Scenes
 
         public override void LoadContent(ContentManager content)
         {
-            //entityTexture.Texture2D = content.Load<Texture2D>("ball");
+            followerTexture.Texture2D = content.Load<Texture2D>("ball");
             entityAnimation.Texture2D = content.Load<Texture2D>("warrior");
         }
     }

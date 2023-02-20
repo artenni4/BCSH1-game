@@ -14,7 +14,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\EntityAnimationState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\InputConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Animation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\FollowPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\AiController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EcsSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\KeyboardEvent.cs" />

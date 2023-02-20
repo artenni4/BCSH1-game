@@ -26,11 +26,7 @@ namespace MyGame.Game.ECS
 
         public T GetComponent<T>() where T : EcsComponent
         {
-            if (_components.TryGetValue(typeof(T), out var component))
-            {
-                return component as T;
-            }
-            return default;
+            return _components[typeof(T)] as T;
         }
 
         public T AddComponent<T>() where T : EcsComponent, new()
@@ -43,6 +39,13 @@ namespace MyGame.Game.ECS
         public bool ContainsComponents<T>() where T : EcsComponent
         {
             return _components.ContainsKey(typeof(T));
+        }
+
+        public bool TryGetComponent<T>(out T component) where T : EcsComponent
+        {
+            var res = _components.TryGetValue(typeof(T), out var compValue);
+            component = compValue as T;
+            return res;
         }
     }
 }
