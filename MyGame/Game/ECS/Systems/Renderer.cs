@@ -98,9 +98,12 @@ namespace MyGame.Game.ECS.Systems
                         }
                     }
 
+                    var bounds = animation.StateFrames[rectIndex];
+                    var origin = new Vector2(bounds.Width / 2f, bounds.Height / 2f); 
                     var spriteEffect = animation.FlipHorizontally ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                    _spriteBatch.Draw(animation.Texture2D, position, animation.StateFrames[rectIndex], Color.White, transform.Rotation,
-                        Vector2.Zero, transform.Scale, spriteEffect, transform.ZIndex);
+
+                    _spriteBatch.Draw(animation.Texture2D, position, bounds, Color.White, transform.Rotation,
+                        origin, transform.Scale, spriteEffect, transform.ZIndex);
                 }
             }
             _spriteBatch.End();
