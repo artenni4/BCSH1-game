@@ -5,17 +5,19 @@ using MyGame.Game.Scenes;
 
 namespace MyGame
 {
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class Game1 : XnaGame
     {
         private readonly GraphicsDeviceManager _graphics;
         private TestScene scene;
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            _graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            _graphics.PreferredBackBufferWidth = 1920;
-            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics = new(this)
+            {
+                GraphicsProfile = GraphicsProfile.HiDef,
+                PreferredBackBufferWidth = 1920,
+                PreferredBackBufferHeight = 1080
+            };
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -34,17 +36,20 @@ namespace MyGame
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            scene.Update(gameTime);
-            base.Update(gameTime);
+            if (IsActive)
+            {
+                scene.Update(gameTime);
+                base.Update(gameTime);
+            }
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            scene.Draw(gameTime);
-            base.Draw(gameTime);
+            if (IsActive)
+            {
+                scene.Draw(gameTime);
+                base.Draw(gameTime);
+            }
         }
     }
 }

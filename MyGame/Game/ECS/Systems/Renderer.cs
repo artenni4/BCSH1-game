@@ -18,8 +18,8 @@ namespace MyGame.Game.ECS.Systems
         private readonly GraphicsDevice _graphicsDevice;
         private readonly SpriteBatch _spriteBatch;
 
-        private const float virtualWidth = 1366f;
-        private const float virtualHeight = 768f;
+        private const float virtualWidth = 384f;
+        private const float virtualHeight = 216f;
 
         public Renderer(GraphicsDevice graphicsDevice)
         {
@@ -57,7 +57,7 @@ namespace MyGame.Game.ECS.Systems
             var cameraMatrix = GetTransformMatrix(viewport, cameraTransform, camera);
 
             // NOTE: SamplerState.PointClamp - pixelates textures on scale
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: cameraMatrix);
+            _spriteBatch.Begin(sortMode: SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp, transformMatrix: cameraMatrix);
             foreach (var entity in entities.Where(e => e.ContainsComponents<Transform>()))
             {
                 var transform = entity.GetComponent<Transform>();
@@ -100,7 +100,7 @@ namespace MyGame.Game.ECS.Systems
 
                     var bounds = animation.StateFrames[rectIndex];
                     var origin = new Vector2(bounds.Width / 2f, bounds.Height / 2f); 
-                    var spriteEffect = animation.FlipHorizontally ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                    var spriteEffect = animation.State.GetSpriteEffect();
 
                     _spriteBatch.Draw(animation.Texture2D, position, bounds, Color.White, transform.Rotation,
                         origin, transform.Scale, spriteEffect, transform.ZIndex);

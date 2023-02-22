@@ -10,17 +10,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\EntityAnimationTrigger.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\EntityAnimationState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\InputSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\PlayerAnimationTrigger.cs" />
+    <Compile Include="..\MyGame\Game\Constants\Enums\AnimationState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\InputConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Animation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\FollowPlayer.cs" />
+    <Compile Include="..\MyGame\Game\ECS\Components\MeleeEnemyLogic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Player.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\AiController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EcsSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventSystem.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\KeyboardEvent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\MouseEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\KeyboardEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\MouseEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\Handlers\CharacterInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventGroup.cs" />
@@ -41,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\" />
     <Folder Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\Handlers\" />
   </ItemGroup>
   <ItemGroup>

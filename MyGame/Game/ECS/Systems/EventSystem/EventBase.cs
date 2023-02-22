@@ -10,5 +10,15 @@ namespace MyGame.Game.ECS.Systems.EventSystem
         /// Group that event belongs
         /// </summary>
         public abstract EventGroup EventGroup { get; }
+
+        /// <summary>
+        /// Game time when event occured
+        /// </summary>
+        public GameTime GameTime { get; }
+
+        protected EventBase(GameTime gameTime)
+        {
+            GameTime = gameTime;
+        }
     }
 }
