@@ -42,34 +42,6 @@ namespace MyGame.Game.ECS.Systems
                         _entities.Remove(entity);
                     }
                 }
-
-                //if (entity.TryGetComponent<MeleeEnemyLogic>(out var enemyLogic))
-                //{
-                //    var playerTransform = enemyLogic.Player.GetComponent<Transform>();
-                //    if (Vector2.Distance(transform.Position, playerTransform.Position) <= enemyLogic.MaxDistanceToTarget)
-                //    {
-                //        enemyLogic.StateMachine.Trigger(AnimationState.Walk);
-                //        if (enemyLogic.StateMachine.State == AnimationState.Walk)
-                //        {
-                //            var direction = playerTransform.Position - transform.Position;
-                //            if (direction != Vector2.Zero)
-                //            {
-                //                direction.Normalize();
-                //            }
-                //            transform.Position += direction * enemyLogic.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        enemyLogic.StateMachine.Trigger(AnimationState.Idle);
-                //    }
-
-                //    // NOTE maybe some way to separate logic from animation
-                //    if (entity.TryGetComponent<Animation>(out var animation))
-                //    {
-                //        animation.State = enemyLogic.StateMachine.State;
-                //    }
-                //}
             }
         }
     }
