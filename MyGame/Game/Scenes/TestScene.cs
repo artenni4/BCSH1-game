@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Content;
 using MyGame.Game.ECS.Systems;
 using MyGame.Game.Helpers;
 using MyGame.Game.ECS.Systems.EventSystem;
-using MyGame.Game.ECS.Systems.Handlers;
 using MyGame.Game.Constants.Enums;
 using MyGame.Game.StateMachine;
 
@@ -27,6 +26,9 @@ namespace MyGame.Game.Scenes
             EcsEntity player = new();
             var playerTransform = player.AddComponent<Transform>();
             playerTransform.Position = new Vector2(0, 100);
+
+            var playerBox = player.AddComponent<BoxCollider>();
+            playerBox.Box = new Rectangle(19, 23, 12, 17);
 
             playerAnimation = player.AddComponent<Animation>();
             playerAnimation.IsPlaying = true;
@@ -55,6 +57,9 @@ namespace MyGame.Game.Scenes
             slimeTransform.Position = new Vector2(0, -100);
             slimeTransform.ZIndex = 1f;
 
+            var slimeBox = slime.AddComponent<BoxCollider>();
+            slimeBox.Box = new Rectangle(10, 13, 13, 10);
+
             slimeAnimation = slime.AddComponent<Animation>();
             slimeAnimation.IsPlaying = true;
             slimeAnimation.IsCycled = true;
@@ -70,10 +75,11 @@ namespace MyGame.Game.Scenes
             };
             slimeAnimation.Speed = 7f;
 
+            var slimeDetector = slime.AddComponent<PlayerDetector>();
+            slimeDetector.Player = player;
+            slimeDetector.MaxDistanceToTarget = 100f;
             var slimeLogic = slime.AddComponent<MeleeEnemyLogic>();
             slimeLogic.Speed = 40f;
-            slimeLogic.Player = player;
-            slimeLogic.MaxDistanceToTarget = 100f;
             slimeLogic.StateMachine = new StateMachine<AnimationState, AnimationState>.Builder(AnimationState.Idle)
                 .State(AnimationState.Idle)
                     .TransitionTo(AnimationState.Walk).OnTrigger(AnimationState.Walk)
@@ -90,12 +96,15 @@ namespace MyGame.Game.Scenes
 
             // add systems
             var eventSystem = new EventSystem();
-            var characterHandler = new CharacterInputHandler(player);
+            var aiController = new AiController();
+            var characterHandler = new CharacterController(player);
             eventSystem.PushHandler(characterHandler);
+            eventSystem.PushHandler(aiController);
 
             Systems.Add(new Renderer(graphicsDevice));
-            Systems.Add(new AiController());
+            Systems.Add(new AiDetectionSystem(eventSystem));
             Systems.Add(new InputSystem(eventSystem));
+            Systems.Add(aiController);
             Systems.Add(characterHandler);
         }
 

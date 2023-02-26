@@ -6,12 +6,7 @@ namespace MyGame.Game.ECS.Components
 {
     internal class MeleeEnemyLogic : EcsComponent
     {
-        public EcsEntity Player { get; set; }
-
-        /// <summary>
-        /// Describes the threshold when entity starts to move towards player
-        /// </summary>
-        public float MaxDistanceToTarget { get; set; }
+        public bool ChasePlayer { get; set; }
 
         /// <summary>
         /// Speed of enemy

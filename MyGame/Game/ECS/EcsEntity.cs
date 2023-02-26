@@ -36,7 +36,7 @@ namespace MyGame.Game.ECS
             return component;
         }
 
-        public bool ContainsComponents<T>() where T : EcsComponent
+        public bool ContainsComponent<T>() where T : EcsComponent
         {
             return _components.ContainsKey(typeof(T));
         }

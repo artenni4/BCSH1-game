@@ -10,6 +10,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\BoxCollider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerDetector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\AiController.cs" />
+    <Compile Include="..\MyGame\Game\ECS\Systems\EventSystem\Events\PlayerDetectionEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\InputSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\PlayerAnimationTrigger.cs" />
     <Compile Include="..\MyGame\Game\Constants\Enums\AnimationState.cs" />
@@ -17,12 +21,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Animation.cs" />
     <Compile Include="..\MyGame\Game\ECS\Components\MeleeEnemyLogic.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Player.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\AiController.cs" />
+    <Compile Include="..\MyGame\Game\ECS\Systems\AiDetectionSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EcsSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\KeyboardEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\MouseEvent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\Handlers\CharacterInputHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\CharacterController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventHandler.cs" />
@@ -42,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\Handlers\" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />

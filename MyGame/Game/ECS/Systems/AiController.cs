@@ -1,7 +1,7 @@
-﻿using MyGame.Game.Constants;
-using MyGame.Game.Constants.Enums;
+﻿using MyGame.Game.Constants.Enums;
 using MyGame.Game.ECS.Components;
-using MyGame.Game.StateMachine;
+using MyGame.Game.ECS.Systems.EventSystem;
+using MyGame.Game.ECS.Systems.EventSystem.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,39 +9,51 @@ using System.Text;
 
 namespace MyGame.Game.ECS.Systems
 {
-    internal class AiController : EcsSystem
+    internal class AiController : EcsSystem, IEventHandler
     {
+        public bool OnEvent<T>(T @event) where T : EventBase
+        {
+            if (@event is PlayerDetectionEvent detectionEvent)
+            {
+                if (detectionEvent.Detector.TryGetComponent<MeleeEnemyLogic>(out var meleeEnemy))
+                {
+                    meleeEnemy.ChasePlayer = detectionEvent.IsDetected;
+                }
+
+                return true;
+            }
+            return false;
+        }
+
         public override void Update(GameTime gameTime, ICollection<EcsEntity> entities)
         {
-            foreach (var entity in entities.Where(e => e.ContainsComponents<Transform>()))
+            foreach (var entity in entities.Where(e => e.ContainsComponent<Transform>()))
             {
                 var transform = entity.GetComponent<Transform>();
-
-                if (entity.TryGetComponent<MeleeEnemyLogic>(out var enemyLogic))
+                if (entity.TryGetComponent<MeleeEnemyLogic>(out var meleeEnemy) && entity.TryGetComponent<PlayerDetector>(out var detector))
                 {
-                    var playerTransform = enemyLogic.Player.GetComponent<Transform>();
-                    if (Vector2.Distance(transform.Position, playerTransform.Position) <= enemyLogic.MaxDistanceToTarget)
+                    if (meleeEnemy.ChasePlayer)
                     {
-                        enemyLogic.StateMachine.Trigger(AnimationState.Walk);
-                        if (enemyLogic.StateMachine.State == AnimationState.Walk)
+                        meleeEnemy.StateMachine.Trigger(AnimationState.Walk);
+                        if (meleeEnemy.StateMachine.State.IsMoving())
                         {
-                            var direction = playerTransform.Position - transform.Position;
+                            var direction = detector.Player.GetComponent<Transform>().Position - transform.Position;
                             if (direction != Vector2.Zero)
                             {
                                 direction.Normalize();
                             }
-                            transform.Position += direction * enemyLogic.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                            transform.Position += direction * meleeEnemy.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                         }
                     }
                     else
                     {
-                        enemyLogic.StateMachine.Trigger(AnimationState.Idle);
+                        meleeEnemy.StateMachine.Trigger(AnimationState.Idle);
                     }
 
                     // NOTE maybe some way to separate logic from animation
                     if (entity.TryGetComponent<Animation>(out var animation))
                     {
-                        animation.State = enemyLogic.StateMachine.State;
+                        animation.State = meleeEnemy.StateMachine.State;
                     }
                 }
             }

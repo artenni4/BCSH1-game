@@ -11,16 +11,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MyGame.Game.ECS.Systems.Handlers
+namespace MyGame.Game.ECS.Systems
 {
-    internal class CharacterInputHandler : EcsSystem, IEventHandler
+    internal class CharacterController : EcsSystem, IEventHandler
     {
         private readonly EcsEntity _playerEntity;
         private readonly StateMachine<AnimationState, PlayerAnimationTrigger> _playerStateMachine;
 
         private KeyboardState _lastKeyboardState;
 
-        public CharacterInputHandler(EcsEntity playerEntity)
+        public CharacterController(EcsEntity playerEntity)
         {
             _playerEntity = playerEntity;
             _playerStateMachine = new StateMachine<AnimationState, PlayerAnimationTrigger>.Builder(AnimationState.IdleRight)
@@ -153,8 +153,7 @@ namespace MyGame.Game.ECS.Systems.Handlers
             _playerStateMachine.Update(gameTime.ElapsedGameTime);
 
             var state = _playerStateMachine.State;
-            if (state == AnimationState.WalkLeft || state == AnimationState.WalkRight ||
-                state == AnimationState.WalkUp || state == AnimationState.WalkDown)
+            if (state.IsMoving())
             {
                 var playerComponent = _playerEntity.GetComponent<Player>();
                 var playerTransform = _playerEntity.GetComponent<Transform>();

@@ -49,5 +49,11 @@ namespace MyGame.Game.Helpers
                 _ => SpriteEffects.None,
             };
         }
+
+        public static bool IsMoving(this AnimationState state)
+        {
+            return state == AnimationState.Walk || state == AnimationState.WalkLeft || state == AnimationState.WalkRight ||
+                state == AnimationState.WalkUp || state == AnimationState.WalkDown;
+        }
     }
 }

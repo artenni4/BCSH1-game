@@ -35,7 +35,7 @@ namespace MyGame.Game.ECS.Systems
             EcsEntity cameraEntity = null;
             try
             {
-                cameraEntity = entities.SingleOrDefault(e => e.ContainsComponents<TopDownCamera>());
+                cameraEntity = entities.SingleOrDefault(e => e.ContainsComponent<TopDownCamera>());
             }
             catch (InvalidOperationException) 
             {
@@ -58,7 +58,7 @@ namespace MyGame.Game.ECS.Systems
 
             // NOTE: SamplerState.PointClamp - pixelates textures on scale
             _spriteBatch.Begin(sortMode: SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp, transformMatrix: cameraMatrix);
-            foreach (var entity in entities.Where(e => e.ContainsComponents<Transform>()))
+            foreach (var entity in entities.Where(e => e.ContainsComponent<Transform>()))
             {
                 var transform = entity.GetComponent<Transform>();
                 var position = new Vector2(transform.Position.X, -transform.Position.Y); // invert Y pos for camera
