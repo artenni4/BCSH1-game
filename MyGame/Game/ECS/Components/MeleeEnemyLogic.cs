@@ -6,13 +6,11 @@ namespace MyGame.Game.ECS.Components
 {
     internal class MeleeEnemyLogic : EcsComponent
     {
-        public bool ChasePlayer { get; set; }
-
         /// <summary>
         /// Speed of enemy
         /// </summary>
         public float Speed { get; set; }
 
-        public StateMachine<AnimationState, AnimationState> StateMachine { get; set; }
+        public StateMachine<AiState, AiStateTrigger> StateMachine { get; set; }
     }
 }

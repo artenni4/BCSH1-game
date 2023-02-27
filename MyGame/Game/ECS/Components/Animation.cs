@@ -7,6 +7,8 @@ namespace MyGame.Game.ECS.Components
 {
     internal class Animation : EcsComponent
     {
+        // TODO animation variables such as 'inAir'
+
         /// <summary>
         /// Sprite Atlas
         /// </summary>
@@ -28,11 +30,10 @@ namespace MyGame.Game.ECS.Components
         public Func<AnimationState, int> MapState { get; set; }
 
         /// <summary>
-        /// Gets frames depending on current animation state
+        /// Describes whether animation shows that entity is moving.
+        /// Could be used in moving logic
         /// </summary>
-        public Rectangle[] StateFrames => Frames[MapState(State)];
-
-        public float GetAnimationDuration(AnimationState state) => (Frames[MapState(state)].Length - 1) / Speed;
+        public Func<Animation, bool> IsMoving { get; set; } = anim => anim.State.IsMoving();
 
         /// <summary>
         /// Speed of animation in frames/second

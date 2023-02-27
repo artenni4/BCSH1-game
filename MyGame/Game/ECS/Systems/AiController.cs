@@ -17,7 +17,7 @@ namespace MyGame.Game.ECS.Systems
             {
                 if (detectionEvent.Detector.TryGetComponent<MeleeEnemyLogic>(out var meleeEnemy))
                 {
-                    meleeEnemy.ChasePlayer = detectionEvent.IsDetected;
+                    meleeEnemy.StateMachine.Trigger(detectionEvent.IsDetected ? AiStateTrigger.PlayerDetected : AiStateTrigger.PlayerLost);
                 }
 
                 return true;
@@ -32,10 +32,16 @@ namespace MyGame.Game.ECS.Systems
                 var transform = entity.GetComponent<Transform>();
                 if (entity.TryGetComponent<MeleeEnemyLogic>(out var meleeEnemy) && entity.TryGetComponent<PlayerDetector>(out var detector))
                 {
-                    if (meleeEnemy.ChasePlayer)
+                    // NOTE maybe some way to separate logic from animation
+                    var hasAnimation = entity.TryGetComponent<Animation>(out var animation);
+
+                    if (meleeEnemy.StateMachine.State == AiState.ChasePlayer)
                     {
-                        meleeEnemy.StateMachine.Trigger(AnimationState.Walk);
-                        if (meleeEnemy.StateMachine.State.IsMoving())
+                        if (hasAnimation)
+                        {
+                            animation.State = AnimationState.Walk;
+                        }
+                        if (hasAnimation && animation.IsMoving(animation) || !hasAnimation)
                         {
                             var direction = detector.Player.GetComponent<Transform>().Position - transform.Position;
                             if (direction != Vector2.Zero)
@@ -47,13 +53,10 @@ namespace MyGame.Game.ECS.Systems
                     }
                     else
                     {
-                        meleeEnemy.StateMachine.Trigger(AnimationState.Idle);
-                    }
-
-                    // NOTE maybe some way to separate logic from animation
-                    if (entity.TryGetComponent<Animation>(out var animation))
-                    {
-                        animation.State = meleeEnemy.StateMachine.State;
+                        if (hasAnimation)
+                        {
+                            animation.State = AnimationState.Idle;
+                        }
                     }
                 }
             }

@@ -64,6 +64,15 @@ namespace MyGame.Game.Scenes
             slimeAnimation.IsPlaying = true;
             slimeAnimation.IsCycled = true;
             slimeAnimation.Frames = AnimationHelper.GenerateBoundsForAnimationAtlas(0, 0, 32, 32, 5, 4, 6, 7, 3, 5);
+            slimeAnimation.IsMoving = anim =>
+            {
+                if (anim.State == AnimationState.Walk)
+                {
+                    int fi = anim.GetFramesIndex();
+                    return fi >= 1 && fi <= 4;
+                }
+                return false;
+            };
             slimeAnimation.MapState = state => state switch
             {
                 AnimationState.None or AnimationState.Idle => 0,
@@ -80,11 +89,11 @@ namespace MyGame.Game.Scenes
             slimeDetector.MaxDistanceToTarget = 100f;
             var slimeLogic = slime.AddComponent<MeleeEnemyLogic>();
             slimeLogic.Speed = 40f;
-            slimeLogic.StateMachine = new StateMachine<AnimationState, AnimationState>.Builder(AnimationState.Idle)
-                .State(AnimationState.Idle)
-                    .TransitionTo(AnimationState.Walk).OnTrigger(AnimationState.Walk)
-                .State(AnimationState.Walk)
-                    .TransitionTo(AnimationState.Idle).OnTrigger(AnimationState.Idle)
+            slimeLogic.StateMachine = new StateMachine<AiState, AiStateTrigger>.Builder(AiState.WalkAround)
+                .State(AiState.WalkAround)
+                    .TransitionTo(AiState.ChasePlayer).OnTrigger(AiStateTrigger.PlayerDetected)
+                .State(AiState.ChasePlayer)
+                    .TransitionTo(AiState.WalkAround).OnTrigger(AiStateTrigger.PlayerLost)
                 .Build();
             Entities.Add(slime);
 

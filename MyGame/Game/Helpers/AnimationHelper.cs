@@ -1,4 +1,5 @@
 ﻿using MyGame.Game.Constants.Enums;
+using MyGame.Game.ECS.Components;
 using System.Linq;
 
 namespace MyGame.Game.Helpers
@@ -35,6 +36,48 @@ namespace MyGame.Game.Helpers
                 }
             }
             return bounds;
+        }
+
+        /// <summary>
+        /// Calculates animation duration
+        /// </summary>
+        public static float GetStateDuration(this Animation animation, AnimationState state)
+        {
+            return (animation.Frames[animation.MapState(state)].Length - 1) / animation.Speed;
+        }
+
+        /// <summary>
+        /// Gets frames depending on current animation state
+        /// </summary>
+        public static Rectangle[] GetStateFrames(this Animation animation)
+        {
+            return animation.Frames[animation.MapState(animation.State)];
+        }
+
+        public static int GetFramesIndex(this Animation animation)
+        {
+            // calculate frame
+            int rectIndex = Convert.ToInt32(animation.TimePlayed.TotalSeconds * animation.Speed);
+
+            // if animation played one cycle
+            int framesCount = animation.GetStateFrames().Length;
+            if (rectIndex >= framesCount)
+            {
+                if (animation.IsCycled)
+                {
+                    return rectIndex % framesCount;
+                }
+                else
+                {
+                    return framesCount - 1;
+                }
+            }
+            return rectIndex;
+        }
+
+        public static Rectangle GetCurrentBound(this Animation animation)
+        {
+            return animation.GetStateFrames()[animation.GetFramesIndex()];
         }
 
         public static SpriteEffects GetSpriteEffect(this AnimationState state)

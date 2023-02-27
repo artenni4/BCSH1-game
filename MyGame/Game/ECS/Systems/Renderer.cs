@@ -75,30 +75,18 @@ namespace MyGame.Game.ECS.Systems
                     if (animation.IsPlaying)
                     {
                         animation.TimePlayed += gameTime.ElapsedGameTime;
+                        var duration = TimeSpan.FromSeconds(animation.GetStateDuration(animation.State));
+                        if (animation.TimePlayed >= duration)
+                        {
+                            animation.TimePlayed -= duration;
+                        }
                     }
                     else
                     {
                         animation.TimePlayed = TimeSpan.Zero;
                     }
 
-                    // calculate frame
-                    ulong rectIndex = Convert.ToUInt64(animation.TimePlayed.TotalSeconds * animation.Speed);
-
-                    // if animation played one cycle
-                    ulong framesCount = Convert.ToUInt64(animation.StateFrames.Length);
-                    if (rectIndex >= framesCount)
-                    {
-                        if (animation.IsCycled)
-                        {
-                            rectIndex %= framesCount;
-                        }
-                        else
-                        {
-                            rectIndex = framesCount - 1;
-                        }
-                    }
-
-                    var bounds = animation.StateFrames[rectIndex];
+                    var bounds = animation.GetCurrentBound();
                     var origin = new Vector2(bounds.Width / 2f, bounds.Height / 2f); 
                     var spriteEffect = animation.State.GetSpriteEffect();
 

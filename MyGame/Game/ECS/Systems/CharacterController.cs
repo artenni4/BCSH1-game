@@ -66,16 +66,16 @@ namespace MyGame.Game.ECS.Systems
                     .TransitionTo(AnimationState.AttackDown).OnTrigger(PlayerAnimationTrigger.AttackPressed)
                 .State(AnimationState.AttackLeft)
                     .TransitionTo(AnimationState.IdleLeft)
-                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetAnimationDuration(AnimationState.AttackLeft)))
+                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetStateDuration(AnimationState.AttackLeft)))
                 .State(AnimationState.AttackRight)
                     .TransitionTo(AnimationState.IdleRight)
-                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetAnimationDuration(AnimationState.AttackRight)))
+                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetStateDuration(AnimationState.AttackRight)))
                 .State(AnimationState.AttackUp)
                     .TransitionTo(AnimationState.IdleUp)
-                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetAnimationDuration(AnimationState.AttackUp)))
+                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetStateDuration(AnimationState.AttackUp)))
                 .State(AnimationState.AttackDown)
                     .TransitionTo(AnimationState.IdleDown)
-                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetAnimationDuration(AnimationState.AttackDown)))
+                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetStateDuration(AnimationState.AttackDown)))
                 .State(AnimationState.DeathLeft).DeadEnd()
                 .State(AnimationState.DeathRight).DeadEnd()
                 .GlobalOnEnter(OnEnterHandler)
@@ -152,8 +152,8 @@ namespace MyGame.Game.ECS.Systems
         {
             _playerStateMachine.Update(gameTime.ElapsedGameTime);
 
-            var state = _playerStateMachine.State;
-            if (state.IsMoving())
+            var playerAnim = _playerEntity.GetComponent<Animation>();
+            if (playerAnim.IsMoving(playerAnim))
             {
                 var playerComponent = _playerEntity.GetComponent<Player>();
                 var playerTransform = _playerEntity.GetComponent<Transform>();
