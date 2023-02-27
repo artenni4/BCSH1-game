@@ -10,6 +10,8 @@ using MyGame.Game.Helpers;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.Constants.Enums;
 using MyGame.Game.StateMachine;
+using MyGame.Game.Configuration;
+using MyGame.Game.Constants;
 
 namespace MyGame.Game.Scenes
 {
@@ -21,6 +23,10 @@ namespace MyGame.Game.Scenes
         public TestScene(GraphicsDeviceManager graphics) : base(graphics)
         {
             var graphicsDevice = graphics.GraphicsDevice;
+
+            var configuration = new ConfigurationStorage();
+            configuration.SetValue(ConfigurationConstants.ShowBoxColliders, true);
+            configuration.SetValue(ConfigurationConstants.ShowAiDebug, true);
 
             // add entities
             EcsEntity player = new();
@@ -54,7 +60,7 @@ namespace MyGame.Game.Scenes
 
             EcsEntity slime = new();
             var slimeTransform = slime.AddComponent<Transform>();
-            slimeTransform.Position = new Vector2(0, -100);
+            slimeTransform.Position = new Vector2(0, -70);
             slimeTransform.ZIndex = 1f;
 
             var slimeBox = slime.AddComponent<BoxCollider>();
@@ -110,7 +116,7 @@ namespace MyGame.Game.Scenes
             eventSystem.PushHandler(characterHandler);
             eventSystem.PushHandler(aiController);
 
-            Systems.Add(new Renderer(graphicsDevice));
+            Systems.Add(new Renderer(graphicsDevice, configuration));
             Systems.Add(new AiDetectionSystem(eventSystem));
             Systems.Add(new InputSystem(eventSystem));
             Systems.Add(aiController);

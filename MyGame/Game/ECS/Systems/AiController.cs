@@ -2,10 +2,7 @@
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MyGame.Game.ECS.Systems
 {
@@ -43,7 +40,7 @@ namespace MyGame.Game.ECS.Systems
                         }
                         if (hasAnimation && animation.IsMoving(animation) || !hasAnimation)
                         {
-                            var direction = detector.Player.GetComponent<Transform>().Position - transform.Position;
+                            var direction = detector.Player.GetEntityCenter() - entity.GetEntityCenter();
                             if (direction != Vector2.Zero)
                             {
                                 direction.Normalize();

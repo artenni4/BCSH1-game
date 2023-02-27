@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using MyGame.Game.Configuration;
+using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
-using SharpDX.Direct2D1.Effects;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,14 +16,16 @@ namespace MyGame.Game.ECS.Systems
     /// </summary>
     internal class Renderer : EcsSystem
     {
+        private readonly IConfiguration _configuration;
         private readonly GraphicsDevice _graphicsDevice;
         private readonly SpriteBatch _spriteBatch;
 
         private const float virtualWidth = 384f;
         private const float virtualHeight = 216f;
 
-        public Renderer(GraphicsDevice graphicsDevice)
+        public Renderer(GraphicsDevice graphicsDevice, IConfiguration configuration)
         {
+            _configuration = configuration;
             _graphicsDevice = graphicsDevice;
             _spriteBatch = new SpriteBatch(_graphicsDevice);
         }
@@ -61,13 +64,28 @@ namespace MyGame.Game.ECS.Systems
             foreach (var entity in entities.Where(e => e.ContainsComponent<Transform>()))
             {
                 var transform = entity.GetComponent<Transform>();
+                // TODO fix Y axis invertion
                 var position = new Vector2(transform.Position.X, -transform.Position.Y); // invert Y pos for camera
 
+                // debug box collider
+                if (_configuration.GetValue<bool>(ConfigurationConstants.ShowBoxColliders) && entity.TryGetComponent<BoxCollider>(out var boxCollider))
+                {
+                    _spriteBatch.DrawRectangle(new Rectangle(position.ToPoint() + boxCollider.Box.Location, boxCollider.Box.Size), Color.LightGreen, 1);
+                }
+
+                // debug ai intention
+                if (_configuration.GetValue<bool>(ConfigurationConstants.ShowAiDebug) && entity.TryGetComponent<PlayerDetector>(out var playerDetector))
+                {
+                    var entityPos = entity.GetEntityCenter();
+                    var playerPos = playerDetector.Player.GetEntityCenter();
+
+                    _spriteBatch.DrawLine(new Vector2(entityPos.X, -entityPos.Y), new Vector2(playerPos.X, -playerPos.Y), Color.Red, 1);
+                }
 
                 if (entity.TryGetComponent<Image>(out var image))
                 {
                     _spriteBatch.Draw(image.Texture2D, position, null, Color.White, transform.Rotation,
-                        new Vector2(image.Texture2D.Width / 2, image.Texture2D.Height / 2), transform.Scale, SpriteEffects.None, transform.ZIndex);
+                        Vector2.Zero, transform.Scale, SpriteEffects.None, transform.ZIndex);
                 }
 
                 if (entity.TryGetComponent<Animation>(out var animation))
@@ -87,7 +105,7 @@ namespace MyGame.Game.ECS.Systems
                     }
 
                     var bounds = animation.GetCurrentBound();
-                    var origin = new Vector2(bounds.Width / 2f, bounds.Height / 2f); 
+                    var origin = Vector2.Zero; // new Vector2(bounds.Width / 2f, bounds.Height / 2f); 
                     var spriteEffect = animation.State.GetSpriteEffect();
 
                     _spriteBatch.Draw(animation.Texture2D, position, bounds, Color.White, transform.Rotation,
