@@ -41,9 +41,9 @@ namespace MyGame.Game.Helpers
         /// <summary>
         /// Calculates animation duration
         /// </summary>
-        public static float GetStateDuration(this Animation animation, AnimationState state)
+        public static TimeSpan GetStateDuration(this Animation animation, AnimationState state)
         {
-            return (animation.Frames[animation.MapState(state)].Length - 1) / animation.Speed;
+            return TimeSpan.FromSeconds((animation.Frames[animation.MapState(state)].Length - 1) / animation.Speed);
         }
 
         /// <summary>

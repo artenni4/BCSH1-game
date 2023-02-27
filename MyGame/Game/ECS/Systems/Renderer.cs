@@ -75,7 +75,7 @@ namespace MyGame.Game.ECS.Systems
                     if (animation.IsPlaying)
                     {
                         animation.TimePlayed += gameTime.ElapsedGameTime;
-                        var duration = TimeSpan.FromSeconds(animation.GetStateDuration(animation.State));
+                        var duration = animation.GetStateDuration(animation.State);
                         if (animation.TimePlayed >= duration)
                         {
                             animation.TimePlayed -= duration;

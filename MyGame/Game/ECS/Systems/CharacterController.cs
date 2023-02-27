@@ -23,6 +23,8 @@ namespace MyGame.Game.ECS.Systems
         public CharacterController(EcsEntity playerEntity)
         {
             _playerEntity = playerEntity;
+            var playerAnimation = _playerEntity.GetComponent<Animation>();
+
             _playerStateMachine = new StateMachine<AnimationState, PlayerAnimationTrigger>.Builder(AnimationState.IdleRight)
                 .State(AnimationState.IdleRight)
                     .TransitionTo(AnimationState.WalkRight).OnTrigger(PlayerAnimationTrigger.RightPressed)
@@ -52,6 +54,7 @@ namespace MyGame.Game.ECS.Systems
                     .TransitionTo(AnimationState.WalkDown).OnTrigger(PlayerAnimationTrigger.DownPressed)
                     .TransitionTo(AnimationState.AttackDown).OnTrigger(PlayerAnimationTrigger.AttackPressed)
                     .TransitionTo(AnimationState.DeathRight).OnTrigger(PlayerAnimationTrigger.Died)
+
                 .State(AnimationState.WalkRight)
                     .TransitionTo(AnimationState.IdleRight).OnTrigger(PlayerAnimationTrigger.RightReleased)
                     .TransitionTo(AnimationState.AttackRight).OnTrigger(PlayerAnimationTrigger.AttackPressed)
@@ -64,18 +67,15 @@ namespace MyGame.Game.ECS.Systems
                 .State(AnimationState.WalkDown)
                     .TransitionTo(AnimationState.IdleDown).OnTrigger(PlayerAnimationTrigger.DownReleased)
                     .TransitionTo(AnimationState.AttackDown).OnTrigger(PlayerAnimationTrigger.AttackPressed)
+
                 .State(AnimationState.AttackLeft)
-                    .TransitionTo(AnimationState.IdleLeft)
-                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetStateDuration(AnimationState.AttackLeft)))
+                    .TransitionTo(AnimationState.IdleLeft).After(playerAnimation.GetStateDuration(AnimationState.AttackLeft))
                 .State(AnimationState.AttackRight)
-                    .TransitionTo(AnimationState.IdleRight)
-                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetStateDuration(AnimationState.AttackRight)))
+                    .TransitionTo(AnimationState.IdleRight).After(playerAnimation.GetStateDuration(AnimationState.AttackRight))
                 .State(AnimationState.AttackUp)
-                    .TransitionTo(AnimationState.IdleUp)
-                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetStateDuration(AnimationState.AttackUp)))
+                    .TransitionTo(AnimationState.IdleUp).After(playerAnimation.GetStateDuration(AnimationState.AttackUp))
                 .State(AnimationState.AttackDown)
-                    .TransitionTo(AnimationState.IdleDown)
-                        .After(TimeSpan.FromSeconds(_playerEntity.GetComponent<Animation>().GetStateDuration(AnimationState.AttackDown)))
+                    .TransitionTo(AnimationState.IdleDown).After(playerAnimation.GetStateDuration(AnimationState.AttackDown))
                 .State(AnimationState.DeathLeft).DeadEnd()
                 .State(AnimationState.DeathRight).DeadEnd()
                 .GlobalOnEnter(OnEnterHandler)
@@ -92,60 +92,62 @@ namespace MyGame.Game.ECS.Systems
 
         public bool OnEvent<T>(T @event) where T : EventBase
         {
-            bool handled = false;
-
             if (@event is KeyboardEvent keyboardEvent)
             {
                 _lastKeyboardState = keyboardEvent.KeyboardState;
                 if (keyboardEvent.ReleasedKeys.Contains(InputConstants.Left))
                 {
-                    handled |= _playerStateMachine.Trigger(PlayerAnimationTrigger.LeftReleased);
+                    _playerStateMachine.Trigger(PlayerAnimationTrigger.LeftReleased);
                 }
                 if (keyboardEvent.ReleasedKeys.Contains(InputConstants.Right))
                 {
-                    handled |= _playerStateMachine.Trigger(PlayerAnimationTrigger.RightReleased);
+                    _playerStateMachine.Trigger(PlayerAnimationTrigger.RightReleased);
                 }
                 if (keyboardEvent.ReleasedKeys.Contains(InputConstants.Up))
                 {
-                    handled |= _playerStateMachine.Trigger(PlayerAnimationTrigger.UpReleased);
+                    _playerStateMachine.Trigger(PlayerAnimationTrigger.UpReleased);
                 }
                 if (keyboardEvent.ReleasedKeys.Contains(InputConstants.Down))
                 {
-                    handled |= _playerStateMachine.Trigger(PlayerAnimationTrigger.DownReleased);
+                    _playerStateMachine.Trigger(PlayerAnimationTrigger.DownReleased);
                 }
 
                 if (keyboardEvent.KeyboardState.IsKeyDown(InputConstants.Left))
                 {
-                    handled |= _playerStateMachine.Trigger(PlayerAnimationTrigger.LeftPressed);
+                    _playerStateMachine.Trigger(PlayerAnimationTrigger.LeftPressed);
                 }
                 if (keyboardEvent.KeyboardState.IsKeyDown(InputConstants.Right))
                 {
-                    handled |= _playerStateMachine.Trigger(PlayerAnimationTrigger.RightPressed);
+                    _playerStateMachine.Trigger(PlayerAnimationTrigger.RightPressed);
                 }
                 if (keyboardEvent.KeyboardState.IsKeyDown(InputConstants.Up))
                 {
-                    handled |= _playerStateMachine.Trigger(PlayerAnimationTrigger.UpPressed);
+                    _playerStateMachine.Trigger(PlayerAnimationTrigger.UpPressed);
                 }
                 if (keyboardEvent.KeyboardState.IsKeyDown(InputConstants.Down))
                 {
-                    handled |= _playerStateMachine.Trigger(PlayerAnimationTrigger.DownPressed);
+                    _playerStateMachine.Trigger(PlayerAnimationTrigger.DownPressed);
                 }
 
 
                 // TODO remove later
                 if (keyboardEvent.PressedKeys.Contains(Keys.K))
                 {
-                    handled |= _playerStateMachine.Trigger(PlayerAnimationTrigger.Died);
+                    _playerStateMachine.Trigger(PlayerAnimationTrigger.Died);
                 }
+
+                return true;
             }
             else if (@event is MouseEvent mouseEvent)
             {
                 if (mouseEvent.MouseState.LeftButton == ButtonState.Pressed)
                 {
-                    handled |= _playerStateMachine.Trigger(PlayerAnimationTrigger.AttackPressed);
+                    _playerStateMachine.Trigger(PlayerAnimationTrigger.AttackPressed);
                 }
+
+                return true;
             }
-            return handled;
+            return false;
         }
 
         public override void Update(GameTime gameTime, ICollection<EcsEntity> entities)

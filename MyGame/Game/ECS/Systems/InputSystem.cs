@@ -2,6 +2,7 @@
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -25,7 +26,7 @@ namespace MyGame.Game.ECS.Systems
             var keyboardState = Keyboard.GetState();
             var pressedKeys = keyboardState.GetPressedKeys().Except(_previousKeyboardState.GetPressedKeys()).ToArray();
             var releasedKeys = _previousKeyboardState.GetPressedKeys().Except(keyboardState.GetPressedKeys()).ToArray();
-            if (keyboardState.GetPressedKeyCount() > 0 || releasedKeys.Length > 0)
+            if (pressedKeys.Length > 0 || releasedKeys.Length > 0)
             {
                 _eventSystem.SendEvent(new KeyboardEvent(gameTime, keyboardState, pressedKeys, releasedKeys));
             }

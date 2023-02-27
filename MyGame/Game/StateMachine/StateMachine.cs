@@ -14,6 +14,9 @@ namespace MyGame.Game.StateMachine
         private readonly Dictionary<TState, KeyValuePair<TimeSpan, TState>> _timeTransitions = new();
         private readonly Dictionary<TState, Action<TransitionInfo>> _stateOnEnter = new(); // TODO: allow list of actions on enter (make list)
         private readonly Dictionary<TState, Action<TState, TimeSpan>> _stateOnUpdate = new();
+        private readonly Dictionary<TState, TimeSpan> _stateMinDuration = new();
+
+        private readonly Queue<TTrigger> _triggersQueue = new(); // enqueue trigger if min state duration is not reached
 
         private TState _state;
         private TimeSpan stateSet;
@@ -45,14 +48,17 @@ namespace MyGame.Game.StateMachine
         /// </summary>
         /// <param name="trigger">Tigger for change</param>
         /// <exception cref="Exception">Exception thrown if trigger is set to change state to more than one defined state</exception>
-        public bool Trigger(TTrigger trigger)
+        public void Trigger(TTrigger trigger)
         {
             if (_triggerTransitions.TryGetValue(State, out var transitions) && transitions.TryGetValue(trigger, out var nextState))
             {
+                if (_stateMinDuration.TryGetValue(State, out var minDuration) && stateSet < minDuration)
+                {
+                    _triggersQueue.Enqueue(trigger);
+                    return;
+                }
                 State = nextState;
-                return true;
             }
-            return false;
         }
 
         /// <summary>
@@ -66,6 +72,19 @@ namespace MyGame.Game.StateMachine
             if (_timeTransitions.TryGetValue(State, out var transition) && stateSet >= transition.Key)
             {
                 State = transition.Value;
+            }
+            
+            // flush trigger queue
+            while (_triggersQueue.Any())
+            {
+                if (_stateMinDuration.TryGetValue(State, out var minDuration) && stateSet >= minDuration)
+                {
+                    Trigger(_triggersQueue.Dequeue());
+                }
+                else
+                {
+                    break;
+                }
             }
 
             // update all states that do something on update
@@ -130,6 +149,12 @@ namespace MyGame.Game.StateMachine
                 return this;
             }
 
+            public IStateBuilder MinDuration(TimeSpan duration)
+            {
+                _machine._stateMinDuration[_currentState] = duration;
+                return this;
+            }
+
             public ITransitionBuilder TransitionTo(TState nextState)
             {
                 _nextState = nextState;
@@ -190,6 +215,7 @@ namespace MyGame.Game.StateMachine
         {
             Builder OnEnter(Action<TransitionInfo> onEnter);
             ITransitionBuilder TransitionTo(TState nextState);
+            IStateBuilder MinDuration(TimeSpan duration);
             Builder DeadEnd();
         }
 
