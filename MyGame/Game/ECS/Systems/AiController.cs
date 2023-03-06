@@ -8,7 +8,7 @@ namespace MyGame.Game.ECS.Systems
 {
     internal class AiController : EcsSystem, IEventHandler
     {
-        public bool OnEvent<T>(T @event) where T : EventBase
+        public bool OnEvent<T>(object sender, T @event) where T : EventBase
         {
             if (@event is PlayerDetectionEvent detectionEvent)
             {

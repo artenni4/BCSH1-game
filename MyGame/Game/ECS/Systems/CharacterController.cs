@@ -90,7 +90,7 @@ namespace MyGame.Game.ECS.Systems
             animation.TimePlayed = TimeSpan.Zero;
         }
 
-        public bool OnEvent<T>(T @event) where T : EventBase
+        public bool OnEvent<T>(object sender, T @event) where T : EventBase
         {
             if (@event is KeyboardEvent keyboardEvent)
             {

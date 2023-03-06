@@ -12,6 +12,6 @@ namespace MyGame.Game.ECS.Systems.EventSystem
         /// <typeparam name="T"></typeparam>
         /// <param name="event"></param>
         /// <returns>Shows whether event is handled and should not be propagated further in the stack of event handlers</returns>
-        bool OnEvent<T>(T @event) where T : EventBase;
+        bool OnEvent<T>(object sender, T @event) where T : EventBase;
     }
 }

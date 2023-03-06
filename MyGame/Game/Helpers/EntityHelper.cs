@@ -1,8 +1,5 @@
 ﻿using MyGame.Game.ECS;
 using MyGame.Game.ECS.Components;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MyGame.Game.Helpers
 {
@@ -16,6 +13,11 @@ namespace MyGame.Game.Helpers
                 {
                     var boxCenter = boxCollider.Box.Center;
                     return transform.Position + new Vector2(boxCenter.X, -boxCenter.Y);
+                }
+                if (entity.TryGetComponent<Image>(out var image))
+                {
+                    var imageCenter = image.Texture2D.Bounds.Center;
+                    return transform.Position + new Vector2(imageCenter.X, -imageCenter.Y);
                 }
                 return transform.Position;
             }

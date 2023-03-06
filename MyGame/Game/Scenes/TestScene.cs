@@ -12,6 +12,7 @@ using MyGame.Game.Constants.Enums;
 using MyGame.Game.StateMachine;
 using MyGame.Game.Configuration;
 using MyGame.Game.Constants;
+using Microsoft.Extensions.Logging;
 
 namespace MyGame.Game.Scenes
 {
@@ -31,7 +32,7 @@ namespace MyGame.Game.Scenes
             // add entities
             EcsEntity player = new();
             var playerTransform = player.AddComponent<Transform>();
-            playerTransform.Position = new Vector2(0, 100);
+            playerTransform.Position = new Vector2(0f, 100f);
 
             var playerBox = player.AddComponent<BoxCollider>();
             playerBox.Box = new Rectangle(19, 23, 12, 17);
@@ -110,7 +111,13 @@ namespace MyGame.Game.Scenes
             Entities.Add(camera);
 
             // add systems
-            var eventSystem = new EventSystem();
+            var loggerFactory = LoggerFactory.Create(config =>
+            {
+                config.SetMinimumLevel(LogLevel.Trace);
+                config.AddDebug();
+            });
+
+            var eventSystem = new EventSystem(loggerFactory.CreateLogger<EventSystem>());
             var aiController = new AiController();
             var characterHandler = new CharacterController(player);
             eventSystem.PushHandler(characterHandler);

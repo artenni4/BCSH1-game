@@ -28,7 +28,7 @@ namespace MyGame.Game.ECS.Systems
             var releasedKeys = _previousKeyboardState.GetPressedKeys().Except(keyboardState.GetPressedKeys()).ToArray();
             if (pressedKeys.Length > 0 || releasedKeys.Length > 0)
             {
-                _eventSystem.SendEvent(new KeyboardEvent(gameTime, keyboardState, pressedKeys, releasedKeys));
+                _eventSystem.SendEvent(this, new KeyboardEvent(gameTime, keyboardState, pressedKeys, releasedKeys));
             }
             _previousKeyboardState = keyboardState;
 
@@ -36,7 +36,7 @@ namespace MyGame.Game.ECS.Systems
             var mouseState = Mouse.GetState();
             if (TryGetMouseStateChange(mouseState, _previousMouseState, gameTime, out var mouseEvent))
             {
-                _eventSystem.SendEvent(mouseEvent);
+                _eventSystem.SendEvent(this, mouseEvent);
             }
             _previousMouseState = mouseState;
         }

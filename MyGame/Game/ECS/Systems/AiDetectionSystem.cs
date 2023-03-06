@@ -33,12 +33,12 @@ namespace MyGame.Game.ECS.Systems
                     var playerTransform = playerDetector.Player.GetComponent<Transform>();
                     if (Vector2.Distance(transform.Position, playerTransform.Position) <= playerDetector.MaxDistanceToTarget)
                     {
-                        _eventSystem.SendEvent(new PlayerDetectionEvent(gameTime, entity, true));
+                        _eventSystem.SendEvent(this, new PlayerDetectionEvent(gameTime, entity, true));
                         _entities.Add(entity);
                     }
                     else if (_entities.Contains(entity))
                     {
-                        _eventSystem.SendEvent(new PlayerDetectionEvent(gameTime, entity, false));
+                        _eventSystem.SendEvent(this, new PlayerDetectionEvent(gameTime, entity, false));
                         _entities.Remove(entity);
                     }
                 }

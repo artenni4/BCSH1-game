@@ -23,6 +23,6 @@ namespace MyGame.Game.ECS.Systems.EventSystem
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="event"></param>
-        public void SendEvent<T>(T @event) where T : EventBase;
+        public void SendEvent<T>(object sender, T @event) where T : EventBase;
     }
 }
