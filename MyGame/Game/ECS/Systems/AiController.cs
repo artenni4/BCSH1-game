@@ -38,7 +38,7 @@ namespace MyGame.Game.ECS.Systems
                         {
                             animation.State = AnimationState.Walk;
                         }
-                        if (hasAnimation && animation.IsMoving(animation) || !hasAnimation)
+                        if (hasAnimation && animation.IsMoving() || !hasAnimation)
                         {
                             var direction = detector.Player.GetEntityCenter() - entity.GetEntityCenter();
                             if (direction != Vector2.Zero)

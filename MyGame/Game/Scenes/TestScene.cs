@@ -71,7 +71,7 @@ namespace MyGame.Game.Scenes
             slimeAnimation.IsPlaying = true;
             slimeAnimation.IsCycled = true;
             slimeAnimation.Frames = AnimationHelper.GenerateBoundsForAnimationAtlas(0, 0, 32, 32, 5, 4, 6, 7, 3, 5);
-            slimeAnimation.IsMoving = anim =>
+            slimeAnimation.IsMovingCallback = anim =>
             {
                 if (anim.State == AnimationState.Walk)
                 {

@@ -155,7 +155,7 @@ namespace MyGame.Game.ECS.Systems
             _playerStateMachine.Update(gameTime.ElapsedGameTime);
 
             var playerAnim = _playerEntity.GetComponent<Animation>();
-            if (playerAnim.IsMoving(playerAnim))
+            if (playerAnim.IsMoving())
             {
                 var playerComponent = _playerEntity.GetComponent<Player>();
                 var playerTransform = _playerEntity.GetComponent<Transform>();

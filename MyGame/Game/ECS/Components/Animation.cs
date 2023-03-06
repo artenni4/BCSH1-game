@@ -33,7 +33,9 @@ namespace MyGame.Game.ECS.Components
         /// Describes whether animation shows that entity is moving.
         /// Could be used in moving logic
         /// </summary>
-        public Func<Animation, bool> IsMoving { get; set; } = anim => anim.State.IsMoving();
+        public Func<Animation, bool> IsMovingCallback { get; set; } = anim => anim.State.IsMoving();
+
+        public bool IsMoving() => IsMovingCallback(this);
 
         /// <summary>
         /// Speed of animation in frames/second
