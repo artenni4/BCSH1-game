@@ -24,7 +24,7 @@ namespace MyGame.Game.ECS.Systems
         public CharacterController(EcsEntity playerEntity)
         {
             _playerEntity = playerEntity;
-            playerState.GlobalOnEnter(OnEnterHandler);
+            playerState.OnStateChanged += OnEnterHandler;
             var playerAnimation = _playerEntity.GetComponent<Animation>();
 
             _playerStateMachine = new StateMachine<AnimationState, PlayerAnimationTrigger>.Builder()
@@ -81,7 +81,7 @@ namespace MyGame.Game.ECS.Systems
                 .Build();
         }
 
-        private void OnEnterHandler(TransitionInfo<AnimationState> transition)
+        private void OnEnterHandler(object sender, TransitionInfo<AnimationState> transition)
         {
             var animation = _playerEntity.GetComponent<Animation>();
             animation.State = transition.CurrentState;

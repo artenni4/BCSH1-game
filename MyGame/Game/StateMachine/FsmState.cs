@@ -4,8 +4,7 @@ namespace MyGame.Game.StateMachine
 {
     internal class FsmState<T>
     {
-        private readonly Dictionary<T, ICollection<Action<TransitionInfo<T>>>> _stateOnEnter = new();
-        private readonly ICollection<Action<TransitionInfo<T>>> _globalOnEnter = new List<Action<TransitionInfo<T>>>();
+        public event EventHandler<TransitionInfo<T>> OnStateChanged;
 
         private T _value;
         public T Value
@@ -17,17 +16,8 @@ namespace MyGame.Game.StateMachine
                 _value = value;
                 var transition = new TransitionInfo<T>(prevState, _value);
                 timeSet = TimeSpan.Zero;
-                if (_stateOnEnter.TryGetValue(_value, out var actions))
-                {
-                    foreach (var onEnter in actions)
-                    {
-                        onEnter(transition);
-                    }
-                }
-                foreach (var onEnter in _globalOnEnter)
-                {
-                    onEnter(transition);
-                }
+
+                OnStateChanged?.Invoke(this, transition);
             }
         }
 
@@ -52,23 +42,6 @@ namespace MyGame.Game.StateMachine
         public static implicit operator FsmState<T>(T value)
         {
             return new FsmState<T>(value);
-        }
-
-        public void OnEnter(T state, Action<TransitionInfo<T>> action)
-        {
-            if (_stateOnEnter.TryGetValue(state, out var actions))
-            {
-                actions.Add(action);
-            }
-            else
-            {
-                _stateOnEnter.Add(state, new List<Action<TransitionInfo<T>>> { action });
-            }
-        }
-
-        public void GlobalOnEnter(Action<TransitionInfo<T>> action)
-        {
-            _globalOnEnter.Add(action);
         }
     }
 }
