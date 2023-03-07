@@ -53,7 +53,7 @@ namespace MyGame.Game.Scenes
                 AnimationState.AttackRight or AnimationState.AttackLeft => 7,
                 AnimationState.AttackUp => 8,
                 AnimationState.DeathRight or AnimationState.DeathLeft => 9,
-                _ => throw new ApplicationException("Bad animation state mapping"),
+                _ => throw new ApplicationException("Bad animation _value mapping"),
             };
             playerAnimation.Speed = 7f;
             player.AddComponent<Player>().Speed = 100f;
@@ -87,21 +87,22 @@ namespace MyGame.Game.Scenes
                 AnimationState.Attack => 2,
                 AnimationState.Hurt => 3,
                 AnimationState.Death => 4,
-                _ => throw new ApplicationException("Bad animation state mapping"),
+                _ => throw new ApplicationException("Bad animation _value mapping"),
             };
             slimeAnimation.Speed = 7f;
 
-            var slimeDetector = slime.AddComponent<PlayerDetector>();
-            slimeDetector.Player = player;
-            slimeDetector.MaxDistanceToTarget = 100f;
-            var slimeLogic = slime.AddComponent<MeleeEnemyLogic>();
-            slimeLogic.Speed = 40f;
-            slimeLogic.StateMachine = new StateMachine<AiState, AiStateTrigger>.Builder(AiState.WalkAround)
+            MeleeEnemyLogic.StateMachine = new StateMachine<AiState, AiStateTrigger>.Builder()
                 .State(AiState.WalkAround)
                     .TransitionTo(AiState.ChasePlayer).OnTrigger(AiStateTrigger.PlayerDetected)
                 .State(AiState.ChasePlayer)
                     .TransitionTo(AiState.WalkAround).OnTrigger(AiStateTrigger.PlayerLost)
                 .Build();
+            var slimeDetector = slime.AddComponent<PlayerDetector>();
+            slimeDetector.Player = player;
+            slimeDetector.MaxDistanceToTarget = 100f;
+            var slimeLogic = slime.AddComponent<MeleeEnemyLogic>();
+            slimeLogic.State = AiState.WalkAround;
+            slimeLogic.Speed = 40f;
             Entities.Add(slime);
 
 

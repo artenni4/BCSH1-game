@@ -14,7 +14,14 @@ namespace MyGame.Game.ECS.Systems
             {
                 if (detectionEvent.Detector.TryGetComponent<MeleeEnemyLogic>(out var meleeEnemy))
                 {
-                    meleeEnemy.StateMachine.Trigger(detectionEvent.IsDetected ? AiStateTrigger.PlayerDetected : AiStateTrigger.PlayerLost);
+                    if (detectionEvent.IsDetected)
+                    {
+                        MeleeEnemyLogic.StateMachine.Trigger(meleeEnemy.State, AiStateTrigger.PlayerDetected);
+                    }
+                    else if (detectionEvent.IsLost)
+                    {
+                        MeleeEnemyLogic.StateMachine.Trigger(meleeEnemy.State, AiStateTrigger.PlayerLost);
+                    }
                 }
 
                 return true;
@@ -32,7 +39,7 @@ namespace MyGame.Game.ECS.Systems
                     // NOTE maybe some way to separate logic from animation
                     var hasAnimation = entity.TryGetComponent<Animation>(out var animation);
 
-                    if (meleeEnemy.StateMachine.State == AiState.ChasePlayer)
+                    if (meleeEnemy.State.Value == AiState.ChasePlayer)
                     {
                         if (hasAnimation)
                         {

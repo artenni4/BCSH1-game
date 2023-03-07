@@ -7,6 +7,7 @@ using MyGame.Game.StateMachine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.PeerToPeer.Collaboration;
 using System.Text;
 
 namespace MyGame.Game.ECS.Systems
@@ -31,12 +32,12 @@ namespace MyGame.Game.ECS.Systems
                 if (entity.TryGetComponent<PlayerDetector>(out var playerDetector))
                 {
                     var playerTransform = playerDetector.Player.GetComponent<Transform>();
-                    if (Vector2.Distance(transform.Position, playerTransform.Position) <= playerDetector.MaxDistanceToTarget)
+                    if (Vector2.Distance(transform.Position, playerTransform.Position) <= playerDetector.MaxDistanceToTarget && !_entities.Contains(entity))
                     {
                         _eventSystem.SendEvent(this, new PlayerDetectionEvent(gameTime, entity, true));
                         _entities.Add(entity);
                     }
-                    else if (_entities.Contains(entity))
+                    else if (Vector2.Distance(transform.Position, playerTransform.Position) > playerDetector.MaxDistanceToTarget && _entities.Contains(entity))
                     {
                         _eventSystem.SendEvent(this, new PlayerDetectionEvent(gameTime, entity, false));
                         _entities.Remove(entity);

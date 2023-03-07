@@ -12,6 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\DrawHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\EntityHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)game\statemachine\FsmState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)game\statemachine\TransitionInfo.cs" />
     <Compile Include="..\MyGame\Game\Configuration\ConfigurationStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Configuration\IConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\ConfigurationConstants.cs" />

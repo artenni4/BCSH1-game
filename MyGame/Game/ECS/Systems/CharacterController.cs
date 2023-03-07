@@ -16,6 +16,7 @@ namespace MyGame.Game.ECS.Systems
     internal class CharacterController : EcsSystem, IEventHandler
     {
         private readonly EcsEntity _playerEntity;
+        private readonly FsmState<AnimationState> playerState = AnimationState.IdleRight;
         private readonly StateMachine<AnimationState, PlayerAnimationTrigger> _playerStateMachine;
 
         private KeyboardState _lastKeyboardState;
@@ -23,9 +24,10 @@ namespace MyGame.Game.ECS.Systems
         public CharacterController(EcsEntity playerEntity)
         {
             _playerEntity = playerEntity;
+            playerState.GlobalOnEnter(OnEnterHandler);
             var playerAnimation = _playerEntity.GetComponent<Animation>();
 
-            _playerStateMachine = new StateMachine<AnimationState, PlayerAnimationTrigger>.Builder(AnimationState.IdleRight)
+            _playerStateMachine = new StateMachine<AnimationState, PlayerAnimationTrigger>.Builder()
                 .State(AnimationState.IdleRight)
                     .TransitionTo(AnimationState.WalkRight).OnTrigger(PlayerAnimationTrigger.RightPressed)
                     .TransitionTo(AnimationState.WalkLeft).OnTrigger(PlayerAnimationTrigger.LeftPressed)
@@ -76,13 +78,10 @@ namespace MyGame.Game.ECS.Systems
                     .TransitionTo(AnimationState.IdleUp).After(playerAnimation.GetStateDuration(AnimationState.AttackUp))
                 .State(AnimationState.AttackDown)
                     .TransitionTo(AnimationState.IdleDown).After(playerAnimation.GetStateDuration(AnimationState.AttackDown))
-                .State(AnimationState.DeathLeft).DeadEnd()
-                .State(AnimationState.DeathRight).DeadEnd()
-                .GlobalOnEnter(OnEnterHandler)
                 .Build();
         }
 
-        private void OnEnterHandler(StateMachine<AnimationState, PlayerAnimationTrigger>.TransitionInfo transition)
+        private void OnEnterHandler(TransitionInfo<AnimationState> transition)
         {
             var animation = _playerEntity.GetComponent<Animation>();
             animation.State = transition.CurrentState;
@@ -97,43 +96,43 @@ namespace MyGame.Game.ECS.Systems
                 _lastKeyboardState = keyboardEvent.KeyboardState;
                 if (keyboardEvent.ReleasedKeys.Contains(InputConstants.Left))
                 {
-                    _playerStateMachine.Trigger(PlayerAnimationTrigger.LeftReleased);
+                    _playerStateMachine.Trigger(playerState, PlayerAnimationTrigger.LeftReleased);
                 }
                 if (keyboardEvent.ReleasedKeys.Contains(InputConstants.Right))
                 {
-                    _playerStateMachine.Trigger(PlayerAnimationTrigger.RightReleased);
+                    _playerStateMachine.Trigger(playerState, PlayerAnimationTrigger.RightReleased);
                 }
                 if (keyboardEvent.ReleasedKeys.Contains(InputConstants.Up))
                 {
-                    _playerStateMachine.Trigger(PlayerAnimationTrigger.UpReleased);
+                    _playerStateMachine.Trigger(playerState, PlayerAnimationTrigger.UpReleased);
                 }
                 if (keyboardEvent.ReleasedKeys.Contains(InputConstants.Down))
                 {
-                    _playerStateMachine.Trigger(PlayerAnimationTrigger.DownReleased);
+                    _playerStateMachine.Trigger(playerState, PlayerAnimationTrigger.DownReleased);
                 }
 
                 if (keyboardEvent.KeyboardState.IsKeyDown(InputConstants.Left))
                 {
-                    _playerStateMachine.Trigger(PlayerAnimationTrigger.LeftPressed);
+                    _playerStateMachine.Trigger(playerState, PlayerAnimationTrigger.LeftPressed);
                 }
                 if (keyboardEvent.KeyboardState.IsKeyDown(InputConstants.Right))
                 {
-                    _playerStateMachine.Trigger(PlayerAnimationTrigger.RightPressed);
+                    _playerStateMachine.Trigger(playerState, PlayerAnimationTrigger.RightPressed);
                 }
                 if (keyboardEvent.KeyboardState.IsKeyDown(InputConstants.Up))
                 {
-                    _playerStateMachine.Trigger(PlayerAnimationTrigger.UpPressed);
+                    _playerStateMachine.Trigger(playerState, PlayerAnimationTrigger.UpPressed);
                 }
                 if (keyboardEvent.KeyboardState.IsKeyDown(InputConstants.Down))
                 {
-                    _playerStateMachine.Trigger(PlayerAnimationTrigger.DownPressed);
+                    _playerStateMachine.Trigger(playerState, PlayerAnimationTrigger.DownPressed);
                 }
 
 
                 // TODO remove later
                 if (keyboardEvent.PressedKeys.Contains(Keys.K))
                 {
-                    _playerStateMachine.Trigger(PlayerAnimationTrigger.Died);
+                    _playerStateMachine.Trigger(playerState, PlayerAnimationTrigger.Died);
                 }
 
                 return true;
@@ -142,7 +141,7 @@ namespace MyGame.Game.ECS.Systems
             {
                 if (mouseEvent.MouseState.LeftButton == ButtonState.Pressed)
                 {
-                    _playerStateMachine.Trigger(PlayerAnimationTrigger.AttackPressed);
+                    _playerStateMachine.Trigger(playerState, PlayerAnimationTrigger.AttackPressed);
                 }
 
                 return true;
@@ -152,7 +151,7 @@ namespace MyGame.Game.ECS.Systems
 
         public override void Update(GameTime gameTime, ICollection<EcsEntity> entities)
         {
-            _playerStateMachine.Update(gameTime.ElapsedGameTime);
+            _playerStateMachine.Update(playerState, gameTime.ElapsedGameTime);
 
             var playerAnim = _playerEntity.GetComponent<Animation>();
             if (playerAnim.IsMoving())
