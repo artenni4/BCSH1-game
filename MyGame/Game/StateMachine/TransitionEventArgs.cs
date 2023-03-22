@@ -1,18 +1,18 @@
 namespace MyGame.Game.StateMachine
 {
-    internal class TransitionInfo<T>
+    internal class TransitionEventArgs<TState> : EventArgs
     {
         /// <summary>
         /// State that was preceeding current state
         /// </summary>
-        public T PreviousState { get; }
+        public TState PreviousState { get; }
 
         /// <summary>
         /// Current state of FSM
         /// </summary>
-        public T CurrentState { get; }
+        public TState CurrentState { get; }
 
-        public TransitionInfo(T previousState, T currentState)
+        public TransitionEventArgs(TState previousState, TState currentState)
         {
             PreviousState = previousState;
             CurrentState = currentState;

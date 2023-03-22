@@ -5,6 +5,6 @@
         Other,
         InputEvent,
         GameEvent,
-        // i hope others like NetworkEvent will also be added eventually
+        // Maybe consider NetworkEvent in the future
     }
 }

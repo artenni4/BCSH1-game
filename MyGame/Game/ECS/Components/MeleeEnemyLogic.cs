@@ -11,7 +11,6 @@ namespace MyGame.Game.ECS.Components
         /// </summary>
         public float Speed { get; set; }
 
-        public FsmState<AiState> State { get; set; }
-        public static StateMachine<AiState, AiStateTrigger> StateMachine { get; set; }
+        public IFiniteStateMachine<AiState> StateMachine { get; set; }
     }
 }

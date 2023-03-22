@@ -13,6 +13,8 @@ using MyGame.Game.StateMachine;
 using MyGame.Game.Configuration;
 using MyGame.Game.Constants;
 using Microsoft.Extensions.Logging;
+using MyGame.Game.ECS.Components.Animation;
+using MyGame.Game.Animators;
 
 namespace MyGame.Game.Scenes
 {
@@ -38,24 +40,7 @@ namespace MyGame.Game.Scenes
             playerBox.Box = new Rectangle(19, 23, 12, 17);
 
             playerAnimation = player.AddComponent<Animation>();
-            playerAnimation.IsPlaying = true;
-            playerAnimation.IsCycled = true;
-            playerAnimation.Frames = AnimationHelper.GenerateBoundsForAnimationAtlas(0, 0, 48, 48, 10, 6, 6, 6, 6, 6, 6, 4, 4, 4, 3);
-            playerAnimation.MapState = state => state switch
-            {
-                AnimationState.None or AnimationState.IdleDown => 0,
-                AnimationState.IdleRight or AnimationState.IdleLeft => 1,
-                AnimationState.IdleUp => 2,
-                AnimationState.WalkDown => 3,
-                AnimationState.WalkRight or AnimationState.WalkLeft => 4,
-                AnimationState.WalkUp => 5,
-                AnimationState.AttackDown => 6,
-                AnimationState.AttackRight or AnimationState.AttackLeft => 7,
-                AnimationState.AttackUp => 8,
-                AnimationState.DeathRight or AnimationState.DeathLeft => 9,
-                _ => throw new ApplicationException("Bad animation _value mapping"),
-            };
-            playerAnimation.Speed = 7f;
+            playerAnimation.Animator = new PlayerAnimator();
             player.AddComponent<Player>().Speed = 100f;
             Entities.Add(player);
 
@@ -68,40 +53,18 @@ namespace MyGame.Game.Scenes
             slimeBox.Box = new Rectangle(10, 13, 13, 10);
 
             slimeAnimation = slime.AddComponent<Animation>();
-            slimeAnimation.IsPlaying = true;
-            slimeAnimation.IsCycled = true;
-            slimeAnimation.Frames = AnimationHelper.GenerateBoundsForAnimationAtlas(0, 0, 32, 32, 5, 4, 6, 7, 3, 5);
-            slimeAnimation.IsMovingCallback = anim =>
-            {
-                if (anim.State == AnimationState.Walk)
-                {
-                    int fi = anim.GetFramesIndex();
-                    return fi >= 1 && fi <= 4;
-                }
-                return false;
-            };
-            slimeAnimation.MapState = state => state switch
-            {
-                AnimationState.None or AnimationState.Idle => 0,
-                AnimationState.Walk => 1,
-                AnimationState.Attack => 2,
-                AnimationState.Hurt => 3,
-                AnimationState.Death => 4,
-                _ => throw new ApplicationException("Bad animation _value mapping"),
-            };
-            slimeAnimation.Speed = 7f;
+            slimeAnimation.Animator = new SlimeAnimator();
 
-            MeleeEnemyLogic.StateMachine = new StateMachine<AiState, AiStateTrigger>.Builder()
-                .State(AiState.WalkAround)
-                    .TransitionTo(AiState.ChasePlayer).OnTrigger(AiStateTrigger.PlayerDetected)
-                .State(AiState.ChasePlayer)
-                    .TransitionTo(AiState.WalkAround).OnTrigger(AiStateTrigger.PlayerLost)
-                .Build();
             var slimeDetector = slime.AddComponent<PlayerDetector>();
             slimeDetector.Player = player;
             slimeDetector.MaxDistanceToTarget = 100f;
             var slimeLogic = slime.AddComponent<MeleeEnemyLogic>();
-            slimeLogic.State = AiState.WalkAround;
+            slimeLogic.StateMachine = new StateMachineBuilder<AiState>()
+                .State(AiState.WalkAround)
+                    .TransitionTo(AiState.ChasePlayer).OnTrigger(AiTriggers.PlayerDetected)
+                .State(AiState.ChasePlayer)
+                    .TransitionTo(AiState.WalkAround).OnTrigger(AiTriggers.PlayerLost)
+                .BuildStateMachine(AiState.WalkAround);
             slimeLogic.Speed = 40f;
             Entities.Add(slime);
 
@@ -121,8 +84,8 @@ namespace MyGame.Game.Scenes
             var eventSystem = new EventSystem(loggerFactory.CreateLogger<EventSystem>());
             var aiController = new AiController();
             var characterHandler = new CharacterController(player);
-            eventSystem.PushHandler(characterHandler);
             eventSystem.PushHandler(aiController);
+            eventSystem.PushHandler(characterHandler);
 
             Systems.Add(new Renderer(graphicsDevice, configuration));
             Systems.Add(new AiDetectionSystem(eventSystem));

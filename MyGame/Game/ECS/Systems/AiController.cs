@@ -1,5 +1,7 @@
-﻿using MyGame.Game.Constants.Enums;
+﻿using MyGame.Game.Constants;
+using MyGame.Game.Constants.Enums;
 using MyGame.Game.ECS.Components;
+using MyGame.Game.ECS.Components.Animation;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using System.Linq;
@@ -16,11 +18,11 @@ namespace MyGame.Game.ECS.Systems
                 {
                     if (detectionEvent.IsDetected)
                     {
-                        MeleeEnemyLogic.StateMachine.Trigger(meleeEnemy.State, AiStateTrigger.PlayerDetected);
+                        meleeEnemy.StateMachine.SetTrigger(AiTriggers.PlayerDetected);
                     }
                     else if (detectionEvent.IsLost)
                     {
-                        MeleeEnemyLogic.StateMachine.Trigger(meleeEnemy.State, AiStateTrigger.PlayerLost);
+                        meleeEnemy.StateMachine.SetTrigger(AiTriggers.PlayerLost);
                     }
                 }
 
@@ -36,18 +38,14 @@ namespace MyGame.Game.ECS.Systems
                 var transform = entity.GetComponent<Transform>();
                 if (entity.TryGetComponent<MeleeEnemyLogic>(out var meleeEnemy) && entity.TryGetComponent<PlayerDetector>(out var detector))
                 {
-                    // NOTE maybe some way to separate logic from animation
-                    var hasAnimation = entity.TryGetComponent<Animation>(out var animation);
+                    var animator = entity.TryGetAnimator(out var _);
 
-                    if (meleeEnemy.State.Value == AiState.ChasePlayer)
+                    Vector2 direction = new();
+                    if (meleeEnemy.StateMachine.State == AiState.ChasePlayer)
                     {
-                        if (hasAnimation)
+                        direction = detector.Player.GetEntityCenter() - entity.GetEntityCenter();
+                        if (animator.GetFlag(AnimationFlags.IsMovable, true))
                         {
-                            animation.State = AnimationState.Walk;
-                        }
-                        if (hasAnimation && animation.IsMoving() || !hasAnimation)
-                        {
-                            var direction = detector.Player.GetEntityCenter() - entity.GetEntityCenter();
                             if (direction != Vector2.Zero)
                             {
                                 direction.Normalize();
@@ -55,13 +53,8 @@ namespace MyGame.Game.ECS.Systems
                             transform.Position += direction * meleeEnemy.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                         }
                     }
-                    else
-                    {
-                        if (hasAnimation)
-                        {
-                            animation.State = AnimationState.Idle;
-                        }
-                    }
+                    animator.StateMachine.SetParameter(AnimationKeys.XDirection, direction.X);
+                    animator.StateMachine.SetParameter(AnimationKeys.YDirection, direction.Y);
                 }
             }
         }

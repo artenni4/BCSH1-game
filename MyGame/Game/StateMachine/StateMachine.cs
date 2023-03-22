@@ -1,132 +1,81 @@
-﻿using System;
+﻿using MyGame.Game.StateMachine.Conditions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace MyGame.Game.StateMachine
 {
-    /// <summary>
-    /// General finite state machine (FSM) class for different purposes
-    /// </summary>
-    internal class StateMachine<TState, TTrigger>
+    internal class StateMachine<TState> : IFiniteStateMachine<TState>
     {
-        private readonly Dictionary<TState, Dictionary<TTrigger, TState>> _triggerTransitions = new();
-        private readonly Dictionary<TState, KeyValuePair<TimeSpan, TState>> _timeTransitions = new();
-        
+        protected readonly IDictionary<TState, ICollection<KeyValuePair<ICollection<ICondition>, TState>>> _transitionConditions;
 
+        protected readonly HashSet<string> _triggers = new();
+        protected readonly Dictionary<string, object> _parameters = new();
 
-        //private TState _state;
-        //private TimeSpan stateSet;
-        ///// <summary>
-        ///// Current state of FSM
-        ///// </summary>
-        //public TState State
-        //{
-        //    get => _state;
-        //    private set
-        //    {
-        //        var prevState = _state;
-        //        _state = value;
-        //        stateSet = TimeSpan.Zero;
-        //        if (_stateOnEnter.TryGetValue(_state, out var onEnter))
-        //        {
-        //            onEnter(new TransitionInfo<TState>(prevState, _state));
-        //        }
-        //    }
-        //}
-
-        /// <summary>
-        /// Trigger some state change
-        /// </summary>
-        /// <param name="trigger">Tigger for change</param>
-        /// <exception cref="Exception">Exception thrown if trigger is set to change state to more than one defined state</exception>
-        public void Trigger(FsmState<TState> state, TTrigger trigger)
+        private TState _state;
+        public virtual TState State
         {
-            if (_triggerTransitions.TryGetValue(state.Value, out var transitions) && transitions.TryGetValue(trigger, out var nextState))
+            get => _state;
+            set
             {
-                state.Value = nextState;
+                var prevState = _state;
+                _state = value;
+                _triggers.Clear();
+                StateChanged?.Invoke(this, new TransitionEventArgs<TState>(prevState, _state));
             }
         }
 
-        /// <summary>
-        /// Updates FSM with time span, used to transit between states with time trigger
-        /// </summary>
-        /// <param name="timeSpan"></param>
-        public void Update(FsmState<TState> state, TimeSpan timeSpan)
+        public event EventHandler<TransitionEventArgs<TState>> StateChanged;
+
+        public StateMachine(IDictionary<TState, ICollection<KeyValuePair<ICollection<ICondition>, TState>>> transitionConditions, TState initialState)
         {
-            // handle all transitions that are triggered by time
-            state.Update(timeSpan);
-            if (_timeTransitions.TryGetValue(state.Value, out var transition) && state.TimeSet >= transition.Key)
+            if (!transitionConditions.Keys.Any(x => Equals(initialState, x)))
             {
-                state.Value = transition.Value;
+                throw new ArgumentException($"{nameof(initialState)} must be in state collection");
             }
+            _transitionConditions = transitionConditions;
+            _state = initialState;
         }
 
-        public class Builder : IStateBuilder, ITransitionBuilder
+        public virtual void SetTrigger(string trigger)
         {
-            private TState _currentState;
-            private TState _nextState;
-            private readonly StateMachine<TState, TTrigger> _machine;
+            _triggers.Add(trigger);
+            HandleStateChange();
+        }
 
-            public Builder()
-            {
-                _machine = new();
-            }
+        public virtual void SetParameter<T>(string name, T value)
+        {
+            _parameters[name] = value;
+            HandleStateChange();
+        }
 
-            /// <summary>
-            /// Rerurn built FSM
-            /// </summary>
-            public StateMachine<TState, TTrigger> Build()
+        protected void HandleStateChange()
+        {
+            if (_transitionConditions.TryGetValue(State, out var transitions))
             {
-                return _machine;
-            }
-
-            /// <summary>
-            /// Sets building state
-            /// </summary>
-            /// <param name="state">State instance</param>
-            /// <returns>State builder</returns>
-            public IStateBuilder State(TState state)
-            {
-                _currentState = state;
-                return this;
-            }
-
-            public ITransitionBuilder TransitionTo(TState nextState)
-            {
-                _nextState = nextState;
-                return this;
-            }
-
-            public Builder OnTrigger(TTrigger trigger)
-            {
-                if (_machine._triggerTransitions.TryGetValue(_currentState, out var collection))
+                foreach (var transition in transitions)
                 {
-                    collection[trigger] = _nextState;
+                    bool allPassed = transition.Key.All(condition =>
+                    {
+                        if (condition.IsTrigger)
+                        {
+                            return _triggers.Contains(condition.Name);
+                        }
+                        else if (_parameters.TryGetValue(condition.Name, out var parameter))
+                        {
+                            return condition.CheckCondition(parameter);
+                        }
+                        return false;
+                    });
+
+                    if (allPassed)
+                    {
+                        State = transition.Value;
+                        break;
+                    }
                 }
-                else
-                {
-                    _machine._triggerTransitions.Add(_currentState, new Dictionary<TTrigger, TState>() { { trigger, _nextState } });
-                }
-                return this;
             }
-
-            public Builder After(TimeSpan timeSpan)
-            {
-                _machine._timeTransitions[_currentState] = new(timeSpan, _nextState);
-                return this;
-            }
-        }
-
-        public interface IStateBuilder
-        {
-            ITransitionBuilder TransitionTo(TState nextState);
-        }
-
-        public interface ITransitionBuilder
-        {
-            Builder OnTrigger(TTrigger trigger);
-            Builder After(TimeSpan timeSpan);
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using MyGame.Game.ECS;
+﻿using MyGame.Game.ECS.Components.Animation;
+using MyGame.Game.StateMachine;
+using MyGame.Game.ECS;
 using MyGame.Game.ECS.Components;
 
 namespace MyGame.Game.Helpers
 {
-    internal static class EntityHelper
+    internal static class GameplayHelper
     {
         public static Vector2 GetEntityCenter(this EcsEntity entity)
         {

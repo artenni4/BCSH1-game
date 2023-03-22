@@ -2,6 +2,7 @@
 using MyGame.Game.Configuration;
 using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
+using MyGame.Game.ECS.Components.Animation;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -67,6 +68,7 @@ namespace MyGame.Game.ECS.Systems
                 // TODO fix Y axis invertion
                 var position = new Vector2(transform.Position.X, -transform.Position.Y); // invert Y pos for camera
 
+                // TODO extract debug to separate renderer
                 // debug box collider
                 if (_configuration.GetValue<bool>(ConfigurationConstants.ShowBoxColliders) && entity.TryGetComponent<BoxCollider>(out var boxCollider))
                 {
@@ -90,26 +92,12 @@ namespace MyGame.Game.ECS.Systems
 
                 if (entity.TryGetComponent<Animation>(out var animation))
                 {
-                    if (animation.IsPlaying)
-                    {
-                        animation.TimePlayed += gameTime.ElapsedGameTime;
-                        var duration = animation.GetStateDuration(animation.State);
-                        if (animation.TimePlayed >= duration)
-                        {
-                            animation.TimePlayed -= duration;
-                        }
-                    }
-                    else
-                    {
-                        animation.TimePlayed = TimeSpan.Zero;
-                    }
+                    var animator = animation.Animator;
+                    animator.StateMachine.Update(gameTime.ElapsedGameTime);
+                    var animationData = animator.GetAnimationData();
 
-                    var bounds = animation.GetCurrentBound();
-                    var origin = Vector2.Zero; // new Vector2(bounds.Width / 2f, bounds.Height / 2f); 
-                    var spriteEffect = animation.State.GetSpriteEffect();
-
-                    _spriteBatch.Draw(animation.Texture2D, position, bounds, Color.White, transform.Rotation,
-                        origin, transform.Scale, spriteEffect, transform.ZIndex);
+                    _spriteBatch.Draw(animation.Texture2D, position, animationData.Bounds, Color.White, transform.Rotation,
+                        animationData.Origin, transform.Scale, animationData.SpriteEffects, transform.ZIndex);
                 }
             }
             _spriteBatch.End();
