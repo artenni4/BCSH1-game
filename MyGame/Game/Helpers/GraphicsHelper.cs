@@ -1,4 +1,5 @@
-﻿using MyGame.Game.ECS;
+﻿using MyGame.Game.Constants;
+using MyGame.Game.ECS;
 using MyGame.Game.ECS.Components.Animation;
 using MyGame.Game.StateMachine;
 using System;
@@ -107,6 +108,12 @@ namespace MyGame.Game.Helpers
             }
             isEmpty = false;
             return _emptyAnimator;
+        }
+
+        public static void SetDirectionVector(this IAnimator animator, Vector2 direction)
+        {
+            animator.StateMachine.SetParameter(AnimationKeys.XDirection, direction.X);
+            animator.StateMachine.SetParameter(AnimationKeys.YDirection, direction.Y);
         }
         #endregion
 

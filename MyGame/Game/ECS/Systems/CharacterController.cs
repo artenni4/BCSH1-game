@@ -1,16 +1,9 @@
-﻿using Microsoft.Xna.Framework;
-using MyGame.Game.Constants;
-using MyGame.Game.StateMachine;
-using MyGame.Game.Constants.Enums;
+﻿using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
-using MyGame.Game.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MyGame.Game.ECS.Systems
 {
@@ -33,19 +26,18 @@ namespace MyGame.Game.ECS.Systems
                 return false;
             }
 
-            var animationStateMachine = animation.Animator.StateMachine;
+            var animator = animation.Animator;
 
             if (@event is KeyboardEvent keyboardEvent)
             {
                 _lastKeyboardState = keyboardEvent.KeyboardState;
                 var input = InputHelper.GetInputAxisNormalized(_lastKeyboardState);
-                animationStateMachine.SetParameter(AnimationKeys.XDirection, input.X);
-                animationStateMachine.SetParameter(AnimationKeys.YDirection, input.Y);
+                animation.Animator.SetDirectionVector(input);
 
                 // TODO remove later
                 if (keyboardEvent.PressedKeys.Contains(Keys.K))
                 {
-                    animationStateMachine.SetParameter(AnimationKeys.IsDead, true);
+                    animator.StateMachine.SetParameter(AnimationKeys.IsDead, true);
                 }
 
                 return true;
@@ -54,7 +46,7 @@ namespace MyGame.Game.ECS.Systems
             {
                 if (mouseEvent.MouseState.LeftButton == ButtonState.Pressed)
                 {
-                    animationStateMachine.SetTrigger(AnimationKeys.AttackTrigger);
+                    animator.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
                 }
 
                 return true;

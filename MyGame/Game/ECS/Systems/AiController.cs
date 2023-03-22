@@ -43,18 +43,14 @@ namespace MyGame.Game.ECS.Systems
                     Vector2 direction = new();
                     if (meleeEnemy.StateMachine.State == AiState.ChasePlayer)
                     {
-                        direction = detector.Player.GetEntityCenter() - entity.GetEntityCenter();
+                        direction = (detector.Player.GetEntityCenter() - entity.GetEntityCenter()).GetNormalized();
+
                         if (animator.GetFlag(AnimationFlags.IsMovable, true))
                         {
-                            if (direction != Vector2.Zero)
-                            {
-                                direction.Normalize();
-                            }
                             transform.Position += direction * meleeEnemy.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                         }
                     }
-                    animator.StateMachine.SetParameter(AnimationKeys.XDirection, direction.X);
-                    animator.StateMachine.SetParameter(AnimationKeys.YDirection, direction.Y);
+                    animator.SetDirectionVector(direction);
                 }
             }
         }

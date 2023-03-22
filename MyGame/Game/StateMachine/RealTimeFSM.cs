@@ -28,14 +28,37 @@ namespace MyGame.Game.StateMachine
             }
         }
 
-        public void Update(TimeSpan elapsedTime)
+        public override void SetParameter<T>(string name, T value)
         {
-            StateSetTime += elapsedTime;
-            if (!State.IsInterruptible && State.Duration < StateSetTime)
+            _parameters[name] = value;
+            if (!State.IsInterruptible && StateSetTime < State.Duration)
             {
                 return;
             }
+            HandleStateChange();
+        }
 
+        public override void SetTrigger(string trigger)
+        {
+            _triggers.Add(trigger);
+            if (!State.IsInterruptible && StateSetTime < State.Duration)
+            {
+                return;
+            }
+            HandleStateChange();
+        }
+
+        public void Update(TimeSpan elapsedTime)
+        {
+            StateSetTime += elapsedTime;
+            if (!State.IsInterruptible && StateSetTime < State.Duration)
+            {
+                return;
+            }
+            else if (StateSetTime > State.Duration) // loop state set time if is bigger than duration 
+            {
+                StateSetTime = TimeSpan.FromTicks(StateSetTime.Ticks % State.Duration.Ticks);
+            }
             HandleStateChange();
         }
     }

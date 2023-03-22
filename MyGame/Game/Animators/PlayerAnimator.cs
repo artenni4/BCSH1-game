@@ -48,8 +48,8 @@ namespace MyGame.Game.Animators
             AnimationNode AttackUpNode       = new((int)PlayerAnimation.AttackUp, _frames, false);
             AnimationNode AttackDownNode     = new((int)PlayerAnimation.AttackDown, _frames, false);
 
-            AnimationNode DeadRightNode      = new((int)PlayerAnimation.DeadRight, _frames, false);
-            AnimationNode DeadLeftNode       = new((int)PlayerAnimation.DeadRight, _frames, false, SpriteEffects.FlipHorizontally);
+            AnimationNode DeadRightNode      = new((int)PlayerAnimation.DeadRight, _frames, false, IsCycled: false);
+            AnimationNode DeadLeftNode       = new((int)PlayerAnimation.DeadRight, _frames, false, SpriteEffects.FlipHorizontally, IsCycled: false);
 
             StateMachine = new StateMachineBuilder<AnimationNode>()
                 .State(IdleRightNode)

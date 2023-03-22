@@ -30,8 +30,8 @@ namespace MyGame.Game.Animators
             AnimationNode IdleRightNode      = new((int)SlimeAnimation.IdleRight, _frames, true);
             AnimationNode IdleLeftNode       = new((int)SlimeAnimation.IdleRight, _frames, true, SpriteEffects.FlipHorizontally);
 
-            AnimationNode MoveRightNode      = new((int)SlimeAnimation.MoveRight, _frames, true);
-            AnimationNode MoveLeftNode       = new((int)SlimeAnimation.MoveRight, _frames, true, SpriteEffects.FlipHorizontally);
+            AnimationNode MoveRightNode      = new((int)SlimeAnimation.MoveRight, _frames, false);
+            AnimationNode MoveLeftNode       = new((int)SlimeAnimation.MoveRight, _frames, false, SpriteEffects.FlipHorizontally);
 
             AnimationNode AttackRightNode    = new((int)SlimeAnimation.AttackRight, _frames, false);
             AnimationNode AttackLeftNode     = new((int)SlimeAnimation.AttackRight, _frames, false, SpriteEffects.FlipHorizontally);
@@ -39,8 +39,8 @@ namespace MyGame.Game.Animators
             AnimationNode HurtRightNode      = new((int)SlimeAnimation.HurtRight, _frames, false);
             AnimationNode HurtLeftNode       = new((int)SlimeAnimation.HurtRight, _frames, false, SpriteEffects.FlipHorizontally);
 
-            AnimationNode DeadRightNode      = new((int)SlimeAnimation.DeadRight, _frames, false);
-            AnimationNode DeadLeftNode       = new((int)SlimeAnimation.DeadRight, _frames, false, SpriteEffects.FlipHorizontally);
+            AnimationNode DeadRightNode      = new((int)SlimeAnimation.DeadRight, _frames, false, IsCycled: false);
+            AnimationNode DeadLeftNode       = new((int)SlimeAnimation.DeadRight, _frames, false, SpriteEffects.FlipHorizontally, IsCycled: false);
 
             StateMachine = new StateMachineBuilder<AnimationNode>()
                 .State(IdleRightNode)
@@ -58,25 +58,31 @@ namespace MyGame.Game.Animators
 
                 .State(MoveRightNode)
                     .TransitionTo(IdleRightNode).OnEquals(AnimationKeys.XDirection, 0f)
+                    .TransitionTo(MoveLeftNode).OnLessThan(AnimationKeys.XDirection, 0f)
                     .TransitionTo(AttackRightNode).OnTrigger(AnimationKeys.AttackTrigger)
                     .TransitionTo(HurtRightNode).OnTrigger(AnimationKeys.HurtTrigger)
                     .TransitionTo(DeadRightNode).OnEquals(AnimationKeys.IsDead, true)
                 .State(MoveLeftNode)
                     .TransitionTo(IdleLeftNode).OnEquals(AnimationKeys.XDirection, 0f)
+                    .TransitionTo(MoveRightNode).OnGreaterThan(AnimationKeys.XDirection, 0f)
                     .TransitionTo(AttackLeftNode).OnTrigger(AnimationKeys.AttackTrigger)
                     .TransitionTo(HurtLeftNode).OnTrigger(AnimationKeys.HurtTrigger)
                     .TransitionTo(DeadLeftNode).OnEquals(AnimationKeys.IsDead, true)
 
                 .State(AttackRightNode)
                     .TransitionTo(HurtRightNode).OnTrigger(AnimationKeys.HurtTrigger)
+                    .TransitionTo(DeadRightNode).OnEquals(AnimationKeys.IsDead, true)
                     .TransitionTo(IdleRightNode)
                 .State(AttackLeftNode)
                     .TransitionTo(HurtLeftNode).OnTrigger(AnimationKeys.HurtTrigger)
+                    .TransitionTo(DeadLeftNode).OnEquals(AnimationKeys.IsDead, true)
                     .TransitionTo(IdleLeftNode)
 
                 .State(HurtRightNode)
+                    .TransitionTo(DeadRightNode).OnEquals(AnimationKeys.IsDead, true)
                     .TransitionTo(IdleRightNode)
                 .State(HurtLeftNode)
+                    .TransitionTo(DeadLeftNode).OnEquals(AnimationKeys.IsDead, true)
                     .TransitionTo(IdleLeftNode)
 
                 .State(DeadRightNode)

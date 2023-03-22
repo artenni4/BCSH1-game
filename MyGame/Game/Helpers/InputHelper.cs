@@ -1,4 +1,5 @@
 ﻿using MyGame.Game.Constants;
+using System.Runtime.CompilerServices;
 
 namespace MyGame.Game.Helpers
 {
@@ -15,14 +16,15 @@ namespace MyGame.Game.Helpers
             return new Vector2(x, y);
         }
 
-        public static Vector2 GetInputAxisNormalized(KeyboardState keyboardState)
+        public static Vector2 GetInputAxisNormalized(KeyboardState keyboardState) => GetInputAxis(keyboardState).GetNormalized();
+
+        public static Vector2 GetNormalized(this Vector2 vector)
         {
-            var result = GetInputAxis(keyboardState);
-            if (result != Vector2.Zero)
+            if (vector != Vector2.Zero)
             {
-                result.Normalize();
+                vector.Normalize();
             }
-            return result;
+            return vector;
         }
     }
 }
