@@ -15,7 +15,6 @@ namespace MyGame.Game.ECS.Entities
 
         public Transform Transform { get; }
         public BoxCollider BoxCollider { get; }
-
         public Animation Animation { get; }
 
         public PlayerEntity()

@@ -29,7 +29,6 @@ namespace MyGame.Game.Scenes
             configuration.SetValue(ConfigurationConstants.ShowBoxColliders, true);
             configuration.SetValue(ConfigurationConstants.ShowAiDebug, true);
 
-            // add systems
             var loggerFactory = LoggerFactory.Create(config =>
             {
                 config.SetMinimumLevel(LogLevel.Trace);
@@ -52,13 +51,14 @@ namespace MyGame.Game.Scenes
 
             var eventSystem = new EventSystem(loggerFactory.CreateLogger<EventSystem>());
 
+            // add systems
             AddSystems(
                 new Renderer(graphicsDevice, this, configuration), 
                 new AiDetectionSystem(this, eventSystem),
                 new InputSystem(eventSystem),
                 new FightSystem(this, eventSystem),
                 new SlimeController(this, eventSystem),
-                new CharacterController(this, eventSystem));
+                new PlayerController(this, eventSystem));
         }
     }
 }

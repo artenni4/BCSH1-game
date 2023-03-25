@@ -9,13 +9,13 @@ using System.Linq;
 
 namespace MyGame.Game.ECS.Systems
 {
-    internal class CharacterController : EcsSystem, IEventHandler
+    internal class PlayerController : EcsSystem, IEventHandler
     {
         private readonly PlayerEntity _playerEntity;
         private readonly IEventSystem _eventSystem;
         private KeyboardState _lastKeyboardState;
 
-        public CharacterController(IEntityCollection entityCollection, IEventSystem eventSystem)
+        public PlayerController(IEntityCollection entityCollection, IEventSystem eventSystem)
         {
             _playerEntity = entityCollection.GetEntityOfType<PlayerEntity>();
             _eventSystem = eventSystem;
@@ -75,7 +75,6 @@ namespace MyGame.Game.ECS.Systems
             return animState == PlayerAnimator.PlayerAnimation.WalkDown || 
                 animState == PlayerAnimator.PlayerAnimation.WalkRight || 
                 animState == PlayerAnimator.PlayerAnimation.WalkUp;
-
         }
     }
 }

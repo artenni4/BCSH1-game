@@ -58,7 +58,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\KeyboardEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\MouseEvent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\CharacterController.cs" />
+    <Compile Include="..\MyGame\Game\ECS\Systems\PlayerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\EventBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventHandler.cs" />
