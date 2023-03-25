@@ -1,31 +1,35 @@
-﻿using MyGame.Game.Constants;
-using MyGame.Game.ECS.Components;
+﻿using MyGame.Game.Animators;
+using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components.Animation;
+using MyGame.Game.ECS.Entities;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
+using MyGame.Game.Scenes;
 using System.Linq;
 
 namespace MyGame.Game.ECS.Systems
 {
-    
-
     internal class CharacterController : EcsSystem, IEventHandler
     {
-        private readonly EcsEntity _playerEntity;
+        private readonly PlayerEntity _playerEntity;
+        private readonly IEventSystem _eventSystem;
         private KeyboardState _lastKeyboardState;
 
-        public CharacterController(EcsEntity playerEntity)
+        public CharacterController(IEntityCollection entityCollection, IEventSystem eventSystem)
         {
-            _playerEntity = playerEntity;
+            _playerEntity = entityCollection.GetEntityOfType<PlayerEntity>();
+            _eventSystem = eventSystem;
+            _eventSystem.PushHandler(this);
         }
 
         public bool OnEvent<T>(object sender, T @event) where T : EventBase
         {
-            if (@event.EventGroup != EventGroup.InputEvent || !_playerEntity.TryGetComponent<Animation>(out var animation))
+            if (@event.EventGroup != EventGroup.InputEvent)
             {
                 return false;
             }
 
+            var animation = _playerEntity.Animation;
             var animator = animation.Animator;
 
             if (@event is KeyboardEvent keyboardEvent)
@@ -47,6 +51,7 @@ namespace MyGame.Game.ECS.Systems
                 if (mouseEvent.MouseState.LeftButton == ButtonState.Pressed)
                 {
                     animator.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
+                    _eventSystem.SendEvent(this, new PlayerAttackEvent(mouseEvent.GameTime, _playerEntity));
                 }
 
                 return true;
@@ -54,17 +59,23 @@ namespace MyGame.Game.ECS.Systems
             return false;
         }
 
-        public override void Update(GameTime gameTime, ICollection<EcsEntity> entities)
+        public override void Update(GameTime gameTime)
         {
-            var animator = _playerEntity.TryGetAnimator(out var _);
-            if (animator.GetFlag(AnimationFlags.IsMovable, true))
+            var animator = _playerEntity.Animation.Animator;
+            if (IsMovable(animator))
             {
-                var playerComponent = _playerEntity.GetComponent<Player>();
-                var playerTransform = _playerEntity.GetComponent<Transform>();
-
                 var input = InputHelper.GetInputAxisNormalized(_lastKeyboardState);
-                playerTransform.Position += input * playerComponent.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _playerEntity.Transform.Position += input * _playerEntity.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
+        }
+
+        private static bool IsMovable(IAnimator animator)
+        {
+            var animState = (PlayerAnimator.PlayerAnimation)animator.StateMachine.State.AnimationState;
+            return animState == PlayerAnimator.PlayerAnimation.WalkDown || 
+                animState == PlayerAnimator.PlayerAnimation.WalkRight || 
+                animState == PlayerAnimator.PlayerAnimation.WalkUp;
+
         }
     }
 }

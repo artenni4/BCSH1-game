@@ -20,6 +20,6 @@
         /// <summary>
         /// Describes third dimension position (depth) in 2D world
         /// </summary>
-        public float ZIndex { get; set; }
+        public float ZIndex { get; set; } // TODO make more convenient way to express z index, for example with enum Foreground, Background...
     }
 }

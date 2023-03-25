@@ -2,11 +2,18 @@
 using MyGame.Game.StateMachine;
 using MyGame.Game.ECS;
 using MyGame.Game.ECS.Components;
+using MyGame.Game.Scenes;
+using System.Linq;
+using MyGame.Game.ECS.Entities;
 
 namespace MyGame.Game.Helpers
 {
     internal static class GameplayHelper
     {
+        public static IEnumerable<T> GetEntitiesOfType<T>(this IEntityCollection entityCollection) => entityCollection.Entities.OfType<T>();
+
+        public static T GetEntityOfType<T>(this IEntityCollection entityCollection) => GetEntitiesOfType<T>(entityCollection).FirstOrDefault();
+
         public static Vector2 GetEntityCenter(this EcsEntity entity)
         {
             if (entity.TryGetComponent<Transform>(out var transform))

@@ -6,11 +6,9 @@ namespace MyGame.Game.ECS.Components
 {
     internal class PlayerDetector : EcsComponent
     {
-        public EcsEntity Player { get; set; }
-
         /// <summary>
-        /// Describes the threshold when entity starts to move towards player
+        /// Distance to target when slime starts to chase it and attack
         /// </summary>
-        public float MaxDistanceToTarget { get; set; }
+        public float DetectionRadius { get; set; }
     }
 }

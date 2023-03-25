@@ -3,6 +3,8 @@ using MyGame.Game.Configuration;
 using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
+using MyGame.Game.ECS.Entities;
+using MyGame.Game.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -18,33 +20,27 @@ namespace MyGame.Game.ECS.Systems
     internal class Renderer : EcsSystem
     {
         private readonly IConfiguration _configuration;
+        private readonly IEntityCollection _entityCollection;
         private readonly GraphicsDevice _graphicsDevice;
         private readonly SpriteBatch _spriteBatch;
 
         private const float virtualWidth = 384f;
         private const float virtualHeight = 216f;
 
-        public Renderer(GraphicsDevice graphicsDevice, IConfiguration configuration)
+        public Renderer(GraphicsDevice graphicsDevice, IEntityCollection entityCollection, IConfiguration configuration)
         {
             _configuration = configuration;
+            _entityCollection = entityCollection;
             _graphicsDevice = graphicsDevice;
             _spriteBatch = new SpriteBatch(_graphicsDevice);
         }
 
-        public override void Draw(GameTime gameTime, ICollection<EcsEntity> entities)
+        public override void Draw(GameTime gameTime)
         {
             _graphicsDevice.Clear(Color.Wheat);
             
             // find camera
-            EcsEntity cameraEntity = null;
-            try
-            {
-                cameraEntity = entities.SingleOrDefault(e => e.ContainsComponent<TopDownCamera>());
-            }
-            catch (InvalidOperationException) 
-            {
-                throw new ArgumentException("Cannot render while 2 or more cameras exist");
-            }
+            CameraEntity cameraEntity = _entityCollection.GetEntityOfType<CameraEntity>();
 
             if (cameraEntity is null)
             {
@@ -62,7 +58,7 @@ namespace MyGame.Game.ECS.Systems
 
             // NOTE: SamplerState.PointClamp - pixelates textures on scale
             _spriteBatch.Begin(sortMode: SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp, transformMatrix: cameraMatrix);
-            foreach (var entity in entities.Where(e => e.ContainsComponent<Transform>()))
+            foreach (var entity in _entityCollection.Entities.Where(e => e.ContainsComponent<Transform>()))
             {
                 var transform = entity.GetComponent<Transform>();
                 // TODO fix Y axis invertion
@@ -78,8 +74,14 @@ namespace MyGame.Game.ECS.Systems
                 // debug ai intention
                 if (_configuration.GetValue<bool>(ConfigurationConstants.ShowAiDebug) && entity.TryGetComponent<PlayerDetector>(out var playerDetector))
                 {
+                    var player = _entityCollection.GetEntityOfType<PlayerEntity>();
+                    if (player is null)
+                    {
+                        return;
+                    }
+
                     var entityPos = entity.GetEntityCenter();
-                    var playerPos = playerDetector.Player.GetEntityCenter();
+                    var playerPos = player.GetEntityCenter();
 
                     _spriteBatch.DrawLine(new Vector2(entityPos.X, -entityPos.Y), new Vector2(playerPos.X, -playerPos.Y), Color.Red, 1);
                 }

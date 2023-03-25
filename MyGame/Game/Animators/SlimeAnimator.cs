@@ -14,7 +14,7 @@ namespace MyGame.Game.Animators
         private readonly Rectangle[][] _frames;
 
         //define names for animations
-        private enum SlimeAnimation
+        public enum SlimeAnimation
         {
             IdleRight,
             MoveRight,
@@ -98,21 +98,6 @@ namespace MyGame.Game.Animators
             var bound = animationFrames[frameIndex];
 
             return new AnimationData(bound, Vector2.Zero, animationNode.SpriteEffects);
-        }
-
-        public bool GetFlag(string name, bool @default)
-        {
-            if (name == AnimationFlags.IsMovable)
-            {
-                var animState = (SlimeAnimation)StateMachine.State.AnimationState;
-                if (animState == SlimeAnimation.MoveRight || animState == SlimeAnimation.AttackRight)
-                {
-                    int fi = StateMachine.GetFrameIndex();
-                    return fi >= 1 && fi <= 4;
-                }
-                return false;
-            }
-            return @default;
         }
     }
 }

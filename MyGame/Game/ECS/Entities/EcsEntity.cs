@@ -1,27 +1,32 @@
-﻿using MyGame.Game.ECS.Components;
+﻿using Microsoft.Xna.Framework.Content;
+using MyGame.Game.ECS.Components;
+using MyGame.Game.ECS.Systems.EventSystem;
+using MyGame.Game.ECS.Systems.EventSystem.Events;
 
-namespace MyGame.Game.ECS
+namespace MyGame.Game.ECS.Entities
 {
-    internal class EcsEntity
+    internal abstract class EcsEntity
     {
         /// <summary>
         /// Unique identifier of every entity
         /// </summary>
-        public Guid Id { get; private init; }
+        public Guid Id { get; }
 
         /// <summary>
         /// Components that are attached to the instance
         /// </summary>
         private readonly Dictionary<Type, EcsComponent> _components = new();
 
-        public EcsEntity()
-        {
-            Id = Guid.NewGuid();
-        }
+        public EcsEntity() : this(Guid.NewGuid()) { }
 
         public EcsEntity(Guid id)
         {
             Id = id;
+        }
+
+        public virtual void LoadContent(ContentManager contentManager)
+        {
+
         }
 
         public T GetComponent<T>() where T : EcsComponent

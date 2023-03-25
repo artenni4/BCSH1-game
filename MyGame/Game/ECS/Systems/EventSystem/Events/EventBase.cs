@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyGame.Game.ECS.Systems.EventSystem
+namespace MyGame.Game.ECS.Systems.EventSystem.Events
 {
     internal abstract class EventBase
     {

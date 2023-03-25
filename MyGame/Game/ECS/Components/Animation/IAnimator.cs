@@ -19,10 +19,5 @@ namespace MyGame.Game.ECS.Components.Animation
         /// to data needed for render
         /// </summary>
         AnimationData GetAnimationData();
-
-        /// <summary>
-        /// Gets flag from the animator, usually to extract some logic from animation
-        /// </summary>
-        bool GetFlag(string name, bool @default);
     }
 }

@@ -1,4 +1,5 @@
-﻿using MyGame.Game.ECS.Systems.EventSystem;
+﻿using MyGame.Game.ECS.Entities;
+using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace MyGame.Game.ECS.Systems
             _eventSystem = eventSystem;
         }
 
-        public override void Update(GameTime gameTime, ICollection<EcsEntity> entities)
+        public override void Update(GameTime gameTime)
         {
             // keyboard input
             var keyboardState = Keyboard.GetState();

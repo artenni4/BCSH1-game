@@ -17,8 +17,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\AnimationNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\IAnimator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\Animators\PlayerAnimator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerDetector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\CameraEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\PlayerEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SlimeEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)game\ecs\systems\eventsystem\events\PlayerAttackEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\FightSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\GraphicsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\StateMachineHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Scenes\IEntityCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Scenes\ISystemCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\StateMachine\Conditions\EqualsCondition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\StateMachine\Conditions\GreaterThanCondition.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\StateMachine\Conditions\ICondition.cs" />
@@ -39,23 +47,19 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\Configuration\IConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\ConfigurationConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\AiState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\AiStateTrigger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\BoxCollider.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerDetector.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\AiController.cs" />
+    <Compile Include="..\MyGame\Game\ECS\Systems\SlimeController.cs" />
     <Compile Include="..\MyGame\Game\ECS\Systems\EventSystem\Events\PlayerDetectionEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\InputSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\InputConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\Animation.cs" />
-    <Compile Include="..\MyGame\Game\ECS\Components\MeleeEnemyLogic.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Player.cs" />
     <Compile Include="..\MyGame\Game\ECS\Systems\AiDetectionSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EcsSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\KeyboardEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\MouseEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\CharacterController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\EventBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventSystem.cs" />
@@ -69,7 +73,7 @@
     <Compile Include="..\MyGame\Usings.cs" />
     <Compile Include="..\MyGame\Game\ECS\Components\Transform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\EcsComponent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\EcsEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\EcsEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />

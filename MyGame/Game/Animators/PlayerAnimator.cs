@@ -11,7 +11,7 @@ namespace MyGame.Game.Animators
         private readonly Rectangle[][] _frames;
 
         // define names for animations
-        private enum PlayerAnimation
+        public enum PlayerAnimation
         {
             IdleDown,
             IdleRight,
@@ -83,15 +83,23 @@ namespace MyGame.Game.Animators
 
                 .State(WalkRightNode)
                     .TransitionTo(IdleRightNode).OnEquals(AnimationKeys.XDirection, 0f)
+                    .TransitionTo(WalkLeftNode).OnLessThan(AnimationKeys.XDirection, 0f)
+                    .TransitionTo(WalkUpNode).OnGreaterThan(AnimationKeys.YDirection, 0f)
+                    .TransitionTo(WalkDownNode).OnLessThan(AnimationKeys.YDirection, 0f)
                     .TransitionTo(AttackRightNode).OnTrigger(AnimationKeys.AttackTrigger)
                 .State(WalkLeftNode)
                     .TransitionTo(IdleLeftNode).OnEquals(AnimationKeys.XDirection, 0f)
+                    .TransitionTo(WalkRightNode).OnGreaterThan(AnimationKeys.XDirection, 0f)
+                    .TransitionTo(WalkUpNode).OnGreaterThan(AnimationKeys.YDirection, 0f)
+                    .TransitionTo(WalkDownNode).OnLessThan(AnimationKeys.YDirection, 0f)
                     .TransitionTo(AttackLeftNode).OnTrigger(AnimationKeys.AttackTrigger)
                 .State(WalkUpNode)
                     .TransitionTo(IdleUpNode).OnEquals(AnimationKeys.YDirection, 0f)
+                    .TransitionTo(WalkDownNode).OnLessThan(AnimationKeys.YDirection, 0f)
                     .TransitionTo(AttackUpNode).OnTrigger(AnimationKeys.AttackTrigger)
                 .State(WalkDownNode)
                     .TransitionTo(IdleDownNode).OnEquals(AnimationKeys.YDirection, 0f)
+                    .TransitionTo(WalkUpNode).OnGreaterThan(AnimationKeys.YDirection, 0f)
                     .TransitionTo(AttackDownNode).OnTrigger(AnimationKeys.AttackTrigger)
 
                 .State(AttackLeftNode).TransitionTo(IdleLeftNode)
@@ -112,16 +120,6 @@ namespace MyGame.Game.Animators
             var bound = animationFrames[frameIndex];
 
             return new AnimationData(bound, Vector2.Zero, animationNode.SpriteEffects);
-        }
-
-        public bool GetFlag(string name, bool @default)
-        {
-            if (name == AnimationFlags.IsMovable)
-            {
-                var animState = (PlayerAnimation)StateMachine.State.AnimationState;
-                return animState == PlayerAnimation.WalkDown || animState == PlayerAnimation.WalkRight || animState == PlayerAnimation.WalkUp;
-            }
-            return @default;
         }
     }
 }

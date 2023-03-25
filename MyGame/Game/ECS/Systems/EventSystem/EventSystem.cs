@@ -1,11 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using MyGame.Game.Configuration;
-using MyGame.Game.Constants;
-using MyGame.Game.Constants.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using MyGame.Game.ECS.Systems.EventSystem.Events;
 
 namespace MyGame.Game.ECS.Systems.EventSystem
 {

@@ -1,6 +1,7 @@
 ﻿using MyGame.Game.Constants;
 using MyGame.Game.ECS;
 using MyGame.Game.ECS.Components.Animation;
+using MyGame.Game.ECS.Entities;
 using MyGame.Game.StateMachine;
 using System;
 using System.Collections.Generic;
@@ -70,44 +71,6 @@ namespace MyGame.Game.Helpers
                 }
             }
             return frameIndex;
-        }
-
-        private static readonly IAnimator _emptyAnimator = new EmptyAnimator();
-        private class EmptyAnimator : IAnimator
-        {
-            private class EmptyStateMachine : IRealTimeFSM<AnimationNode>
-            {
-                public TimeSpan StateSetTime => default;
-
-                public AnimationNode State => default;
-
-                public event EventHandler<TransitionEventArgs<AnimationNode>> StateChanged { add { } remove { } }
-
-                public void SetParameter<T>(string name, T value) { }
-
-                public void SetTrigger(string trigger) { }
-
-                public void Update(TimeSpan elapsedTime) { }
-            }
-
-            private static readonly EmptyStateMachine _emptyStateMachine = new();
-
-            public IRealTimeFSM<AnimationNode> StateMachine => _emptyStateMachine;
-
-            public AnimationData GetAnimationData() => default;
-
-            public bool GetFlag(string name, bool @default) => @default;
-        }
-
-        public static IAnimator TryGetAnimator(this EcsEntity entity, out bool isEmpty)
-        {
-            if (entity.TryGetComponent<Animation>(out var animation))
-            {
-                isEmpty = false;
-                return animation.Animator;
-            }
-            isEmpty = false;
-            return _emptyAnimator;
         }
 
         public static void SetDirectionVector(this IAnimator animator, Vector2 direction)

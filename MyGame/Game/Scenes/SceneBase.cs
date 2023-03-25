@@ -1,55 +1,68 @@
 ﻿using Microsoft.Xna.Framework.Content;
-using MyGame.Game.ECS;
+using MyGame.Game.ECS.Entities;
 using MyGame.Game.ECS.Systems;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MyGame.Game.Scenes
 {
-    internal abstract class SceneBase
+    internal abstract class SceneBase : IEntityCollection, ISystemCollection
     {
         /// <summary>
         /// List of all entities incorporated on the scene
         /// </summary>
-        private readonly ICollection<EcsEntity> entities;
-
-        protected ICollection<EcsEntity> Entities => entities;
+        public ICollection<EcsEntity> Entities { get; }
 
         /// <summary>
         /// List of systems that scene executes
         /// </summary>
-        private readonly IList<EcsSystem> systems;
+        public ICollection<EcsSystem> Systems { get; }
 
-        protected IList<EcsSystem> Systems => systems;
+        public SceneBase()
+        {
+            Entities = new List<EcsEntity>();
+            Systems = new List<EcsSystem>();
+        }
+
+        public void AddEntities(params EcsEntity[] entities)
+        {
+            foreach (var entity in entities)
+            {
+                Entities.Add(entity);
+            }
+        }
+
+        public void AddSystems(params EcsSystem[] systems)
+        {
+            foreach(var system in systems)
+            {
+                Systems.Add(system);
+            }
+        }
 
         /// <summary>
         /// Load content for entities
         /// </summary>
-        public virtual void LoadContent(ContentManager content)
+        public virtual void LoadContent(ContentManager contentManager)
         {
-
+            foreach (var entity in Entities)
+            {
+                entity.LoadContent(contentManager);
+            }
         }
 
-        public SceneBase(GraphicsDeviceManager graphics)
-        {
-            entities = new List<EcsEntity>();
-            systems = new List<EcsSystem>();
-        }
 
         public void Draw(GameTime gameTime)
         {
-            foreach (var system in systems)
+            foreach (var system in Systems)
             {
-                system.Draw(gameTime, entities);
+                system.Draw(gameTime);
             }
         }
 
         public void Update(GameTime gameTime)
         {
-            foreach (var system in systems)
+            foreach (var system in Systems)
             {
-                system.Update(gameTime, entities);
+                system.Update(gameTime);
             }
         }
     }
