@@ -57,7 +57,15 @@ namespace MyGame.Game.ECS.Systems
         {
             // TODO handle animation and damage, maybe add some EntityStats component that will hold hp, mana, etc.
             var slime = (SlimeEntity)damageEvent.Damaged;
-            slime.Animation.Animator.StateMachine.SetTrigger(AnimationKeys.HurtTrigger);
+            slime.HealthPoints -= damageEvent.Damage;
+            if (slime.IsDead)
+            {
+                slime.Animation.Animator.StateMachine.SetParameter(AnimationKeys.IsDead, true);
+            }
+            else
+            {
+                slime.Animation.Animator.StateMachine.SetTrigger(AnimationKeys.HurtTrigger);
+            }
         }
 
         public override void Update(GameTime gameTime)

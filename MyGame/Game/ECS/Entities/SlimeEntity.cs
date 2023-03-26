@@ -14,7 +14,16 @@ namespace MyGame.Game.ECS.Entities
     internal class SlimeEntity : EcsEntity
     {
         public float Speed { get; set; } = 40f;
-        
+
+        public float healthPoints = 100f;
+        public float HealthPoints
+        {
+            get => healthPoints;
+            set => healthPoints = Math.Clamp(value, 0f, 100f);
+        }
+
+        public bool IsDead => HealthPoints <= 0f;
+
         public StateMachine<AiState> StateMachine { get; }
 
         public Transform Transform { get; }

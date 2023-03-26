@@ -26,8 +26,8 @@ namespace MyGame.Game.Scenes
             var graphicsDevice = graphics.GraphicsDevice;
 
             var configuration = new ConfigurationStorage();
-            configuration.SetValue(ConfigurationConstants.ShowBoxColliders, true);
-            configuration.SetValue(ConfigurationConstants.ShowAiDebug, true);
+            //configuration.SetValue(ConfigurationConstants.ShowBoxColliders, true);
+            //configuration.SetValue(ConfigurationConstants.ShowAiDebug, true);
 
             var loggerFactory = LoggerFactory.Create(config =>
             {
