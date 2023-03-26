@@ -18,12 +18,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\AnimationNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\IAnimator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\Animators\PlayerAnimator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\EntityHealth.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerDetector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\CameraEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\PlayerEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SlimeEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\DamageEvent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)game\ecs\systems\eventsystem\events\PlayerAttackEvent.cs" />
+    <Compile Include="..\MyGame\game\ecs\systems\eventsystem\events\MeleeAttackEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\FightSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\GraphicsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\StateMachineHelper.cs" />

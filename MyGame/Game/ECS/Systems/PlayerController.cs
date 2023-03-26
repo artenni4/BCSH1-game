@@ -31,7 +31,7 @@ namespace MyGame.Game.ECS.Systems
         {
             if (IsAttackAnimation(e.CurrentState) && !IsAttackAnimation(e.PreviousState))
             {
-                _eventSystem.SendEvent(this, new PlayerAttackEvent(_lastGameTime, _playerEntity, GetAttackDirection(e.CurrentState)));
+                _eventSystem.SendEvent(this, new MeleeAttackEvent(_lastGameTime, _playerEntity, GetAttackDirection(e.CurrentState), PlayerEntity.AttackRadius, PlayerEntity.AttackDamage));
             }
         }
 
@@ -99,23 +99,23 @@ namespace MyGame.Game.ECS.Systems
                 state == PlayerAnimator.AttackLeftNode;
         }
 
-        private static PlayerAttackEvent.Direction GetAttackDirection(AnimationNode state)
+        private static MeleeAttackEvent.Direction GetAttackDirection(AnimationNode state)
         {
             if (state == PlayerAnimator.AttackDownNode)
             {
-                return PlayerAttackEvent.Direction.Down;
+                return MeleeAttackEvent.Direction.Down;
             }
             else if (state == PlayerAnimator.AttackUpNode)
             {
-                return PlayerAttackEvent.Direction.Up;
+                return MeleeAttackEvent.Direction.Up;
             }
             else if (state == PlayerAnimator.AttackLeftNode)
             {
-                return PlayerAttackEvent.Direction.Left;
+                return MeleeAttackEvent.Direction.Left;
             }
             else if (state == PlayerAnimator.AttackRightNode)
             {
-                return PlayerAttackEvent.Direction.Right;
+                return MeleeAttackEvent.Direction.Right;
             }
             throw new ArgumentException($"{nameof(state)} is not attack animation state");
         }

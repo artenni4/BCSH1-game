@@ -15,15 +15,6 @@ namespace MyGame.Game.ECS.Entities
     {
         public float Speed { get; set; } = 40f;
 
-        public float healthPoints = 100f;
-        public float HealthPoints
-        {
-            get => healthPoints;
-            set => healthPoints = Math.Clamp(value, 0f, 100f);
-        }
-
-        public bool IsDead => HealthPoints <= 0f;
-
         public StateMachine<AiState> StateMachine { get; }
 
         public Transform Transform { get; }
@@ -33,6 +24,8 @@ namespace MyGame.Game.ECS.Entities
         public Animation Animation { get; }
 
         public PlayerDetector PlayerDetector { get; }
+
+        public EntityHealth EntityHealth { get; }
 
         public SlimeEntity()
         {
@@ -47,6 +40,10 @@ namespace MyGame.Game.ECS.Entities
 
             PlayerDetector = AddComponent<PlayerDetector>();
             PlayerDetector.DetectionRadius = 100f;
+
+            EntityHealth = AddComponent<EntityHealth>();
+            EntityHealth.MaxHealth = 100f;
+            EntityHealth.HealthPoints = 100f;
 
             StateMachine = new StateMachineBuilder<AiState>()
                 .State(AiState.WalkAround)

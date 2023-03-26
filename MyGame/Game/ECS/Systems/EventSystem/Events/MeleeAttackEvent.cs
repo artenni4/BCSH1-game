@@ -5,22 +5,22 @@ using System.Text;
 
 namespace MyGame.Game.ECS.Systems.EventSystem.Events
 {
-    internal class PlayerAttackEvent : EventBase
+    internal class MeleeAttackEvent : EventBase
     {
         public enum Direction { Left, Right, Up, Down }
 
         public override EventGroup EventGroup => EventGroup.GameEvent;
-        public PlayerEntity Player { get; }
+        public EcsEntity Attacker { get; }
         public Direction AttackDirection { get; }
+        public float Radius { get; }
+        public float Damage { get; }
 
-        public const float Radius = 30f;
-
-        public const float Damage = 20f;
-
-        public PlayerAttackEvent(GameTime gameTime, PlayerEntity player, Direction attackDirection) : base(gameTime)
+        public MeleeAttackEvent(GameTime gameTime, EcsEntity attacker, Direction attackDirection, float radius, float damage) : base(gameTime)
         {
-            Player = player;
+            Attacker = attacker;
             AttackDirection = attackDirection;
+            Radius = radius;
+            Damage = damage;
         }
     }
 }
