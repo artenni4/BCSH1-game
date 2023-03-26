@@ -7,7 +7,7 @@ namespace MyGame.Game.ECS.Components.Animation
 {
     internal interface IAnimator
     {
-        public const float AnimationSpeed = 7f;
+        public const float AnimationSpeed = 8f;
 
         /// <summary>
         /// State machine of animation
@@ -19,5 +19,11 @@ namespace MyGame.Game.ECS.Components.Animation
         /// to data needed for render
         /// </summary>
         AnimationData GetAnimationData();
+
+        /// <summary>
+        /// Gets current animation frame index
+        /// </summary>
+        /// <returns></returns>
+        int GetFrameIndex();
     }
 }

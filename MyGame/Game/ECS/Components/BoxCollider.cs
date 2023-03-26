@@ -6,6 +6,6 @@ namespace MyGame.Game.ECS.Components
 {
     internal class BoxCollider : EcsComponent
     {
-        public Rectangle Box;
+        public Rectangle Box { get; set; }
     }
 }

@@ -55,11 +55,11 @@ namespace MyGame.Game.StateMachine
             {
                 return;
             }
-            else if (StateSetTime > State.Duration) // loop state set time if is bigger than duration 
+            HandleStateChange();
+            if (StateSetTime > State.Duration) // loop state set time if is bigger than duration 
             {
                 StateSetTime = TimeSpan.FromTicks(StateSetTime.Ticks % State.Duration.Ticks);
             }
-            HandleStateChange();
         }
     }
 }

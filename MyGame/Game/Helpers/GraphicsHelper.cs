@@ -45,38 +45,10 @@ namespace MyGame.Game.Helpers
             return bounds;
         }
 
-        /// <summary>
-        /// Calculates animation duration
-        /// </summary>
-        public static TimeSpan GetStateDuration(Rectangle[] frames, float speed)
+        public static void SetDirectionVector(this IRealTimeFSM<AnimationNode> stateMachine, Vector2 direction)
         {
-            return TimeSpan.FromSeconds((frames.Length - 1) / speed);
-        }
-
-        public static int GetFrameIndex(this IRealTimeFSM<AnimationNode> animationStateMachine)
-        {
-            var animationPlayedTime = animationStateMachine.StateSetTime;
-            var animationNode = animationStateMachine.State;
-
-            int frameIndex = Convert.ToInt32(animationPlayedTime.TotalSeconds * IAnimator.AnimationSpeed);
-            if (frameIndex >= animationNode.StateFrames.Length)
-            {
-                if (animationNode.IsCycled)
-                {
-                    frameIndex %= animationNode.StateFrames.Length;
-                }
-                else
-                {
-                    frameIndex = animationNode.StateFrames.Length - 1;
-                }
-            }
-            return frameIndex;
-        }
-
-        public static void SetDirectionVector(this IAnimator animator, Vector2 direction)
-        {
-            animator.StateMachine.SetParameter(AnimationKeys.XDirection, direction.X);
-            animator.StateMachine.SetParameter(AnimationKeys.YDirection, direction.Y);
+            stateMachine.SetParameter(AnimationKeys.XDirection, direction.X);
+            stateMachine.SetParameter(AnimationKeys.YDirection, direction.Y);
         }
         #endregion
 

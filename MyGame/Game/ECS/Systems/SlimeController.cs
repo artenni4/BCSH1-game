@@ -1,7 +1,6 @@
 ﻿using MyGame.Game.Animators;
 using MyGame.Game.Constants;
 using MyGame.Game.Constants.Enums;
-using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
 using MyGame.Game.ECS.Entities;
 using MyGame.Game.ECS.Systems.EventSystem;
@@ -27,21 +26,38 @@ namespace MyGame.Game.ECS.Systems
         {
             if (@event is PlayerDetectionEvent detectionEvent)
             {
-                if (detectionEvent.Detector is SlimeEntity slime)
-                {
-                    if (detectionEvent.IsDetected)
-                    {
-                        slime.StateMachine.SetTrigger(AiTriggers.PlayerDetected);
-                    }
-                    else if (detectionEvent.IsLost)
-                    {
-                        slime.StateMachine.SetTrigger(AiTriggers.PlayerLost);
-                    }
-                }
+                HandleDetection(detectionEvent);
+                return true;
+            }
 
+            if (@event is DamageEvent damageEvent && damageEvent.Damaged is SlimeEntity)
+            {
+                HandleDamage(damageEvent);
                 return true;
             }
             return false;
+        }
+
+        private static void HandleDetection(PlayerDetectionEvent detectionEvent)
+        {
+            if (detectionEvent.Detector is SlimeEntity slime)
+            {
+                if (detectionEvent.IsDetected)
+                {
+                    slime.StateMachine.SetTrigger(AiTriggers.PlayerDetected);
+                }
+                else if (detectionEvent.IsLost)
+                {
+                    slime.StateMachine.SetTrigger(AiTriggers.PlayerLost);
+                }
+            }
+        }
+
+        private static void HandleDamage(DamageEvent damageEvent)
+        {
+            // TODO handle animation and damage, maybe add some EntityStats component that will hold hp, mana, etc.
+            var slime = (SlimeEntity)damageEvent.Damaged;
+            slime.Animation.Animator.StateMachine.SetTrigger(AnimationKeys.HurtTrigger);
         }
 
         public override void Update(GameTime gameTime)
@@ -61,16 +77,17 @@ namespace MyGame.Game.ECS.Systems
                         transform.Position += direction * slime.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     }
                 }
-                animator.SetDirectionVector(direction);
+                animator.StateMachine.SetDirectionVector(direction);
             }
         }
 
         private static bool IsMovable(IAnimator animator)
         {
-            var animState = (SlimeAnimator.SlimeAnimation)animator.StateMachine.State.AnimationState;
-            if (animState == SlimeAnimator.SlimeAnimation.MoveRight || animState == SlimeAnimator.SlimeAnimation.AttackRight)
+            var animState = animator.StateMachine.State;
+            if (animState == SlimeAnimator.MoveRightNode || animState == SlimeAnimator.MoveLeftNode ||
+                animState == SlimeAnimator.AttackRightNode || animState == SlimeAnimator.AttackLeftNode)
             {
-                int fi = animator.StateMachine.GetFrameIndex();
+                int fi = animator.GetFrameIndex();
                 return fi >= 1 && fi <= 4;
             }
             return false;

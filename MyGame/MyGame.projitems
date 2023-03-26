@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Animators\AnimatorBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\Animators\SlimeAnimator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\AiTriggers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\AnimationFlags.cs" />
@@ -21,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\CameraEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\PlayerEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SlimeEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\DamageEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ecs\systems\eventsystem\events\PlayerAttackEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\FightSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\GraphicsHelper.cs" />

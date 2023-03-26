@@ -10,13 +10,17 @@ namespace MyGame.Game.ECS.Systems.EventSystem.Events
         public enum Direction { Left, Right, Up, Down }
 
         public override EventGroup EventGroup => EventGroup.GameEvent;
-        public EcsEntity Player { get; }
+        public PlayerEntity Player { get; }
+        public Direction AttackDirection { get; }
 
-        public const float Radius = 20f;
+        public const float Radius = 30f;
 
-        public PlayerAttackEvent(GameTime gameTime, EcsEntity player) : base(gameTime)
+        public const float Damage = 20f;
+
+        public PlayerAttackEvent(GameTime gameTime, PlayerEntity player, Direction attackDirection) : base(gameTime)
         {
             Player = player;
+            AttackDirection = attackDirection;
         }
     }
 }

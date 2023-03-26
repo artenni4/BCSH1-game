@@ -14,6 +14,6 @@ namespace MyGame.Game.ECS.Components.Animation
         bool IsCycled = true) : IRealTimeState
     {
         public Rectangle[] StateFrames => AnimationFrames[AnimationState];
-        public TimeSpan Duration => TimeSpan.FromSeconds((AnimationFrames[AnimationState].Length - 1) / IAnimator.AnimationSpeed);
+        public TimeSpan Duration => TimeSpan.FromSeconds(AnimationFrames[AnimationState].Length / IAnimator.AnimationSpeed);
     }
 }

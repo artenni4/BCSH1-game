@@ -4,14 +4,13 @@ using MyGame.Game.StateMachine;
 
 namespace MyGame.Game.Animators
 {
-    internal class PlayerAnimator : IAnimator
+    internal class PlayerAnimator : AnimatorBase
     {
-        public IRealTimeFSM<AnimationNode> StateMachine { get; private init; }
+        public override IRealTimeFSM<AnimationNode> StateMachine { get; }
 
-        private readonly Rectangle[][] _frames;
+        private static readonly Rectangle[][] frames = GraphicsHelper.GenerateBoundsForAnimationAtlas(0, 0, 48, 48, 10, 6, 6, 6, 6, 6, 6, 4, 4, 4, 3);
 
-        // define names for animations
-        public enum PlayerAnimation
+        private enum PlayerAnimation
         {
             IdleDown,
             IdleRight,
@@ -28,29 +27,26 @@ namespace MyGame.Game.Animators
             DeadRight
         };
 
+        public static readonly AnimationNode IdleRightNode      = new((int)PlayerAnimation.IdleRight, frames, true);
+        public static readonly AnimationNode IdleLeftNode       = new((int)PlayerAnimation.IdleRight, frames, true, SpriteEffects.FlipHorizontally);
+        public static readonly AnimationNode IdleUpNode         = new((int)PlayerAnimation.IdleUp, frames, true);
+        public static readonly AnimationNode IdleDownNode       = new((int)PlayerAnimation.IdleDown, frames, true);
+
+        public static readonly AnimationNode WalkRightNode      = new((int)PlayerAnimation.WalkRight, frames, true);
+        public static readonly AnimationNode WalkLeftNode       = new((int)PlayerAnimation.WalkRight, frames, true, SpriteEffects.FlipHorizontally);
+        public static readonly AnimationNode WalkUpNode         = new((int)PlayerAnimation.WalkUp, frames, true);
+        public static readonly AnimationNode WalkDownNode       = new((int)PlayerAnimation.WalkDown, frames, true);
+
+        public static readonly AnimationNode AttackRightNode    = new((int)PlayerAnimation.AttackRight, frames, false);
+        public static readonly AnimationNode AttackLeftNode     = new((int)PlayerAnimation.AttackRight, frames, false, SpriteEffects.FlipHorizontally);
+        public static readonly AnimationNode AttackUpNode       = new((int)PlayerAnimation.AttackUp, frames, false);
+        public static readonly AnimationNode AttackDownNode     = new((int)PlayerAnimation.AttackDown, frames, false);
+
+        public static readonly AnimationNode DeadRightNode      = new((int)PlayerAnimation.DeadRight, frames, false, IsCycled: false);
+        public static readonly AnimationNode DeadLeftNode       = new((int)PlayerAnimation.DeadRight, frames, false, SpriteEffects.FlipHorizontally, IsCycled: false);
+
         public PlayerAnimator()
         {
-            _frames = GraphicsHelper.GenerateBoundsForAnimationAtlas(0, 0, 48, 48, 10, 6, 6, 6, 6, 6, 6, 4, 4, 4, 3);
-
-            // define nodes in animation 
-            AnimationNode IdleRightNode      = new((int)PlayerAnimation.IdleRight, _frames, true);
-            AnimationNode IdleLeftNode       = new((int)PlayerAnimation.IdleRight, _frames, true, SpriteEffects.FlipHorizontally);
-            AnimationNode IdleUpNode         = new((int)PlayerAnimation.IdleUp, _frames, true);
-            AnimationNode IdleDownNode       = new((int)PlayerAnimation.IdleDown, _frames, true);
-
-            AnimationNode WalkRightNode      = new((int)PlayerAnimation.WalkRight, _frames, true);
-            AnimationNode WalkLeftNode       = new((int)PlayerAnimation.WalkRight, _frames, true, SpriteEffects.FlipHorizontally);
-            AnimationNode WalkUpNode         = new((int)PlayerAnimation.WalkUp, _frames, true);
-            AnimationNode WalkDownNode       = new((int)PlayerAnimation.WalkDown, _frames, true);
-
-            AnimationNode AttackRightNode    = new((int)PlayerAnimation.AttackRight, _frames, false);
-            AnimationNode AttackLeftNode     = new((int)PlayerAnimation.AttackRight, _frames, false, SpriteEffects.FlipHorizontally);
-            AnimationNode AttackUpNode       = new((int)PlayerAnimation.AttackUp, _frames, false);
-            AnimationNode AttackDownNode     = new((int)PlayerAnimation.AttackDown, _frames, false);
-
-            AnimationNode DeadRightNode      = new((int)PlayerAnimation.DeadRight, _frames, false, IsCycled: false);
-            AnimationNode DeadLeftNode       = new((int)PlayerAnimation.DeadRight, _frames, false, SpriteEffects.FlipHorizontally, IsCycled: false);
-
             StateMachine = new StateMachineBuilder<AnimationNode>()
                 .State(IdleRightNode)
                     .TransitionTo(WalkRightNode).OnGreaterThan(AnimationKeys.XDirection, 0f)
@@ -110,16 +106,6 @@ namespace MyGame.Game.Animators
                 .State(DeadLeftNode)
                 .State(DeadRightNode)
                 .BuildRealTimeFSM(IdleDownNode);
-        }
-
-        public AnimationData GetAnimationData()
-        {
-            var animationNode = StateMachine.State;
-            var animationFrames = animationNode.StateFrames;
-            int frameIndex = StateMachine.GetFrameIndex();
-            var bound = animationFrames[frameIndex];
-
-            return new AnimationData(bound, Vector2.Zero, animationNode.SpriteEffects);
         }
     }
 }
