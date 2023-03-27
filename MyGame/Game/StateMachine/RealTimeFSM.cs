@@ -56,10 +56,6 @@ namespace MyGame.Game.StateMachine
                 return;
             }
             HandleStateChange();
-            //if (StateSetTime > State.Duration) // loop state set time if is bigger than duration 
-            //{
-            //    StateSetTime = TimeSpan.FromTicks(StateSetTime.Ticks % State.Duration.Ticks);
-            //}
         }
     }
 }

@@ -44,10 +44,20 @@ namespace MyGame.Game.StateMachine
             HandleStateChange();
         }
 
+        public virtual void RemoveTrigger(string trigger)
+        {
+            _triggers.Remove(trigger);
+        }
+
         public virtual void SetParameter<T>(string name, T value)
         {
             _parameters[name] = value;
             HandleStateChange();
+        }
+
+        public virtual void RemoveParameter(string trigger)
+        {
+            _triggers.Remove(trigger);
         }
 
         protected void HandleStateChange()

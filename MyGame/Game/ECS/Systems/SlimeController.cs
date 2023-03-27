@@ -1,4 +1,5 @@
-﻿using MyGame.Game.Animators;
+﻿using Microsoft.Xna.Framework;
+using MyGame.Game.Animators;
 using MyGame.Game.Constants;
 using MyGame.Game.Constants.Enums;
 using MyGame.Game.ECS.Components.Animation;
@@ -6,7 +7,6 @@ using MyGame.Game.ECS.Entities;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.Scenes;
-using System.Linq;
 
 namespace MyGame.Game.ECS.Systems
 {
@@ -14,6 +14,9 @@ namespace MyGame.Game.ECS.Systems
     {
         private readonly IEntityCollection _entityCollection;
         private readonly IEventSystem _eventSystem;
+
+        private readonly Dictionary<SlimeEntity, Vector2> _jumpDirection = new();
+        private readonly Dictionary<SlimeEntity, TimeSpan> _jumpInterval = new(); 
 
         public SlimeController(IEntityCollection entityCollection, IEventSystem eventSystem)
         {
@@ -32,7 +35,7 @@ namespace MyGame.Game.ECS.Systems
 
             if (@event is DamageEvent damageEvent && damageEvent.Damaged is SlimeEntity)
             {
-                HandleDamage(damageEvent);
+                HandleDamage(damageEvent.Damaged as SlimeEntity, damageEvent.Damage);
                 return true;
             }
             return false;
@@ -53,11 +56,9 @@ namespace MyGame.Game.ECS.Systems
             }
         }
 
-        private static void HandleDamage(DamageEvent damageEvent)
+        private static void HandleDamage(SlimeEntity slime, float damage)
         {
-            // TODO handle animation and damage, maybe add some EntityStats component that will hold hp, mana, etc.
-            var slime = (SlimeEntity)damageEvent.Damaged;
-            slime.EntityHealth.HealthPoints -= damageEvent.Damage;
+            slime.EntityHealth.HealthPoints -= damage;
             if (slime.EntityHealth.IsDead)
             {
                 slime.Animation.Animator.StateMachine.SetParameter(AnimationKeys.IsDead, true);
@@ -72,31 +73,72 @@ namespace MyGame.Game.ECS.Systems
         {
             foreach (var slime in _entityCollection.GetEntitiesOfType<SlimeEntity>())
             {
-                var transform = slime.Transform;
-                var animator = slime.Animation.Animator;
-
-                Vector2 direction = new();
                 if (slime.StateMachine.State == AiState.ChasePlayer && _entityCollection.GetEntityOfType<PlayerEntity>() is PlayerEntity player)
                 {
-                    direction = (player.GetEntityCenter() - slime.GetEntityCenter()).GetNormalized();
-
-                    if (IsMovable(animator))
-                    {
-                        transform.Position += direction * slime.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    }
+                    ChasePlayer(gameTime, slime, player);
                 }
-                animator.StateMachine.SetDirectionVector(direction);
             }
         }
+
+        private void ChasePlayer(GameTime gameTime, SlimeEntity slime, PlayerEntity player)
+        {
+            // delay between slime jumps
+            if (_jumpInterval.TryGetValue(slime, out var interval))
+            {
+                if (interval <= slime.MinJumpInterval)
+                {
+                    _jumpInterval[slime] += gameTime.ElapsedGameTime;
+                    slime.Animation.Animator.StateMachine.RemoveDirectionVector();
+                    slime.Animation.Animator.StateMachine.RemoveParameter(AnimationKeys.AttackTrigger);
+                    return;
+                }
+                else
+                {
+                    _jumpInterval.Remove(slime);
+                }
+            }
+
+            // set last jump 
+            if (slime.Animation.Animator.IsLastAnimationFrame() && _jumpDirection.ContainsKey(slime))
+            {
+                _jumpDirection.Remove(slime);
+                _jumpInterval[slime] = TimeSpan.Zero;
+            }
+            if (!_jumpDirection.TryGetValue(slime, out var direction) && slime.Animation.Animator.IsFirstAnimationFrame())
+            {
+                direction = player.GetEntityCenter() - slime.GetEntityCenter();
+                _jumpDirection[slime] = direction;
+            }
+
+            if (Vector2.Distance(slime.GetEntityCenter(), player.GetEntityCenter()) <= slime.AttackRadius && slime.Animation.Animator.IsFirstAnimationFrame())
+            {
+                slime.Animation.Animator.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
+            }
+            else
+            {
+                slime.Animation.Animator.StateMachine.SetDirectionVector(direction);
+            }
+            if (IsMovable(slime.Animation.Animator))
+            {
+                // increase speed in attack
+                float speed = IsAttacking(slime.Animation.Animator.StateMachine.State) ? slime.Speed * slime.AttackingSpeedModifier : slime.Speed;
+                slime.Transform.Position += direction.GetNormalized() * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+        }
+
+        private static bool IsAttacking(AnimationNode state) => state == SlimeAnimator.AttackLeftNode || state == SlimeAnimator.AttackRightNode;
 
         private static bool IsMovable(IAnimator animator)
         {
             var animState = animator.StateMachine.State;
-            if (animState == SlimeAnimator.MoveRightNode || animState == SlimeAnimator.MoveLeftNode ||
-                animState == SlimeAnimator.AttackRightNode || animState == SlimeAnimator.AttackLeftNode)
+            int fi = animator.GetFrameIndex();
+            if (animState == SlimeAnimator.MoveRightNode || animState == SlimeAnimator.MoveLeftNode)
             {
-                int fi = animator.GetFrameIndex();
                 return fi >= 1 && fi <= 4;
+            }
+            if (animState == SlimeAnimator.AttackRightNode || animState == SlimeAnimator.AttackLeftNode)
+            {
+                return fi >= 1 && fi <= 5;
             }
             return false;
         }

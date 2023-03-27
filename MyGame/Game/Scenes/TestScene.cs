@@ -46,7 +46,7 @@ namespace MyGame.Game.Scenes
             AddEntities(
                 player,
                 slime1,
-                slime2,
+                //slime2,
                 new CameraEntity());
 
             var eventSystem = new EventSystem(loggerFactory.CreateLogger<EventSystem>());

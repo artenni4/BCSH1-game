@@ -50,6 +50,32 @@ namespace MyGame.Game.Helpers
             stateMachine.SetParameter(AnimationKeys.XDirection, direction.X);
             stateMachine.SetParameter(AnimationKeys.YDirection, direction.Y);
         }
+
+        public static void RemoveDirectionVector(this IRealTimeFSM<AnimationNode> stateMachine)
+        {
+            stateMachine.RemoveParameter(AnimationKeys.XDirection);
+            stateMachine.RemoveParameter(AnimationKeys.YDirection);
+        }
+
+        /// <summary>
+        /// If current animation frame is last in sequence
+        /// </summary>
+        /// <param name="animator"></param>
+        /// <returns></returns>
+        public static bool IsLastAnimationFrame(this IAnimator animator)
+        {
+            return animator.GetFrameIndex() >= animator.StateMachine.State.AnimationFrames.Length - 1;
+        }
+
+        /// <summary>
+        /// If current animation frame is first in sequence
+        /// </summary>
+        /// <param name="animator"></param>
+        /// <returns></returns>
+        public static bool IsFirstAnimationFrame(this IAnimator animator)
+        {
+            return animator.GetFrameIndex() <= 1;
+        }
         #endregion
 
         #region Drawing Primitives

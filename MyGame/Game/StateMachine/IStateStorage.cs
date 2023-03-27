@@ -7,6 +7,8 @@ namespace MyGame.Game.StateMachine
     internal interface IStateStorage
     {
         void SetTrigger(string trigger);
+        void RemoveTrigger(string trigger);
         void SetParameter<T>(string name, T value);
+        void RemoveParameter(string name);
     }
 }

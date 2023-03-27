@@ -13,6 +13,9 @@ namespace MyGame.Game.ECS.Entities
 {
     internal class SlimeEntity : EcsEntity
     {
+        public TimeSpan MinJumpInterval { get; set; } = TimeSpan.FromSeconds(1);
+        public float AttackingSpeedModifier { get; set; } = 1.8f;
+        public float AttackRadius { get; set; } = 30f;
         public float Speed { get; set; } = 40f;
 
         public StateMachine<AiState> StateMachine { get; }
@@ -39,7 +42,7 @@ namespace MyGame.Game.ECS.Entities
             Animation.Animator = new SlimeAnimator();
 
             PlayerDetector = AddComponent<PlayerDetector>();
-            PlayerDetector.DetectionRadius = 100f;
+            PlayerDetector.DetectionRadius = 150f;
 
             EntityHealth = AddComponent<EntityHealth>();
             EntityHealth.MaxHealth = 100f;
