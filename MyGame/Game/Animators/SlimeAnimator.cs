@@ -25,8 +25,8 @@ namespace MyGame.Game.Animators
         public static readonly AnimationNode IdleRightNode      = new((int)SlimeAnimation.IdleRight, frames, true);
         public static readonly AnimationNode IdleLeftNode       = new((int)SlimeAnimation.IdleRight, frames, true, SpriteEffects.FlipHorizontally);
 
-        public static readonly AnimationNode MoveRightNode      = new((int)SlimeAnimation.MoveRight, frames, false);
-        public static readonly AnimationNode MoveLeftNode       = new((int)SlimeAnimation.MoveRight, frames, false, SpriteEffects.FlipHorizontally);
+        public static readonly AnimationNode MoveRightNode      = new((int)SlimeAnimation.MoveRight, frames, true);
+        public static readonly AnimationNode MoveLeftNode       = new((int)SlimeAnimation.MoveRight, frames, true, SpriteEffects.FlipHorizontally);
 
         public static readonly AnimationNode AttackRightNode    = new((int)SlimeAnimation.AttackRight, frames, false);
         public static readonly AnimationNode AttackLeftNode     = new((int)SlimeAnimation.AttackRight, frames, false, SpriteEffects.FlipHorizontally);

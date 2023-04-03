@@ -35,21 +35,20 @@ namespace MyGame.Game.ECS.Systems
                 return;
             }
 
-            foreach (var entity in _entityCollection.Entities.Where(e => e.ContainsComponent<Transform>()))
+            foreach (var entity in _entityCollection.Entities.Where(e => e != player && e.ContainsComponent<Transform>()))
             {
                 var transform = entity.GetComponent<Transform>();
 
                 if (entity.TryGetComponent<PlayerDetector>(out var playerDetector))
                 {
-                    var playerTransform = player.Transform;
-                    if (Vector2.Distance(transform.Position, playerTransform.Position) <= playerDetector.DetectionRadius && !_entities.Contains(entity))
+                    if (Vector2.Distance(entity.GetEntityCenter(), player.GetEntityCenter()) <= playerDetector.DetectionRadius && !_entities.Contains(entity))
                     {
-                        _eventSystem.SendEvent(this, new PlayerDetectionEvent(gameTime, entity, true));
+                        _eventSystem.SendEvent(this, new PlayerDetectionEvent(gameTime, entity, player, true));
                         _entities.Add(entity);
                     }
-                    else if (Vector2.Distance(transform.Position, playerTransform.Position) > playerDetector.DetectionRadius && _entities.Contains(entity))
+                    else if (Vector2.Distance(entity.GetEntityCenter(), player.GetEntityCenter()) > playerDetector.DetectionRadius && _entities.Contains(entity))
                     {
-                        _eventSystem.SendEvent(this, new PlayerDetectionEvent(gameTime, entity, false));
+                        _eventSystem.SendEvent(this, new PlayerDetectionEvent(gameTime, entity, player, false));
                         _entities.Remove(entity);
                     }
                 }

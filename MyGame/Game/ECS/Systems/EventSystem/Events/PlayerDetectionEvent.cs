@@ -15,10 +15,12 @@ namespace MyGame.Game.ECS.Systems.EventSystem.Events
         public bool IsLost => !isDetected;
 
         public EcsEntity Detector { get; }
+        public PlayerEntity Player { get; }
 
-        public PlayerDetectionEvent(GameTime gameTime, EcsEntity detector, bool isDetected) : base(gameTime)
+        public PlayerDetectionEvent(GameTime gameTime, EcsEntity detector, PlayerEntity player, bool isDetected) : base(gameTime)
         {
             Detector = detector;
+            Player = player;
             this.isDetected = isDetected;
         }
     }

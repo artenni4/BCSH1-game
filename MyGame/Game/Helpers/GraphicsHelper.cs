@@ -53,8 +53,8 @@ namespace MyGame.Game.Helpers
 
         public static void RemoveDirectionVector(this IRealTimeFSM<AnimationNode> stateMachine)
         {
-            stateMachine.RemoveParameter(AnimationKeys.XDirection);
-            stateMachine.RemoveParameter(AnimationKeys.YDirection);
+            stateMachine.SetParameter(AnimationKeys.XDirection, 0f);
+            stateMachine.SetParameter(AnimationKeys.YDirection, 0f);
         }
 
         /// <summary>

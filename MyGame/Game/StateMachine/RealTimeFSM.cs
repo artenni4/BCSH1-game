@@ -17,6 +17,8 @@ namespace MyGame.Game.StateMachine
             : base(transitionConditions, initialState) { }
 
         public TimeSpan StateSetTime { get; private set; }
+        public TimeSpan StateCycleTime { get; private set; }
+        public event EventHandler StateCycleDone;
 
         public override TState State
         { 
@@ -25,6 +27,7 @@ namespace MyGame.Game.StateMachine
             {
                 base.State = value;
                 StateSetTime = TimeSpan.Zero;
+                StateCycleTime = TimeSpan.Zero;
             }
         }
 
@@ -51,9 +54,15 @@ namespace MyGame.Game.StateMachine
         public void Update(TimeSpan elapsedTime)
         {
             StateSetTime += elapsedTime;
+            StateCycleTime += elapsedTime;
             if (!State.IsInterruptible && StateSetTime < State.Duration)
             {
                 return;
+            }
+            if (StateCycleTime >= State.Duration) // trigger state change in every cycle
+            {
+                StateCycleDone?.Invoke(this, EventArgs.Empty);
+                StateCycleTime -= State.Duration;
             }
             HandleStateChange();
         }

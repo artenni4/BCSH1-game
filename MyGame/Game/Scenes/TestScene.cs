@@ -34,12 +34,14 @@ namespace MyGame.Game.Scenes
                 config.SetMinimumLevel(LogLevel.Trace);
                 config.AddDebug();
             });
+            
+            var eventSystem = new EventSystem(loggerFactory.CreateLogger<EventSystem>());
 
-            var player = new PlayerEntity();
+            var player = new PlayerEntity(eventSystem);
             player.Transform.Position = new(0, 100);
-            var slime1 = new SlimeEntity();
+            var slime1 = new SlimeEntity(eventSystem);
             slime1.Transform.Position = new(30, -70);
-            var slime2 = new SlimeEntity();
+            var slime2 = new SlimeEntity(eventSystem);
             slime2.Transform.Position = new(100, -60);
 
             // add entities
@@ -49,16 +51,12 @@ namespace MyGame.Game.Scenes
                 //slime2,
                 new CameraEntity());
 
-            var eventSystem = new EventSystem(loggerFactory.CreateLogger<EventSystem>());
-
             // add systems
             AddSystems(
                 new Renderer(graphicsDevice, this, configuration), 
                 new AiDetectionSystem(this, eventSystem),
                 new InputSystem(eventSystem),
-                new FightSystem(this, eventSystem),
-                new SlimeController(this, eventSystem),
-                new PlayerController(this, eventSystem));
+                new FightSystem(this, eventSystem));
         }
     }
 }

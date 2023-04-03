@@ -51,7 +51,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\ConfigurationConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\AiState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\BoxCollider.cs" />
-    <Compile Include="..\MyGame\Game\ECS\Systems\SlimeController.cs" />
     <Compile Include="..\MyGame\Game\ECS\Systems\EventSystem\Events\PlayerDetectionEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\InputSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\InputConstants.cs" />
@@ -61,7 +60,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\KeyboardEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\MouseEvent.cs" />
-    <Compile Include="..\MyGame\Game\ECS\Systems\PlayerController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\EventBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventHandler.cs" />

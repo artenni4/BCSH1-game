@@ -24,10 +24,9 @@ namespace MyGame.Game.ECS.Entities
             Id = id;
         }
 
-        public virtual void LoadContent(ContentManager contentManager)
-        {
+        public abstract void LoadContent(ContentManager contentManager);
 
-        }
+        public abstract void Update(GameTime gameTime);
 
         public T GetComponent<T>() where T : EcsComponent
         {

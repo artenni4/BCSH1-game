@@ -64,6 +64,10 @@ namespace MyGame.Game.Scenes
             {
                 system.Update(gameTime);
             }
+            foreach (var entity in Entities)
+            {
+                entity.Update(gameTime);
+            }
         }
     }
 }

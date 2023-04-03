@@ -22,7 +22,7 @@ namespace MyGame.Game.StateMachine
                 var prevState = _state;
                 _state = value;
                 _triggers.Clear();
-                StateChanged?.Invoke(this, new TransitionEventArgs<TState>(prevState, _state));
+                OnStateChange(prevState, _state);
             }
         }
 
@@ -55,12 +55,17 @@ namespace MyGame.Game.StateMachine
             HandleStateChange();
         }
 
-        public virtual void RemoveParameter(string trigger)
+        public virtual void RemoveParameter(string parameter)
         {
-            _triggers.Remove(trigger);
+            _parameters.Remove(parameter);
         }
 
-        protected void HandleStateChange()
+        private void OnStateChange(TState prevState, TState currState)
+        {
+            StateChanged?.Invoke(this, new TransitionEventArgs<TState>(prevState, currState));
+        }
+
+        protected bool HandleStateChange()
         {
             if (_transitionConditions.TryGetValue(State, out var transitions))
             {
@@ -82,10 +87,11 @@ namespace MyGame.Game.StateMachine
                     if (allPassed)
                     {
                         State = transition.Value;
-                        break;
+                        return true;
                     }
                 }
             }
+            return false;
         }
     }
 }
