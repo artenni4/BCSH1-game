@@ -3,6 +3,7 @@ using MyGame.Game.Configuration;
 using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
+using MyGame.Game.ECS.Components.Collider;
 using MyGame.Game.ECS.Entities;
 using MyGame.Game.Scenes;
 using System;

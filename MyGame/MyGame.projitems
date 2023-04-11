@@ -18,6 +18,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\AnimationNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\IAnimator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\Animators\PlayerAnimator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Collider\ICollider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\EntityHealth.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerDetector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\CameraEntity.cs" />
@@ -51,7 +52,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\Configuration\IConfiguration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\ConfigurationConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\AiState.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\BoxCollider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Collider\BoxCollider.cs" />
     <Compile Include="..\MyGame\Game\ECS\Systems\EventSystem\Events\PlayerDetectionEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\InputSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\InputConstants.cs" />

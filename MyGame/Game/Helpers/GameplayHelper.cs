@@ -5,6 +5,7 @@ using MyGame.Game.ECS.Components;
 using MyGame.Game.Scenes;
 using System.Linq;
 using MyGame.Game.ECS.Entities;
+using MyGame.Game.ECS.Components.Collider;
 
 namespace MyGame.Game.Helpers
 {

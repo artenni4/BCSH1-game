@@ -7,10 +7,12 @@ using MyGame.Game.StateMachine;
 using Microsoft.Xna.Framework.Content;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.ECS.Systems.EventSystem;
+using MyGame.Game.ECS.Components.Collider;
+using System.Diagnostics;
 
 namespace MyGame.Game.ECS.Entities
 {
-    internal class SlimeEntity : EcsEntity, IEventHandler
+    internal class SlimeEntity : EcsEntity, IEventHandler, ICollider
     {
         private readonly IEventSystem _eventSystem;
 
@@ -45,6 +47,7 @@ namespace MyGame.Game.ECS.Entities
             Transform.ZIndex = 1f;
 
             BoxCollider = AddComponent<BoxCollider>();
+            BoxCollider.Collider = this;
             BoxCollider.Box = new Rectangle(10, 13, 13, 10);
 
             Animation = AddComponent<Animation>();
@@ -194,6 +197,11 @@ namespace MyGame.Game.ECS.Entities
                 return fi >= 1 && fi <= 5;
             }
             return false;
+        }
+
+        public void OnCollision(EcsEntity collider)
+        {
+
         }
     }
 }

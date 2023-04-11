@@ -1,4 +1,5 @@
 ﻿using MyGame.Game.ECS.Components;
+using MyGame.Game.ECS.Components.Collider;
 using MyGame.Game.ECS.Entities;
 using MyGame.Game.Scenes;
 using System;
@@ -25,13 +26,15 @@ namespace MyGame.Game.ECS.Systems
                 {
                     if (ResolveCollision(entity, collider))
                     {
-                        // TODO: send collision event
+                        // NOTE: maybe send event in both ways: e -> c and c -> e
+                        // send collision event
+                        entity.GetComponent<BoxCollider>().Collider.OnCollision(collider);
                     }
                 }
             }
         }
 
-        private bool ResolveCollision(EcsEntity entity, EcsEntity collider)
+        private static bool ResolveCollision(EcsEntity entity, EcsEntity collider)
         {
             var eTransform = entity.GetComponent<Transform>();
             var eBoxCollider = entity.GetComponent<BoxCollider>();
@@ -52,35 +55,90 @@ namespace MyGame.Game.ECS.Systems
 
             if (dx < (eWidth + cWidth) / 2.0f && dy < (eHeight + cHeight) / 2.0f)
             {
+                if (eBoxCollider.IsStatic && cBoxCollider.IsStatic) // do not move static objects
+                {
+                    return true;
+                }
+
                 var overlapX = (eWidth + cWidth) / 2.0f - dx;
                 var overlapY = (eHeight + cHeight) / 2.0f - dy;
 
                 if (overlapX < overlapY)
                 {
                     var moveX = overlapX / 2.0f;
-                    if (eX < cX)
+                    if (eBoxCollider.IsStatic)
                     {
-                        eTransform.Position = new(eTransform.Position.X - moveX, eTransform.Position.Y);
-                        cTransform.Position = new(cTransform.Position.X + moveX, cTransform.Position.Y);
+                        if (eX < cX)
+                        {
+                            cTransform.Position = new(cTransform.Position.X + moveX * 2.0f, cTransform.Position.Y);
+                        }
+                        else
+                        {
+                            cTransform.Position = new(cTransform.Position.X - moveX * 2.0f, cTransform.Position.Y);
+                        }
+                    }
+                    else if (cBoxCollider.IsStatic)
+                    {
+                        if (eX < cX)
+                        {
+                            eTransform.Position = new(eTransform.Position.X - moveX * 2.0f, eTransform.Position.Y);
+                        }
+                        else
+                        {
+                            eTransform.Position = new(eTransform.Position.X + moveX * 2.0f, eTransform.Position.Y);
+                        }
                     }
                     else
                     {
-                        eTransform.Position = new(eTransform.Position.X + moveX, eTransform.Position.Y);
-                        cTransform.Position = new(cTransform.Position.X - moveX, cTransform.Position.Y);
+                        if (eX < cX)
+                        {
+                            eTransform.Position = new(eTransform.Position.X - moveX, eTransform.Position.Y);
+                            cTransform.Position = new(cTransform.Position.X + moveX, cTransform.Position.Y);
+                        }
+                        else
+                        {
+                            eTransform.Position = new(eTransform.Position.X + moveX, eTransform.Position.Y);
+                            cTransform.Position = new(cTransform.Position.X - moveX, cTransform.Position.Y);
+                        }
                     }
                 }
                 else
                 {
                     var moveY = overlapY / 2.0f;
-                    if (eY < cY)
+                    if (eBoxCollider.IsStatic)
                     {
-                        eTransform.Position = new(eTransform.Position.X, eTransform.Position.Y - moveY);
-                        cTransform.Position = new(cTransform.Position.X, cTransform.Position.Y + moveY);
+                        if (eY < cY)
+                        {
+                            cTransform.Position = new(cTransform.Position.X, cTransform.Position.Y + moveY * 2.0f);
+                        }
+                        else
+                        {
+                            cTransform.Position = new(cTransform.Position.X, cTransform.Position.Y - moveY * 2.0f);
+                        }
+                    }
+                    else if (cBoxCollider.IsStatic)
+                    {
+                        if (eY < cY)
+                        {
+                            eTransform.Position = new(eTransform.Position.X, eTransform.Position.Y - moveY * 2.0f);
+                        }
+                        else
+                        {
+                            eTransform.Position = new(eTransform.Position.X, eTransform.Position.Y + moveY * 2.0f);
+                        }
                     }
                     else
                     {
-                        eTransform.Position = new(eTransform.Position.X, eTransform.Position.Y + moveY);
-                        cTransform.Position = new(cTransform.Position.X, cTransform.Position.Y - moveY);
+                        if (eY < cY)
+                        {
+                            eTransform.Position = new(eTransform.Position.X, eTransform.Position.Y - moveY);
+                            cTransform.Position = new(cTransform.Position.X, cTransform.Position.Y + moveY);
+                        }
+                        else
+                        {
+                            eTransform.Position = new(eTransform.Position.X, eTransform.Position.Y + moveY);
+                            cTransform.Position = new(cTransform.Position.X, cTransform.Position.Y - moveY);
+                        }
                     }
                 }
                 return true;
