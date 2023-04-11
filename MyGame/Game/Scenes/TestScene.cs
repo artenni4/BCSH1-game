@@ -26,8 +26,8 @@ namespace MyGame.Game.Scenes
             var graphicsDevice = graphics.GraphicsDevice;
 
             var configuration = new ConfigurationStorage();
-            //configuration.SetValue(ConfigurationConstants.ShowBoxColliders, true);
-            //configuration.SetValue(ConfigurationConstants.ShowAiDebug, true);
+            configuration.SetValue(ConfigurationConstants.ShowBoxColliders, true);
+            configuration.SetValue(ConfigurationConstants.ShowAiDebug, true);
 
             var loggerFactory = LoggerFactory.Create(config =>
             {
@@ -56,7 +56,9 @@ namespace MyGame.Game.Scenes
                 new Renderer(graphicsDevice, this, configuration), 
                 new AiDetectionSystem(this, eventSystem),
                 new InputSystem(eventSystem),
-                new FightSystem(this, eventSystem));
+                new CollisionSystem(this),
+                new FightSystem(this, eventSystem)
+                );
         }
     }
 }

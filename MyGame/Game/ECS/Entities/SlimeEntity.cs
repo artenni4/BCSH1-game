@@ -7,7 +7,6 @@ using MyGame.Game.StateMachine;
 using Microsoft.Xna.Framework.Content;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.ECS.Systems.EventSystem;
-using System.Diagnostics;
 
 namespace MyGame.Game.ECS.Entities
 {

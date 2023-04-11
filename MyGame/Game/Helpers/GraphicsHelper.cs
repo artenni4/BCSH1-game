@@ -90,14 +90,12 @@ namespace MyGame.Game.Helpers
             }
         }
 
-        public static void DrawRectangle(this SpriteBatch spriteBatch, Rectangle rectangle, Color color, int thickness)
+        public static void DrawRectangle(this SpriteBatch spriteBatch, float x, float y, float width, float height, Color color, int thickness)
         {
-            InitPixel(spriteBatch);
-
-            spriteBatch.Draw(_pixel, new Rectangle(rectangle.X, rectangle.Y, thickness, rectangle.Height + thickness), color);
-            spriteBatch.Draw(_pixel, new Rectangle(rectangle.X, rectangle.Y, rectangle.Width + thickness, thickness), color);
-            spriteBatch.Draw(_pixel, new Rectangle(rectangle.X + rectangle.Width, rectangle.Y, thickness, rectangle.Height + thickness), color);
-            spriteBatch.Draw(_pixel, new Rectangle(rectangle.X, rectangle.Y + rectangle.Height, rectangle.Width + thickness, thickness), color);
+            spriteBatch.DrawLine(new(x, y), new(x + width, y), color, thickness);
+            spriteBatch.DrawLine(new(x + width, y), new(x + width, y + height), color, thickness);
+            spriteBatch.DrawLine(new(x + width, y + height), new(x, y + height), color, thickness);
+            spriteBatch.DrawLine(new(x, y + height), new(x, y), color, thickness);
         }
 
         public static void DrawLine(this SpriteBatch spriteBatch, Vector2 startPos, Vector2 endPos, Color color, int thickness)

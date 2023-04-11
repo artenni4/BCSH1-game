@@ -68,7 +68,12 @@ namespace MyGame.Game.ECS.Systems
                 // debug box collider
                 if (_configuration.GetValue<bool>(ConfigurationConstants.ShowBoxColliders) && entity.TryGetComponent<BoxCollider>(out var boxCollider))
                 {
-                    _spriteBatch.DrawRectangle(new Rectangle(position.ToPoint() + boxCollider.Box.Location, boxCollider.Box.Size), Color.LightGreen, 1);
+                    _spriteBatch.DrawRectangle(
+                        position.X + boxCollider.Box.X, 
+                        position.Y + boxCollider.Box.Y, 
+                        boxCollider.Box.Width, 
+                        boxCollider.Box.Height, 
+                        Color.LightGreen, 1);
                 }
 
                 // debug ai intention

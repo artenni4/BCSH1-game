@@ -35,7 +35,7 @@ namespace MyGame.Game.ECS.Entities
             Transform = AddComponent<Transform>();
 
             BoxCollider = AddComponent<BoxCollider>();
-            BoxCollider.Box = new Rectangle(19, 23, 12, 17);
+            BoxCollider.Box = new Rectangle(17, 22, 15, 19);
 
             Animation = AddComponent<Animation>();
             Animation.Animator = new PlayerAnimator();
