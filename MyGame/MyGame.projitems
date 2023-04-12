@@ -21,6 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Collider\ICollider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\EntityHealth.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerDetector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\BushEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\CameraEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\PlayerEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SlimeEntity.cs" />

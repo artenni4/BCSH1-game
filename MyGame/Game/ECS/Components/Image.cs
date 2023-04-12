@@ -7,5 +7,6 @@ namespace MyGame.Game.ECS.Components
     internal class Image : EcsComponent
     {
         public Texture2D Texture2D { get; set; }
+        public Rectangle? SourceRectangle { get; set; }
     }
 }

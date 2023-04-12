@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace MyGame.Game.ECS.Entities
 {
-    internal class PlayerEntity : EcsEntity, IEventHandler, ICollider
+    internal class PlayerEntity : EcsEntity, IEventHandler
     {
         public const float AttackDamage = 20f;
         public const float AttackRadius = 30f;
@@ -33,7 +33,6 @@ namespace MyGame.Game.ECS.Entities
             Transform = AddComponent<Transform>();
 
             BoxCollider = AddComponent<BoxCollider>();
-            BoxCollider.Collider = this;
             BoxCollider.Box = new Rectangle(17, 22, 15, 19);
 
             Animation = AddComponent<Animation>();
@@ -142,11 +141,6 @@ namespace MyGame.Game.ECS.Entities
                 return MeleeAttackEvent.Direction.Right;
             }
             throw new ArgumentException($"{nameof(state)} is not attack animation state");
-        }
-
-        public void OnCollision(EcsEntity collider)
-        {
-
         }
     }
 }

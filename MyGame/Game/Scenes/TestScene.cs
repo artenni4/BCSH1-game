@@ -49,6 +49,7 @@ namespace MyGame.Game.Scenes
                 player,
                 slime1,
                 //slime2,
+                new BushEntity(),
                 new CameraEntity());
 
             // add systems

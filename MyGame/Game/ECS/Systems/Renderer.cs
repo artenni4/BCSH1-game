@@ -65,36 +65,9 @@ namespace MyGame.Game.ECS.Systems
                 // TODO fix Y axis invertion
                 var position = new Vector2(transform.Position.X, -transform.Position.Y); // invert Y pos for camera
 
-                // TODO extract debug to separate renderer
-                // debug box collider
-                if (_configuration.GetValue<bool>(ConfigurationConstants.ShowBoxColliders) && entity.TryGetComponent<BoxCollider>(out var boxCollider))
-                {
-                    _spriteBatch.DrawRectangle(
-                        position.X + boxCollider.Box.X, 
-                        position.Y + boxCollider.Box.Y, 
-                        boxCollider.Box.Width, 
-                        boxCollider.Box.Height, 
-                        Color.LightGreen, 1);
-                }
-
-                // debug ai intention
-                if (_configuration.GetValue<bool>(ConfigurationConstants.ShowAiDebug) && entity.TryGetComponent<PlayerDetector>(out var playerDetector))
-                {
-                    var player = _entityCollection.GetEntityOfType<PlayerEntity>();
-                    if (player is null)
-                    {
-                        return;
-                    }
-
-                    var entityPos = entity.GetEntityCenter();
-                    var playerPos = player.GetEntityCenter();
-
-                    _spriteBatch.DrawLine(new Vector2(entityPos.X, -entityPos.Y), new Vector2(playerPos.X, -playerPos.Y), Color.Red, 1);
-                }
-
                 if (entity.TryGetComponent<Image>(out var image))
                 {
-                    _spriteBatch.Draw(image.Texture2D, position, null, Color.White, transform.Rotation,
+                    _spriteBatch.Draw(image.Texture2D, position, image.SourceRectangle, Color.White, transform.Rotation,
                         Vector2.Zero, transform.Scale, SpriteEffects.None, transform.ZIndex);
                 }
 
@@ -107,8 +80,40 @@ namespace MyGame.Game.ECS.Systems
                     _spriteBatch.Draw(animation.Texture2D, position, animationData.Bounds, Color.White, transform.Rotation,
                         animationData.Origin, transform.Scale, animationData.SpriteEffects, transform.ZIndex);
                 }
+
+                DrawDebug(position, entity);
             }
             _spriteBatch.End();
+        }
+
+        private void DrawDebug(Vector2 position, EcsEntity entity)
+        {
+            // TODO extract debug to separate renderer
+            // debug box collider
+            if (_configuration.GetValue<bool>(ConfigurationConstants.ShowBoxColliders) && entity.TryGetComponent<BoxCollider>(out var boxCollider))
+            {
+                _spriteBatch.DrawRectangle(
+                    position.X + boxCollider.Box.X,
+                    position.Y + boxCollider.Box.Y,
+                    boxCollider.Box.Width,
+                    boxCollider.Box.Height,
+                    Color.LightGreen, 1);
+            }
+
+            // debug ai intention
+            if (_configuration.GetValue<bool>(ConfigurationConstants.ShowAiDebug) && entity.TryGetComponent<PlayerDetector>(out var _))
+            {
+                var player = _entityCollection.GetEntityOfType<PlayerEntity>();
+                if (player is null)
+                {
+                    return;
+                }
+
+                var entityPos = entity.GetEntityCenter();
+                var playerPos = player.GetEntityCenter();
+
+                _spriteBatch.DrawLine(new Vector2(entityPos.X, -entityPos.Y), new Vector2(playerPos.X, -playerPos.Y), Color.Red, 1);
+            }
         }
 
         private static Matrix GetTransformMatrix(Viewport viewport, Transform cameraTransform, TopDownCamera camera)

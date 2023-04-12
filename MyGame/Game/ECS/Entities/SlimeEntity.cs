@@ -182,7 +182,6 @@ namespace MyGame.Game.ECS.Entities
 
         private static bool IsMoving(AnimationNode state) => state == SlimeAnimator.MoveLeftNode || state == SlimeAnimator.MoveRightNode;
         private static bool IsAttacking(AnimationNode state) => state == SlimeAnimator.AttackLeftNode || state == SlimeAnimator.AttackRightNode;
-        private static bool IsHurt(AnimationNode state) => state == SlimeAnimator.HurtLeftNode || state == SlimeAnimator.HurtRightNode;
 
         private static bool IsMovable(IAnimator animator)
         {
