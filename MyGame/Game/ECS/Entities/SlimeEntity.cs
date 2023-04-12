@@ -14,6 +14,13 @@ namespace MyGame.Game.ECS.Entities
 {
     internal class SlimeEntity : EcsEntity, IEventHandler, ICollider
     {
+        public enum Strength
+        {
+            Weak,
+            Average,
+            Strong
+        }
+
         private readonly IEventSystem _eventSystem;
 
         private PlayerEntity chasingPlayer;
@@ -21,10 +28,11 @@ namespace MyGame.Game.ECS.Entities
         private Vector2 jumpDirection;
         private TimeSpan timeJumped = TimeSpan.Zero;
 
-        public TimeSpan MinJumpInterval { get; set; } = TimeSpan.FromSeconds(1);
+        public TimeSpan MinJumpInterval { get; set; }
         public float AttackingSpeedModifier { get; set; } = 1.8f;
         public float AttackRadius { get; set; } = 30f;
-        public float Speed { get; set; } = 40f;
+        public float AttackDamage { get; set; }
+        public float Speed { get; set; }
 
         public StateMachine<AiState> StateMachine { get; }
 
@@ -38,12 +46,17 @@ namespace MyGame.Game.ECS.Entities
 
         public EntityHealth EntityHealth { get; }
 
-        public SlimeEntity(IEventSystem eventSystem)
+        public Strength SlimeStrength { get; }
+
+        public SlimeEntity(IEventSystem eventSystem, Vector2 position, Strength strength)
         {
             _eventSystem = eventSystem;
             _eventSystem.PushHandler(this);
 
+            SlimeStrength = strength;
+
             Transform = AddComponent<Transform>();
+            Transform.Position = position;
             Transform.ZIndex = 1f;
 
             BoxCollider = AddComponent<BoxCollider>();
@@ -54,11 +67,40 @@ namespace MyGame.Game.ECS.Entities
             Animation.Animator = new SlimeAnimator();
 
             PlayerDetector = AddComponent<PlayerDetector>();
-            PlayerDetector.DetectionRadius = 100f;
+            PlayerDetector.DetectionRadius = SlimeStrength switch
+            {
+                Strength.Strong => 200f,
+                Strength.Average => 150f,
+                Strength.Weak or _ => 100f,
+            };
 
             EntityHealth = AddComponent<EntityHealth>();
-            EntityHealth.MaxHealth = 100f;
-            EntityHealth.HealthPoints = 100f;
+            EntityHealth.MaxHealth = SlimeStrength switch
+            {
+                Strength.Strong => 150f,
+                Strength.Average => 120f,
+                Strength.Weak or _ => 70f,
+            };
+            EntityHealth.HealthPoints = EntityHealth.MaxHealth;
+
+            AttackDamage = SlimeStrength switch
+            {
+                Strength.Strong => 50f,
+                Strength.Average => 30f,
+                Strength.Weak or _ => 20f,
+            };
+            MinJumpInterval = SlimeStrength switch
+            {
+                Strength.Strong => TimeSpan.FromSeconds(0.8f),
+                Strength.Average => TimeSpan.FromSeconds(0.9f),
+                Strength.Weak or _ => TimeSpan.FromSeconds(1.0f),
+            };
+            Speed = SlimeStrength switch
+            {
+                Strength.Strong => 50f,
+                Strength.Average => 45f,
+                Strength.Weak or _ => 40f,
+            };
 
             StateMachine = new StateMachineBuilder<AiState>()
                 .State(AiState.WalkAround)
@@ -73,7 +115,12 @@ namespace MyGame.Game.ECS.Entities
 
         public override void LoadContent(ContentManager contentManager)
         {
-            Animation.Texture2D = contentManager.Load<Texture2D>("sprites/characters/slime1");
+            Animation.Texture2D = SlimeStrength switch
+            {
+                Strength.Strong => contentManager.Load<Texture2D>("sprites/characters/slime3"),
+                Strength.Average => contentManager.Load<Texture2D>("sprites/characters/slime2"),
+                Strength.Weak or _ => contentManager.Load<Texture2D>("sprites/characters/slime1"),
+            };
         }
 
         public bool OnEvent<T>(object sender, T @event) where T : EventBase
