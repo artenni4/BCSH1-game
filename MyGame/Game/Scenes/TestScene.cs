@@ -24,10 +24,7 @@ namespace MyGame.Game.Scenes
         public TestScene(GraphicsDeviceManager graphics)
         {
             var graphicsDevice = graphics.GraphicsDevice;
-
             var configuration = new ConfigurationStorage();
-            configuration.SetValue(ConfigurationConstants.ShowBoxColliders, true);
-            configuration.SetValue(ConfigurationConstants.ShowAiDebug, true);
 
             var loggerFactory = LoggerFactory.Create(config =>
             {
@@ -49,6 +46,7 @@ namespace MyGame.Game.Scenes
                 player,
                 slime1,
                 //slime2,
+                new StumpEntity(),
                 new BushEntity(),
                 new CameraEntity());
 
@@ -58,6 +56,9 @@ namespace MyGame.Game.Scenes
                 new AiDetectionSystem(this, eventSystem),
                 new InputSystem(eventSystem),
                 new CollisionSystem(this),
+#if DEBUG
+                new DebugInputHandler(eventSystem, configuration),
+#endif
                 new FightSystem(this, eventSystem)
                 );
         }

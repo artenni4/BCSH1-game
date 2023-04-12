@@ -25,7 +25,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\CameraEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\PlayerEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SlimeEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\StumpEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\CollisionSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\DebugInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\DamageEvent.cs" />
     <Compile Include="..\MyGame\game\ecs\systems\eventsystem\events\MeleeAttackEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\FightSystem.cs" />
