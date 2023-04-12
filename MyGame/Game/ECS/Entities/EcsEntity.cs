@@ -40,6 +40,11 @@ namespace MyGame.Game.ECS.Entities
             return component;
         }
 
+        public void RemoveComponent<T>() where T : EcsComponent
+        {
+            _components.Remove(typeof(T));
+        }
+
         public bool ContainsComponent<T>() where T : EcsComponent
         {
             return _components.ContainsKey(typeof(T));

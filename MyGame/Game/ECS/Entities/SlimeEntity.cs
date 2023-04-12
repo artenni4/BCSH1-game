@@ -159,6 +159,7 @@ namespace MyGame.Game.ECS.Entities
             if (EntityHealth.IsDead)
             {
                 Animation.Animator.StateMachine.SetParameter(AnimationKeys.IsDead, true);
+                BoxCollider.IsKinematic = false;
             }
             else
             {
@@ -168,6 +169,12 @@ namespace MyGame.Game.ECS.Entities
 
         public override void Update(GameTime gameTime)
         {
+            // no need to update anything if slime is dead
+            if (EntityHealth.IsDead)
+            {
+                return;
+            }
+
             _lastGameTime = gameTime;
 
             // delay between slime jumps

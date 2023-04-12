@@ -123,7 +123,9 @@ namespace MyGame.Game.ECS.Systems
 
             float minScale = MathHelper.Min(scaleX, scaleY);
 
-            return Matrix.CreateTranslation(new Vector3(-cameraTransform.Position, 0)) *
+            // that Y axis invertion needs to be fixed...
+            var cameraPosition = new Vector2(-cameraTransform.Position.X, cameraTransform.Position.Y);
+            return Matrix.CreateTranslation(new Vector3(cameraPosition, 0)) *
                 Matrix.CreateRotationZ(cameraTransform.Rotation) *
                 Matrix.CreateScale(camera.Zoom, camera.Zoom, 1) *
                 // below translation could be virtualWidth / 2 and virtualHeight / 2

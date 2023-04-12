@@ -13,10 +13,10 @@ namespace MyGame.Game.ECS.Entities
         public Image Image { get; }
         public BoxCollider BoxCollider { get; }
 
-        public StumpEntity()
+        public StumpEntity(Vector2 position)
         {
             Transform = AddComponent<Transform>();
-            Transform.Position = new(-100, 30);
+            Transform.Position = position;
 
             Image = AddComponent<Image>();
             Image.SourceRectangle = new Rectangle(160, 112, 32, 32);

@@ -55,7 +55,7 @@ namespace MyGame.Game.ECS.Systems
 
             if (dx < (eWidth + cWidth) / 2.0f && dy < (eHeight + cHeight) / 2.0f)
             {
-                if (eBoxCollider.IsStatic && cBoxCollider.IsStatic) // do not move static objects
+                if (!eBoxCollider.IsKinematic || !cBoxCollider.IsKinematic || (eBoxCollider.IsStatic && cBoxCollider.IsStatic)) // do not move static objects
                 {
                     return true;
                 }

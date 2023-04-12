@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using MyGame.Game.ECS.Components;
+using MyGame.Game.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,10 +9,17 @@ namespace MyGame.Game.ECS.Entities
 {
     internal class CameraEntity : EcsEntity
     {
-        public CameraEntity()
+        private readonly IEntityCollection _entityCollection;
+
+        public Transform Transform { get; }
+        public TopDownCamera TopDownCamera { get; }
+
+        public CameraEntity(IEntityCollection entityCollection)
         {
-            AddComponent<Transform>();
-            AddComponent<TopDownCamera>();
+            _entityCollection = entityCollection;
+
+            Transform = AddComponent<Transform>();
+            TopDownCamera = AddComponent<TopDownCamera>();
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -20,6 +28,8 @@ namespace MyGame.Game.ECS.Entities
 
         public override void Update(GameTime gameTime)
         {
+            // follow player
+            Transform.Position = _entityCollection.GetEntityOfType<PlayerEntity>().GetEntityCenter();
         }
     }
 }
