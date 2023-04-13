@@ -23,11 +23,11 @@ namespace MyGame.Game.Scenes
 
             // add entities
             AddEntities(
-                new PlayerEntity(eventSystem, new(0, 100)),
-                new SlimeEntity(eventSystem, new(30, -70), SlimeEntity.Strength.Weak),
-                new SlimeEntity(eventSystem, new(100, -60), SlimeEntity.Strength.Average),
-                new StumpEntity(new(-100, 30)),
-                new BushEntity(new(-50, -10)),
+                new PlayerEntity(eventSystem), // new(0, 100)
+                new SlimeEntity(eventSystem), // new(30, -70), SlimeEntity.Strength.Weak
+                new SlimeEntity(eventSystem), // new(100, -60), SlimeEntity.Strength.Average
+                new StumpEntity(), //new(-100, 30)
+                new BushEntity(), //new(-50, -10)
                 new CameraEntity(this));
 
             // add systems

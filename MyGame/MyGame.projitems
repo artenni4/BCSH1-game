@@ -29,6 +29,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\CollisionSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\DebugInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\DamageEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Factories\SceneFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\ReflectionHelper.cs" />
     <Compile Include="..\MyGame\game\ecs\systems\eventsystem\events\MeleeAttackEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\FightSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\GraphicsHelper.cs" />
@@ -83,7 +85,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Content\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Game\Factories\" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />

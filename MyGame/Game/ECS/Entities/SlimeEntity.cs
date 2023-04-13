@@ -46,17 +46,56 @@ namespace MyGame.Game.ECS.Entities
 
         public EntityHealth EntityHealth { get; }
 
-        public Strength SlimeStrength { get; }
+        private Strength _slimeStrength;
+        public Strength SlimeStrength 
+        {
+            get => _slimeStrength;
+            set
+            {
+                _slimeStrength = value;
+                PlayerDetector.DetectionRadius = SlimeStrength switch
+                {
+                    Strength.Strong => 200f,
+                    Strength.Average => 150f,
+                    Strength.Weak or _ => 100f,
+                };
 
-        public SlimeEntity(IEventSystem eventSystem, Vector2 position, Strength strength)
+                EntityHealth.MaxHealth = SlimeStrength switch
+                {
+                    Strength.Strong => 150f,
+                    Strength.Average => 120f,
+                    Strength.Weak or _ => 70f,
+                };
+                EntityHealth.HealthPoints = EntityHealth.MaxHealth;
+
+                AttackDamage = SlimeStrength switch
+                {
+                    Strength.Strong => 50f,
+                    Strength.Average => 30f,
+                    Strength.Weak or _ => 20f,
+                };
+
+                MinJumpInterval = SlimeStrength switch
+                {
+                    Strength.Strong => TimeSpan.FromSeconds(0.8f),
+                    Strength.Average => TimeSpan.FromSeconds(0.9f),
+                    Strength.Weak or _ => TimeSpan.FromSeconds(1.0f),
+                };
+                Speed = SlimeStrength switch
+                {
+                    Strength.Strong => 50f,
+                    Strength.Average => 45f,
+                    Strength.Weak or _ => 40f,
+                };
+            }
+        }
+
+        public SlimeEntity(IEventSystem eventSystem)
         {
             _eventSystem = eventSystem;
             _eventSystem.PushHandler(this);
 
-            SlimeStrength = strength;
-
             Transform = AddComponent<Transform>();
-            Transform.Position = position;
             Transform.ZIndex = 1f;
 
             BoxCollider = AddComponent<BoxCollider>();
@@ -67,40 +106,7 @@ namespace MyGame.Game.ECS.Entities
             Animation.Animator = new SlimeAnimator();
 
             PlayerDetector = AddComponent<PlayerDetector>();
-            PlayerDetector.DetectionRadius = SlimeStrength switch
-            {
-                Strength.Strong => 200f,
-                Strength.Average => 150f,
-                Strength.Weak or _ => 100f,
-            };
-
             EntityHealth = AddComponent<EntityHealth>();
-            EntityHealth.MaxHealth = SlimeStrength switch
-            {
-                Strength.Strong => 150f,
-                Strength.Average => 120f,
-                Strength.Weak or _ => 70f,
-            };
-            EntityHealth.HealthPoints = EntityHealth.MaxHealth;
-
-            AttackDamage = SlimeStrength switch
-            {
-                Strength.Strong => 50f,
-                Strength.Average => 30f,
-                Strength.Weak or _ => 20f,
-            };
-            MinJumpInterval = SlimeStrength switch
-            {
-                Strength.Strong => TimeSpan.FromSeconds(0.8f),
-                Strength.Average => TimeSpan.FromSeconds(0.9f),
-                Strength.Weak or _ => TimeSpan.FromSeconds(1.0f),
-            };
-            Speed = SlimeStrength switch
-            {
-                Strength.Strong => 50f,
-                Strength.Average => 45f,
-                Strength.Weak or _ => 40f,
-            };
 
             StateMachine = new StateMachineBuilder<AiState>()
                 .State(AiState.WalkAround)

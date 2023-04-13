@@ -1,14 +1,18 @@
-﻿using MyGame.Game;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MyGame.Game;
 using MyGame.Game.ECS;
 using MyGame.Game.ECS.Components;
+using MyGame.Game.Factories;
 using MyGame.Game.Scenes;
+using System.IO;
+using System.Xml.Linq;
 
 namespace MyGame
 {
     public class Game1 : XnaGame
     {
         private readonly GraphicsDeviceManager _graphics;
-        private TestScene scene;
+        private SceneBase scene;
 
         public Game1()
         {
@@ -25,7 +29,10 @@ namespace MyGame
 
         protected override void Initialize()
         {
-            scene = new(_graphics);
+            var serviceProvider = new ServiceCollection().AddGameServices(_graphics.GraphicsDevice).BuildServiceProvider();
+            var sceneFactory = new SceneFactory(serviceProvider.GetService<IServiceScopeFactory>());
+            var map = XDocument.Load("Content/maps/test-map.xml");
+            scene = sceneFactory.CreateScene(map);
             base.Initialize();
         }
 

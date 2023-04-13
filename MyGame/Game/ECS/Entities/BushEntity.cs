@@ -13,10 +13,9 @@ namespace MyGame.Game.ECS.Entities
         public Image Image { get; }
         public BoxCollider BoxCollider { get; }
 
-        public BushEntity(Vector2 position)
+        public BushEntity()
         {
             Transform = AddComponent<Transform>();
-            Transform.Position = position;
 
             Image = AddComponent<Image>();
             Image.SourceRectangle = new Rectangle(96, 112, 32, 32);

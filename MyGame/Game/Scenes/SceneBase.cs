@@ -4,7 +4,7 @@ using MyGame.Game.ECS.Systems;
 
 namespace MyGame.Game.Scenes
 {
-    internal abstract class SceneBase : IEntityCollection, ISystemCollection
+    internal class SceneBase : IEntityCollection, ISystemCollection
     {
         /// <summary>
         /// List of all entities incorporated on the scene
@@ -41,7 +41,7 @@ namespace MyGame.Game.Scenes
         /// <summary>
         /// Load content for entities
         /// </summary>
-        public virtual void LoadContent(ContentManager contentManager)
+        public void LoadContent(ContentManager contentManager)
         {
             foreach (var entity in Entities)
             {

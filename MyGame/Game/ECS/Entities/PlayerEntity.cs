@@ -28,10 +28,9 @@ namespace MyGame.Game.ECS.Entities
         private KeyboardState _lastKeyboardState;
         private GameTime _lastGameTime;
 
-        public PlayerEntity(IEventSystem eventSystem, Vector2 position)
+        public PlayerEntity(IEventSystem eventSystem)
         {
             Transform = AddComponent<Transform>();
-            Transform.Position = position;
 
             BoxCollider = AddComponent<BoxCollider>();
             BoxCollider.Box = new Rectangle(17, 22, 15, 19);

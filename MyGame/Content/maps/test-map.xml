@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SceneBase 
+    xmlns:systems="Systems"
+    xmlns:entities="Entities">
+    <Systems>
+        <systems:Renderer />
+        <systems:AiDetectionSystem />
+        <systems:InputSystem />
+        <systems:CollisionSystem />
+        <systems:DebugInputHandler DEBUG="true" />
+        <systems:FightSystem />
+    </Systems>
+    <Entities>
+        <entities:CameraEntity />
+
+        <entities:PlayerEntity>
+            <Position X="0" Y="100"/>
+        </entities:PlayerEntity>
+
+        <entities:SlimeEntity>
+            <Position X="30" Y="-70"/>
+            <Strength>Weak</Strength>
+        </entities:SlimeEntity>
+
+        <entities:SlimeEntity>
+            <Position X="100" Y="-60"/>
+            <Strength>Average</Strength>
+        </entities:SlimeEntity>
+
+        <entities:StumpEntity>
+            <Position X="-100" Y="30"/>
+        </entities:StumpEntity>
+
+        <entities:BushEntity>
+            <Position X="-50" Y="-10"/>
+        </entities:BushEntity>
+    </Entities>
+</SceneBase>
