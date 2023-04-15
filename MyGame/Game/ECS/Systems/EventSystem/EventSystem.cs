@@ -29,12 +29,12 @@ namespace MyGame.Game.ECS.Systems.EventSystem
         {
             if (_eventHandlers.TryGetValue(typeof(TEvent), out var stack))
             {
-                stack.AddLast(handler);
+                stack.AddFirst(handler);
             }
             else
             {
                 stack = new LinkedList<Delegate>();
-                stack.AddLast(handler);
+                stack.AddFirst(handler);
                 _eventHandlers[typeof(TEvent)] = stack;
             }
         }
