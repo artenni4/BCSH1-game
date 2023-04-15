@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace MyGame.Game.ECS.Systems
 {
-    internal class FightSystem : EcsSystem, IEventHandler
+    internal class FightSystem : EcsSystem
     {
         private readonly IEventSystem _eventSystem;
         private readonly IEntityCollection _entityCollection;
@@ -19,25 +19,21 @@ namespace MyGame.Game.ECS.Systems
         {
             _entityCollection = entityCollection;
             _eventSystem = eventSystem;
-            _eventSystem.PushHandler(this);
+            _eventSystem.Subscribe<MeleeAttackEvent>(OnMeleeAttackEvent);
         }
 
-        public bool OnEvent<T>(object sender, T @event) where T : EventBase
+        public bool OnMeleeAttackEvent(object sender, MeleeAttackEvent meleeAttackEvent)
         {
-            if (@event is MeleeAttackEvent attackEvent)
+            // get all nearby box colliders
+            foreach (var target in _entityCollection.Entities.Where(t =>
+                t != meleeAttackEvent.Attacker && // skip entity itself
+                t.ContainsComponent<BoxCollider>() && 
+                t.ContainsComponent<Transform>() &&
+                IsHit(meleeAttackEvent, t)))
             {
-                // get all nearby box colliders
-                foreach (var target in _entityCollection.Entities.Where(t =>
-                    t != attackEvent.Attacker && // skip entity itself
-                    t.ContainsComponent<BoxCollider>() && 
-                    t.ContainsComponent<Transform>() &&
-                    IsHit(attackEvent, t)))
-                {
-                    _eventSystem.SendEvent(this, new DamageEvent(@event.GameTime, attackEvent.Attacker, target, attackEvent.Damage));
-                }
-                return true;
+                _eventSystem.Emit(this, new DamageEvent(meleeAttackEvent.GameTime, meleeAttackEvent.Attacker, target, meleeAttackEvent.Damage));
             }
-            return false;
+            return true;
         }
 
         private static bool IsHit(MeleeAttackEvent meleeAttackEvent, EcsEntity target)

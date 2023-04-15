@@ -9,10 +9,11 @@ using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Components.Collider;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace MyGame.Game.ECS.Entities
 {
-    internal class SlimeEntity : EcsEntity, IEventHandler, ICollider
+    internal class SlimeEntity : EcsEntity, ICollider
     {
         public enum Strength
         {
@@ -93,7 +94,8 @@ namespace MyGame.Game.ECS.Entities
         public SlimeEntity(IEventSystem eventSystem)
         {
             _eventSystem = eventSystem;
-            _eventSystem.PushHandler(this);
+            _eventSystem.Subscribe<PlayerDetectionEvent>(OnPlayerDetected);
+            _eventSystem.Subscribe<DamageEvent>(OnSlimeDamaged);
 
             Transform = AddComponent<Transform>();
             Transform.ZIndex = 1f;
@@ -129,15 +131,19 @@ namespace MyGame.Game.ECS.Entities
             };
         }
 
-        public bool OnEvent<T>(object sender, T @event) where T : EventBase
+        private bool OnPlayerDetected(object sender, PlayerDetectionEvent detectionEvent)
         {
-            if (@event is PlayerDetectionEvent detectionEvent && detectionEvent.Detector == this)
+            if (detectionEvent.Detector == this)
             {
                 HandleDetection(detectionEvent);
                 return true;
             }
+            return false;
+        }
 
-            if (@event is DamageEvent damageEvent && damageEvent.Damaged == this)
+        private bool OnSlimeDamaged(object sender, DamageEvent damageEvent)
+        {
+            if (damageEvent.Damaged == this)
             {
                 HandleDamage(damageEvent.Damage);
                 return true;

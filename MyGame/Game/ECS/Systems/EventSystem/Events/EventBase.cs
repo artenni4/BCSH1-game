@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyGame.Game.ECS.Systems.EventSystem.Events
 {
-    internal abstract class EventBase
+    internal abstract class EventBase : EventArgs
     {
         /// <summary>
         /// Group that event belongs

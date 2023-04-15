@@ -9,7 +9,7 @@ using System.Text;
 
 namespace MyGame.Game.ECS.Systems
 {
-    internal class DebugInputHandler : EcsSystem, IEventHandler
+    internal class DebugInputHandler : EcsSystem
     {
         private readonly IEventSystem _eventSystem;
         private readonly IConfiguration _configuration;
@@ -19,25 +19,22 @@ namespace MyGame.Game.ECS.Systems
             _eventSystem = eventSystem;
             _configuration = configuration;
 
-            _eventSystem.PushHandler(this);
+            _eventSystem.Subscribe<KeyboardEvent>(OnKeyboardInput);
         }
 
-        public bool OnEvent<T>(object sender, T @event) where T : EventBase
+        private bool OnKeyboardInput(object sender, KeyboardEvent keyboardEvent)
         {
-            if (@event is KeyboardEvent keyboardEvent)
+            if (keyboardEvent.PressedKeys.Contains(Keys.B))
             {
-                if (keyboardEvent.PressedKeys.Contains(Keys.B))
-                {
-                    var showBoxColliders = _configuration.GetValue<bool>(ConfigurationConstants.ShowBoxColliders);
-                    _configuration.SetValue(ConfigurationConstants.ShowBoxColliders, !showBoxColliders);
-                    return true;
-                }
-                if (keyboardEvent.PressedKeys.Contains(Keys.I))
-                {
-                    var showAiDebug = _configuration.GetValue<bool>(ConfigurationConstants.ShowAiDebug);
-                    _configuration.SetValue(ConfigurationConstants.ShowAiDebug, !showAiDebug);
-                    return true;
-                }
+                var showBoxColliders = _configuration.GetValue<bool>(ConfigurationConstants.ShowBoxColliders);
+                _configuration.SetValue(ConfigurationConstants.ShowBoxColliders, !showBoxColliders);
+                return true;
+            }
+            if (keyboardEvent.PressedKeys.Contains(Keys.I))
+            {
+                var showAiDebug = _configuration.GetValue<bool>(ConfigurationConstants.ShowAiDebug);
+                _configuration.SetValue(ConfigurationConstants.ShowAiDebug, !showAiDebug);
+                return true;
             }
             return false;
         }

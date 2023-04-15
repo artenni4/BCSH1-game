@@ -43,12 +43,12 @@ namespace MyGame.Game.ECS.Systems
                 {
                     if (Vector2.Distance(entity.GetEntityCenter(), player.GetEntityCenter()) <= playerDetector.DetectionRadius && !_entities.Contains(entity))
                     {
-                        _eventSystem.SendEvent(this, new PlayerDetectionEvent(gameTime, entity, player, true));
+                        _eventSystem.Emit(this, new PlayerDetectionEvent(gameTime, entity, player, true));
                         _entities.Add(entity);
                     }
                     else if (Vector2.Distance(entity.GetEntityCenter(), player.GetEntityCenter()) > playerDetector.DetectionRadius && _entities.Contains(entity))
                     {
-                        _eventSystem.SendEvent(this, new PlayerDetectionEvent(gameTime, entity, player, false));
+                        _eventSystem.Emit(this, new PlayerDetectionEvent(gameTime, entity, player, false));
                         _entities.Remove(entity);
                     }
                 }

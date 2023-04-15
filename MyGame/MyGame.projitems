@@ -69,7 +69,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\MouseEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\EventBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventGroup.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\IEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\EventSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\InputHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Scenes\TestScene.cs" />

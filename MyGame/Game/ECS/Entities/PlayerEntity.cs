@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Xna.Framework.Content;
 using MyGame.Game.Animators;
 using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
@@ -12,7 +13,7 @@ using System.Linq;
 
 namespace MyGame.Game.ECS.Entities
 {
-    internal class PlayerEntity : EcsEntity, IEventHandler
+    internal class PlayerEntity : EcsEntity
     {
         public const float AttackDamage = 20f;
         public const float AttackRadius = 30f;
@@ -43,7 +44,8 @@ namespace MyGame.Game.ECS.Entities
             EntityHealth.HealthPoints = 100f;
 
             _eventSystem = eventSystem;
-            _eventSystem.PushHandler(this);
+            _eventSystem.Subscribe<KeyboardEvent>(OnKeyboardEvent);
+            _eventSystem.Subscribe<MouseEvent>(OnMouseEvent);
 
             Animation.Animator.StateMachine.StateChanged += StateMachine_StateChanged;
         }
@@ -57,38 +59,33 @@ namespace MyGame.Game.ECS.Entities
         {
             if (IsAttackAnimation(e.CurrentState) && !IsAttackAnimation(e.PreviousState))
             {
-                _eventSystem.SendEvent(this, new MeleeAttackEvent(_lastGameTime, this, GetAttackDirection(e.CurrentState), PlayerEntity.AttackRadius, PlayerEntity.AttackDamage));
+                _eventSystem.Emit(this, new MeleeAttackEvent(_lastGameTime, this, GetAttackDirection(e.CurrentState), AttackRadius, AttackDamage));
             }
         }
 
-        public bool OnEvent<T>(object sender, T @event) where T : EventBase
+        private bool OnKeyboardEvent(object sender, KeyboardEvent keyboardEvent)
         {
-            if (@event.EventGroup != EventGroup.InputEvent)
+            _lastKeyboardState = keyboardEvent.KeyboardState;
+            var handled = false;
+
+            var input = InputHelper.GetInputAxisNormalized(_lastKeyboardState);
+            handled |= input != Vector2.Zero; // if player moves
+            Animation.Animator.StateMachine.SetDirectionVector(input);
+
+            // TODO remove later
+            if (keyboardEvent.PressedKeys.Contains(Keys.K))
             {
-                return false;
+                Animation.Animator.StateMachine.SetParameter(AnimationKeys.IsDead, true);
+                handled = true;
             }
+            return handled;
+        }
 
-            if (@event is KeyboardEvent keyboardEvent)
+        private bool OnMouseEvent(object sender, MouseEvent mouseEvent)
+        {
+            if (mouseEvent.MouseState.LeftButton == ButtonState.Pressed)
             {
-                _lastKeyboardState = keyboardEvent.KeyboardState;
-                var input = InputHelper.GetInputAxisNormalized(_lastKeyboardState);
-                Animation.Animator.StateMachine.SetDirectionVector(input);
-
-                // TODO remove later
-                if (keyboardEvent.PressedKeys.Contains(Keys.K))
-                {
-                    Animation.Animator.StateMachine.SetParameter(AnimationKeys.IsDead, true);
-                }
-
-                return true;
-            }
-            else if (@event is MouseEvent mouseEvent)
-            {
-                if (mouseEvent.MouseState.LeftButton == ButtonState.Pressed)
-                {
-                    Animation.Animator.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
-                }
-
+                Animation.Animator.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
                 return true;
             }
             return false;

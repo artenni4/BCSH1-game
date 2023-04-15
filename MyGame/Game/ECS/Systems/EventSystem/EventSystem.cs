@@ -5,7 +5,7 @@ namespace MyGame.Game.ECS.Systems.EventSystem
 {
     internal class EventSystem : IEventSystem
     {
-        private readonly Stack<IEventHandler> _eventHandlers = new();
+        private readonly Dictionary<Type, LinkedList<Delegate>> _eventHandlers = new();
         private readonly ILogger<EventSystem> _logger;
 
         public EventSystem(ILogger<EventSystem> logger)
@@ -13,21 +13,47 @@ namespace MyGame.Game.ECS.Systems.EventSystem
             _logger = logger;
         }
 
-        public IEventHandler PopHandler() => _eventHandlers.Pop();
+        public void Unsubscribe<TEvent>(EcsEventHandler<TEvent> handler) where TEvent : EventBase
+        {
+            if (_eventHandlers.TryGetValue(typeof(TEvent), out var stack))
+            {
+                stack.Remove(handler);
+                if (stack.Count == 0 )
+                {
+                    _eventHandlers.Remove(typeof(TEvent));
+                }
+            }
+        }
 
-        public void PushHandler(IEventHandler handler) => _eventHandlers.Push(handler);
+        public void Subscribe<TEvent>(EcsEventHandler<TEvent> handler) where TEvent : EventBase
+        {
+            if (_eventHandlers.TryGetValue(typeof(TEvent), out var stack))
+            {
+                stack.AddLast(handler);
+            }
+            else
+            {
+                stack = new LinkedList<Delegate>();
+                stack.AddLast(handler);
+                _eventHandlers[typeof(TEvent)] = stack;
+            }
+        }
 
-        public void SendEvent<T>(object sender, T @event) where T : EventBase
+        public void Emit<TEvent>(object sender, TEvent @event) where TEvent : EventBase
         {
             _logger.LogDebug("Event {@event} sent by {sender}", @event, sender);
 
             // NOTE: some events can push new handlers, so maybe making copy of currently registered handlers is good idea
-            foreach (var handler in _eventHandlers)
+            if (_eventHandlers.TryGetValue(typeof(TEvent), out var stack))
             {
-                // interrupt propagation if handled
-                if (handler.OnEvent(sender, @event))
+                foreach (var handler in stack)
                 {
-                    break;
+                    var ecsHandler = (EcsEventHandler<TEvent>)handler;
+                    // interrupt propagation if handled
+                    if (ecsHandler(sender, @event))
+                    {
+                        break;
+                    }
                 }
             }
         }
