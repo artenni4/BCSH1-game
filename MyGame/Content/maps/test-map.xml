@@ -27,6 +27,11 @@
             <Strength>Average</Strength>
         </entities:SlimeEntity>
 
+        <entities:SlimeEntity>
+            <Position X="-50" Y="60"/>
+            <Strength>Strong</Strength>
+        </entities:SlimeEntity>
+
         <entities:StumpEntity>
             <Position X="-100" Y="30"/>
         </entities:StumpEntity>

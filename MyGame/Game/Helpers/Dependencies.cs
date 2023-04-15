@@ -5,14 +5,11 @@ using MyGame.Game.ECS.Entities;
 using MyGame.Game.ECS.Systems;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.Scenes;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MyGame.Game.Helpers
 {
-    internal static class ReflectionHelper
+    internal static class Dependencies
     {
         public static IServiceCollection AddGameServices(this IServiceCollection services, GraphicsDevice graphicsDevice)
         {

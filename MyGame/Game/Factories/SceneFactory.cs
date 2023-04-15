@@ -46,7 +46,7 @@ namespace MyGame.Game.Factories
             return scene;
         }
 
-        private void SetupEntity(EcsEntity entity, IEnumerable<XElement> properties)
+        private static void SetupEntity(EcsEntity entity, IEnumerable<XElement> properties)
         {
             foreach (var property in properties)
             {
