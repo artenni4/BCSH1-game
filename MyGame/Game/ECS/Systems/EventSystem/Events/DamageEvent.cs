@@ -7,18 +7,17 @@ namespace MyGame.Game.ECS.Systems.EventSystem.Events
 {
     internal class DamageEvent : EventBase
     {
-
         public override EventGroup EventGroup => EventGroup.GameEvent;
 
-        public EcsEntity Damager { get; }
-        public EcsEntity Damaged { get; }
-        public float Damage { get; }
+        public EcsEntity Attacker { get; }
+        public EcsEntity Target { get; }
+        public float Amount { get; }
 
         public DamageEvent(GameTime gameTime, EcsEntity damager, EcsEntity damaged, float damage) : base(gameTime)
         {
-            Damager = damager;
-            Damaged = damaged;
-            Damage = damage;
+            Attacker = damager;
+            Target = damaged;
+            Amount = damage;
         }
     }
 }

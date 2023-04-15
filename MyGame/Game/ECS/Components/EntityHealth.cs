@@ -6,13 +6,7 @@ namespace MyGame.Game.ECS.Components
 {
     internal class EntityHealth : EcsComponent
     {
-        private float healthPoints;
-
-        public float HealthPoints
-        {
-            get => healthPoints;
-            set => healthPoints = Math.Clamp(value, 0f, MaxHealth);
-        }
+        public float HealthPoints { get; set; }
 
         public bool IsDead => HealthPoints <= 0f;
 

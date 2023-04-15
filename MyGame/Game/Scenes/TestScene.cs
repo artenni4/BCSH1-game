@@ -31,15 +31,17 @@ namespace MyGame.Game.Scenes
                 new CameraEntity(this));
 
             // add systems
+            var damageSystem = new DamageSystem(this, eventSystem);
             AddSystems(
                 new Renderer(graphicsDevice, this, configuration), 
                 new AiDetectionSystem(this, eventSystem),
-                new InputSystem(eventSystem),
+                new InputSystem(eventSystem, this),
                 new CollisionSystem(this),
+                damageSystem,
 #if DEBUG
-                new DebugInputHandler(eventSystem, configuration),
+                new DebugInputHandler(eventSystem, this, configuration),
 #endif
-                new FightSystem(this, eventSystem)
+                new AttackSystem(this, damageSystem)
                 );
         }
     }

@@ -18,6 +18,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\AnimationNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\IAnimator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\Animators\PlayerAnimator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Attack\AttackComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Attack\MeleeAttackComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Collider\ICollider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\EntityHealth.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerDetector.cs" />
@@ -27,12 +29,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SlimeEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\StumpEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\CollisionSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\DamageSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\DebugInputHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\DamageEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Factories\SceneFactory.cs" />
     <Compile Include="..\MyGame\Game\Helpers\Dependencies.cs" />
-    <Compile Include="..\MyGame\game\ecs\systems\eventsystem\events\MeleeAttackEvent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\FightSystem.cs" />
+    <Compile Include="..\MyGame\Game\ECS\Systems\AttackSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\GraphicsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\StateMachineHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Scenes\IEntityCollection.cs" />

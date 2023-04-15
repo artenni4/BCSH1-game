@@ -8,7 +8,8 @@
         <systems:InputSystem />
         <systems:CollisionSystem />
         <systems:DebugInputHandler DEBUG="true" />
-        <systems:FightSystem />
+        <systems:DamageSystem />
+        <systems:AttackSystem />
     </Systems>
     <Entities>
         <entities:CameraEntity />

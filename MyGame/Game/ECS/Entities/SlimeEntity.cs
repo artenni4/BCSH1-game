@@ -143,9 +143,9 @@ namespace MyGame.Game.ECS.Entities
 
         private bool OnSlimeDamaged(object sender, DamageEvent damageEvent)
         {
-            if (damageEvent.Damaged == this)
+            if (damageEvent.Target == this)
             {
-                HandleDamage(damageEvent.Damage);
+                HandleDamage(damageEvent.Amount);
                 return true;
             }
             return false;

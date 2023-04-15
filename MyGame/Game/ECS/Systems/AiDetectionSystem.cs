@@ -17,28 +17,25 @@ namespace MyGame.Game.ECS.Systems
     internal class AiDetectionSystem : EcsSystem
     {
         private readonly IEventSystem _eventSystem;
-        private readonly IEntityCollection _entityCollection;
         private readonly ISet<EcsEntity> _entities;
 
         public AiDetectionSystem(IEntityCollection entityCollection, IEventSystem eventSystem)
+            : base(entityCollection)
         {
             _eventSystem = eventSystem;
-            _entityCollection = entityCollection;
             _entities = new HashSet<EcsEntity>();
         }
 
         public override void Update(GameTime gameTime)
         {
-            var player = _entityCollection.GetEntityOfType<PlayerEntity>();
+            var player = GetEntityOfType<PlayerEntity>();
             if (player is null)
             {
                 return;
             }
 
-            foreach (var entity in _entityCollection.Entities.Where(e => e != player && e.ContainsComponent<Transform>()))
+            foreach (var entity in GetEntities<Transform>())
             {
-                var transform = entity.GetComponent<Transform>();
-
                 if (entity.TryGetComponent<PlayerDetector>(out var playerDetector))
                 {
                     if (Vector2.Distance(entity.GetEntityCenter(), player.GetEntityCenter()) <= playerDetector.DetectionRadius && !_entities.Contains(entity))

@@ -29,6 +29,7 @@ namespace MyGame.Game.ECS.Systems
         private const float virtualHeight = 216f;
 
         public Renderer(GraphicsDevice graphicsDevice, IEntityCollection entityCollection, IConfiguration configuration)
+            : base(entityCollection)
         {
             _configuration = configuration;
             _entityCollection = entityCollection;
@@ -41,7 +42,7 @@ namespace MyGame.Game.ECS.Systems
             _graphicsDevice.Clear(Color.Wheat);
             
             // find camera
-            CameraEntity cameraEntity = _entityCollection.GetEntityOfType<CameraEntity>();
+            CameraEntity cameraEntity = GetEntityOfType<CameraEntity>();
 
             if (cameraEntity is null)
             {
@@ -59,7 +60,7 @@ namespace MyGame.Game.ECS.Systems
 
             // NOTE: SamplerState.PointClamp - pixelates textures on scale
             _spriteBatch.Begin(sortMode: SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp, transformMatrix: cameraMatrix);
-            foreach (var entity in _entityCollection.Entities.Where(e => e.ContainsComponent<Transform>()))
+            foreach (var entity in _entityCollection.Entities.Where(e => e.HasComponent<Transform>()))
             {
                 var transform = entity.GetComponent<Transform>();
                 // TODO fix Y axis invertion
@@ -103,7 +104,7 @@ namespace MyGame.Game.ECS.Systems
             // debug ai intention
             if (_configuration.GetValue<bool>(ConfigurationConstants.ShowAiDebug) && entity.TryGetComponent<PlayerDetector>(out var _))
             {
-                var player = _entityCollection.GetEntityOfType<PlayerEntity>();
+                var player = GetEntityOfType<PlayerEntity>();
                 if (player is null)
                 {
                     return;

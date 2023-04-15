@@ -4,6 +4,7 @@ using MyGame.Game.Animators;
 using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
+using MyGame.Game.ECS.Components.Attack;
 using MyGame.Game.ECS.Components.Collider;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
@@ -15,19 +16,16 @@ namespace MyGame.Game.ECS.Entities
 {
     internal class PlayerEntity : EcsEntity
     {
-        public const float AttackDamage = 20f;
-        public const float AttackRadius = 30f;
-
         public float Speed { get; set; } = 100f;
 
         public Transform Transform { get; }
         public BoxCollider BoxCollider { get; }
         public Animation Animation { get; }
         public EntityHealth EntityHealth { get; }
+        public MeleeAttackComponent MeleeAttackComponent { get; }
 
         private readonly IEventSystem _eventSystem;
         private KeyboardState _lastKeyboardState;
-        private GameTime _lastGameTime;
 
         public PlayerEntity(IEventSystem eventSystem)
         {
@@ -42,6 +40,11 @@ namespace MyGame.Game.ECS.Entities
             EntityHealth = AddComponent<EntityHealth>();
             EntityHealth.MaxHealth = 100f;
             EntityHealth.HealthPoints = 100f;
+
+            MeleeAttackComponent = AddComponent<MeleeAttackComponent>();
+            MeleeAttackComponent.Cooldown = TimeSpan.FromSeconds(0.5);
+            MeleeAttackComponent.Range = 30f;
+            MeleeAttackComponent.DamageAmount = 20f;
 
             _eventSystem = eventSystem;
             _eventSystem.Subscribe<KeyboardEvent>(OnKeyboardEvent);
@@ -59,7 +62,8 @@ namespace MyGame.Game.ECS.Entities
         {
             if (IsAttackAnimation(e.CurrentState) && !IsAttackAnimation(e.PreviousState))
             {
-                _eventSystem.Emit(this, new MeleeAttackEvent(_lastGameTime, this, GetAttackDirection(e.CurrentState), AttackRadius, AttackDamage));
+                MeleeAttackComponent.AttackDirection = GetAttackDirection(Animation.Animator.StateMachine.State);
+                MeleeAttackComponent.AttackInitiated = true;
             }
         }
 
@@ -93,9 +97,8 @@ namespace MyGame.Game.ECS.Entities
 
         public override void Update(GameTime gameTime)
         {
-            _lastGameTime = gameTime;
-
             var animator = Animation.Animator;
+
             if (IsMovable(animator.StateMachine.State))
             {
                 var input = InputHelper.GetInputAxisNormalized(_lastKeyboardState);
@@ -119,23 +122,23 @@ namespace MyGame.Game.ECS.Entities
                 state == PlayerAnimator.AttackLeftNode;
         }
 
-        private static MeleeAttackEvent.Direction GetAttackDirection(AnimationNode state)
+        private static MeleeAttackComponent.Direction GetAttackDirection(AnimationNode state)
         {
             if (state == PlayerAnimator.AttackDownNode)
             {
-                return MeleeAttackEvent.Direction.Down;
+                return MeleeAttackComponent.Direction.Down;
             }
             else if (state == PlayerAnimator.AttackUpNode)
             {
-                return MeleeAttackEvent.Direction.Up;
+                return MeleeAttackComponent.Direction.Up;
             }
             else if (state == PlayerAnimator.AttackLeftNode)
             {
-                return MeleeAttackEvent.Direction.Left;
+                return MeleeAttackComponent.Direction.Left;
             }
             else if (state == PlayerAnimator.AttackRightNode)
             {
-                return MeleeAttackEvent.Direction.Right;
+                return MeleeAttackComponent.Direction.Right;
             }
             throw new ArgumentException($"{nameof(state)} is not attack animation state");
         }

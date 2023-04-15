@@ -11,18 +11,16 @@ namespace MyGame.Game.ECS.Systems
 {
     internal class CollisionSystem : EcsSystem
     {
-        private readonly IEntityCollection _entityCollection;
-
         public CollisionSystem(IEntityCollection entityCollection)
+            : base(entityCollection)
         {
-            _entityCollection = entityCollection;
         }
 
         public override void Update(GameTime gameTime)
         {
-            foreach (var entity in _entityCollection.Entities.Where(e => e.ContainsComponent<Transform>() && e.ContainsComponent<BoxCollider>()))
+            foreach (var entity in GetEntities<BoxCollider, Transform>())
             {
-                foreach (var collider in _entityCollection.Entities.Where(c => c != entity && c.ContainsComponent<Transform>() && c.ContainsComponent<BoxCollider>()))
+                foreach (var collider in GetEntities<Transform, BoxCollider>())
                 {
                     if (ResolveCollision(entity, collider))
                     {

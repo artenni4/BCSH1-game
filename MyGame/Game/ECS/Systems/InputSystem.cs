@@ -1,6 +1,7 @@
 ﻿using MyGame.Game.ECS.Entities;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
+using MyGame.Game.Scenes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,7 +17,8 @@ namespace MyGame.Game.ECS.Systems
         private KeyboardState _previousKeyboardState;
         private MouseState _previousMouseState;
 
-        public InputSystem(IEventSystem eventSystem)
+        public InputSystem(IEventSystem eventSystem, IEntityCollection entityCollection)
+            : base(entityCollection)
         {
             _eventSystem = eventSystem;
         }
