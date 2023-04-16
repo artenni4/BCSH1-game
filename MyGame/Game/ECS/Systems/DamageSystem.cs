@@ -24,14 +24,17 @@ namespace MyGame.Game.ECS.Systems
         {
             foreach (var request in _damageRequests)
             {
-                var targetHealthComponent = request.Target.GetComponent<EntityHealth>();
-                if (targetHealthComponent != null)
+                if (request.Target.TryGetComponent<EntityHealth>(out var entityHealth) && 
+                    (gameTime.TotalGameTime - entityHealth.LastDamagedTime >= entityHealth.DamageCooldown))
                 {
                     // Apply damage
-                    targetHealthComponent.HealthPoints -= request.Amount;
+                    entityHealth.HealthPoints -= request.Amount;
 
                     // Clamp health to the range [0, MaxHealth]
-                    targetHealthComponent.HealthPoints = Math.Clamp(targetHealthComponent.HealthPoints, 0, targetHealthComponent.MaxHealth);
+                    entityHealth.HealthPoints = Math.Clamp(entityHealth.HealthPoints, 0, entityHealth.MaxHealth);
+
+                    // set last damage time
+                    entityHealth.LastDamagedTime = gameTime.TotalGameTime;
 
                     // Emit a damage event
                     _eventSystem.Emit(this, new DamageEvent(gameTime, request.Attacker, request.Target, request.Amount));

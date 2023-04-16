@@ -1,9 +1,5 @@
 ﻿using MyGame.Game.ECS.Entities;
-using MyGame.Game.ECS.Systems.EventSystem.Events;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MyGame.Game.ECS.Components.Attack
 {
@@ -15,13 +11,26 @@ namespace MyGame.Game.ECS.Components.Attack
         public float DamageAmount { get; set; }
         public Direction AttackDirection { get; set; }
 
+        /// <summary>
+        /// A value between 0 and 1 that represents attack progress theshold when damage should be dealt
+        /// </summary>
+        public float DamageDealtThreshhold { get; set; }
+
+        public bool DamageDealt { get; private set; }
+
         public override float CalculateDamage() => DamageAmount;
 
         public override IEnumerable<EcsEntity> GetTargets(IEnumerable<EcsEntity> potentialTargets) => potentialTargets.Where(IsHit);
 
+        public override void InitiateAttack(GameTime gameTime)
+        {
+            base.InitiateAttack(gameTime);
+            DamageDealt = false;
+        }
+
         private bool IsHit(EcsEntity target)
         {
-            if (IsAllyFaction(target)) return false;
+            if (target == Entity || IsAllyFaction(target)) return false;
 
             var attackerCenter = Entity.GetEntityCenter();
             var targetCenter = target.GetEntityCenter();
@@ -43,6 +52,21 @@ namespace MyGame.Game.ECS.Components.Attack
                 Direction.Left => angle >= 3f * pi4 || angle <= -3f * pi4,
                 _ => false
             };
+        }
+
+        public override bool IsDealingDamage(GameTime gameTime)
+        {
+            if (DamageDealt)
+            {
+                return false;
+            }
+
+            if (AttackProgress >= DamageDealtThreshhold)
+            {
+                DamageDealt = true;
+                return true;
+            }
+            return false;
         }
     }
 }

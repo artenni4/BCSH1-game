@@ -27,9 +27,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\PlayerEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SlimeEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\StumpEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\AnimationSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\CollisionSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\DamageSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\DebugInputHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\AttackEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\AttackInitiationEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\CollisionEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\DamageEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Factories\SceneFactory.cs" />

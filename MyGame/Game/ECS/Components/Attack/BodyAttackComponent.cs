@@ -17,9 +17,11 @@ namespace MyGame.Game.ECS.Components.Attack
 
         public override IEnumerable<EcsEntity> GetTargets(IEnumerable<EcsEntity> potentialTargets) => potentialTargets.Where(IsHit);
 
+        public override bool IsDealingDamage(GameTime gameTime) => IsAttacking;
+
         private bool IsHit(EcsEntity target)
         {
-            if (IsAllyFaction(target)) return false;
+            if (target == Entity || IsAllyFaction(target)) return false;
 
             var attackerCenter = Entity.GetEntityCenter();
             var targetCenter = target.GetEntityCenter();

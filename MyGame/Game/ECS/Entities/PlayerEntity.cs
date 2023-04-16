@@ -3,6 +3,7 @@ using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
 using MyGame.Game.ECS.Components.Attack;
+using MyGame.Game.ECS.Systems;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.StateMachine;
@@ -33,12 +34,15 @@ namespace MyGame.Game.ECS.Entities
             Animation = AddComponent<PlayerAnimation>();
 
             EntityHealth = AddComponent<EntityHealth>();
+            EntityHealth.DamageCooldown = TimeSpan.FromSeconds(1.5f);
             EntityHealth.MaxHealth = 100f;
             EntityHealth.HealthPoints = 100f;
 
             MeleeAttackComponent = AddComponent<MeleeAttackComponent>();
+            MeleeAttackComponent.AttackDuration = PlayerAnimation.AttackLeftNode.Duration;
             MeleeAttackComponent.Faction = AttackFactions.PlayerFaction;
-            MeleeAttackComponent.Cooldown = TimeSpan.FromSeconds(0.5);
+            MeleeAttackComponent.Cooldown = TimeSpan.FromSeconds(1);
+            MeleeAttackComponent.DamageDealtThreshhold = 0.25f;
             MeleeAttackComponent.Range = 30f;
             MeleeAttackComponent.DamageAmount = 20f;
 
@@ -46,22 +50,11 @@ namespace MyGame.Game.ECS.Entities
             _eventSystem.Subscribe<DamageEvent>(OnPlayerDamaged);
             _eventSystem.Subscribe<KeyboardEvent>(OnKeyboardEvent);
             _eventSystem.Subscribe<MouseEvent>(OnMouseEvent);
-
-            Animation.StateMachine.StateChanged += StateMachine_StateChanged;
         }
 
         public override void LoadContent(ContentManager contentManager)
         {
             Animation.Texture2D = contentManager.Load<Texture2D>("sprites/characters/player");
-        }
-
-        private void StateMachine_StateChanged(object sender, TransitionEventArgs<AnimationNode> e)
-        {
-            if (IsAttackAnimation(e.CurrentState) && !IsAttackAnimation(e.PreviousState))
-            {
-                MeleeAttackComponent.AttackDirection = GetAttackDirection(Animation.StateMachine.State);
-                MeleeAttackComponent.AttackInitiated = true;
-            }
         }
 
         private bool OnPlayerDamaged(object sender, DamageEvent damageEvent)
@@ -71,26 +64,21 @@ namespace MyGame.Game.ECS.Entities
                 return false;
             }
 
-            Animation.StateMachine.SetParameter(AnimationKeys.IsDead, true);
-            BoxCollider.IsKinematic = false;
-            return true;
+            if (EntityHealth.IsDead)
+            {
+                BoxCollider.IsKinematic = false;
+            }
+            return false;
         }
 
         private bool OnKeyboardEvent(object sender, KeyboardEvent keyboardEvent)
         {
             _lastKeyboardState = keyboardEvent.KeyboardState;
-            var handled = false;
 
             var input = InputHelper.GetInputAxisNormalized(_lastKeyboardState);
-            handled |= input != Vector2.Zero; // if player moves
+            var handled = input != Vector2.Zero; // if player moves
             Animation.StateMachine.SetDirectionVector(input);
 
-            // TODO remove later
-            if (keyboardEvent.PressedKeys.Contains(Keys.K))
-            {
-                Animation.StateMachine.SetParameter(AnimationKeys.IsDead, true);
-                handled = true;
-            }
             return handled;
         }
 
@@ -98,7 +86,7 @@ namespace MyGame.Game.ECS.Entities
         {
             if (mouseEvent.MouseState.LeftButton == ButtonState.Pressed)
             {
-                Animation.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
+                _eventSystem.Emit(this, new AttackInitiationEvent(mouseEvent.GameTime, this));
                 return true;
             }
             return false;

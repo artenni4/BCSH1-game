@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Components.Attack;
+using MyGame.Game.ECS.Systems;
 
 namespace MyGame.Game.ECS.Entities
 {
@@ -109,9 +110,12 @@ namespace MyGame.Game.ECS.Entities
             Animation = AddComponent<SlimeAnimation>();
 
             PlayerDetector = AddComponent<PlayerDetector>();
+
             EntityHealth = AddComponent<EntityHealth>();
+            EntityHealth.DamageCooldown = TimeSpan.FromSeconds(1);
 
             BodyAttackComponent = AddComponent<BodyAttackComponent>();
+            BodyAttackComponent.AttackDuration = SlimeAnimation.AttackLeftNode.Duration;
             BodyAttackComponent.Faction = AttackFactions.EnemyFaction;
             BodyAttackComponent.AttackingSpeedModifier = 1.8f;
             BodyAttackComponent.Range = 20f;
@@ -153,8 +157,12 @@ namespace MyGame.Game.ECS.Entities
             {
                 return false;
             }
-            HandleDamage(damageEvent.Amount);
-            return true;
+
+            if (EntityHealth.IsDead)
+            {
+                BoxCollider.IsKinematic = false;
+            }
+            return false;
         }
 
         private void HandleDetection(PlayerDetectionEvent detectionEvent)
@@ -168,20 +176,6 @@ namespace MyGame.Game.ECS.Entities
             {
                 StateMachine.SetTrigger(AiTriggers.PlayerLost);
                 chasingPlayer = null;
-            }
-        }
-
-        private void HandleDamage(float damage)
-        {
-            EntityHealth.HealthPoints -= damage;
-            if (EntityHealth.IsDead)
-            {
-                Animation.StateMachine.SetParameter(AnimationKeys.IsDead, true);
-                BoxCollider.IsKinematic = false;
-            }
-            else
-            {
-                Animation.StateMachine.SetTrigger(AnimationKeys.HurtTrigger);
             }
         }
 
@@ -234,7 +228,7 @@ namespace MyGame.Game.ECS.Entities
                 // trigger attack if needed
                 if (Vector2.Distance(slimeCenter, playerCenter) <= MinJumpDistance)
                 {
-                    Animation.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
+                    _eventSystem.Emit(this, new AttackInitiationEvent(gameTime, this));
                 }
                 // if idle give direction and exit
                 jumpDirection = playerCenter - slimeCenter;
@@ -274,10 +268,6 @@ namespace MyGame.Game.ECS.Entities
         {
             if (collisionEvent.IsColliding(this))
             {
-                if (IsAttacking(Animation.StateMachine.State))
-                {
-                    BodyAttackComponent.AttackInitiated = true;
-                }
                 return true;
             }
             return false;

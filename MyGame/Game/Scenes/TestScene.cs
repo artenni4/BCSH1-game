@@ -20,6 +20,7 @@ namespace MyGame.Game.Scenes
             });
             
             var eventSystem = new EventSystem(loggerFactory.CreateLogger<EventSystem>());
+            var damageSystem = new DamageSystem(this, eventSystem);
 
             // add entities
             AddEntities(
@@ -31,17 +32,17 @@ namespace MyGame.Game.Scenes
                 new CameraEntity(this));
 
             // add systems
-            var damageSystem = new DamageSystem(this, eventSystem);
             AddSystems(
                 new Renderer(graphicsDevice, this, configuration), 
                 new AiDetectionSystem(this, eventSystem),
                 new InputSystem(eventSystem, this),
                 new CollisionSystem(this, eventSystem),
+                new AnimationSystem(this, eventSystem),
                 damageSystem,
 #if DEBUG
                 new DebugInputHandler(eventSystem, this, configuration),
 #endif
-                new AttackSystem(this, damageSystem)
+                new AttackSystem(this, damageSystem, eventSystem)
                 );
         }
     }

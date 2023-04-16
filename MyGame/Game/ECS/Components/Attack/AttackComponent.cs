@@ -1,7 +1,5 @@
-﻿using MyGame.Game.ECS.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.Xna.Framework;
+using MyGame.Game.ECS.Entities;
 
 namespace MyGame.Game.ECS.Components.Attack
 {
@@ -9,18 +7,43 @@ namespace MyGame.Game.ECS.Components.Attack
     {
         public TimeSpan Cooldown { get; set; }
         public TimeSpan LastAttackTime { get; set; }
-        public bool AttackInitiated { get; set; }
+        public TimeSpan AttackDuration { get; set; }
+        public bool IsAttacking { get; private set; }
+
+        /// <summary>
+        /// A value between 0 and 1 representing the attack progress
+        /// </summary>
+        public float AttackProgress { get; private set; }
+
+        /// <summary>
+        /// Faction of attacker
+        /// </summary>
         public string Faction { get; set; }
 
-        protected bool IsAllyFaction(EcsEntity target)
+        public virtual void UpdateAttackProgress(GameTime gameTime)
         {
-            if (target.TryGetComponent<AttackComponent>(out var attackComponent) && attackComponent.Faction == Faction)
+            if (IsAttacking)
             {
-                return true;
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                AttackProgress += deltaTime / (float)AttackDuration.TotalSeconds;
+                if (AttackProgress >= 1f)
+                {
+                    IsAttacking = false;
+                    AttackProgress = 0f;
+                }
             }
-            return false;
         }
 
+        public virtual void InitiateAttack(GameTime gameTime)
+        {
+            LastAttackTime = gameTime.TotalGameTime;
+            IsAttacking = true;
+            AttackProgress = 0f;
+        }
+
+        protected bool IsAllyFaction(EcsEntity target) => target.TryGetComponent<AttackComponent>(out var attackComponent) && attackComponent.Faction == Faction;
+
+        public abstract bool IsDealingDamage(GameTime gameTime);
         public abstract IEnumerable<EcsEntity> GetTargets(IEnumerable<EcsEntity> potentialTargets);
         public abstract float CalculateDamage();
     }
