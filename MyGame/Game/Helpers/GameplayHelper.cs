@@ -1,11 +1,5 @@
-﻿using MyGame.Game.ECS.Components.Animation;
-using MyGame.Game.StateMachine;
-using MyGame.Game.ECS;
-using MyGame.Game.ECS.Components;
-using MyGame.Game.Scenes;
-using System.Linq;
+﻿using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Entities;
-using MyGame.Game.ECS.Components.Collider;
 
 namespace MyGame.Game.Helpers
 {

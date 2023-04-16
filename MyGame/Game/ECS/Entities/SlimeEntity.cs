@@ -7,12 +7,11 @@ using MyGame.Game.StateMachine;
 using Microsoft.Xna.Framework.Content;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.ECS.Systems.EventSystem;
-using MyGame.Game.ECS.Components.Collider;
 using MyGame.Game.ECS.Components.Attack;
 
 namespace MyGame.Game.ECS.Entities
 {
-    internal class SlimeEntity : EcsEntity, ICollider
+    internal class SlimeEntity : EcsEntity
     {
         public enum Strength
         {
@@ -99,13 +98,13 @@ namespace MyGame.Game.ECS.Entities
         {
             _eventSystem = eventSystem;
             _eventSystem.Subscribe<PlayerDetectionEvent>(OnPlayerDetected);
+            _eventSystem.Subscribe<CollisionEvent>(OnCollision);
             _eventSystem.Subscribe<DamageEvent>(OnSlimeDamaged);
 
             Transform = AddComponent<Transform>();
             Transform.ZIndex = 1f;
 
             BoxCollider = AddComponent<BoxCollider>();
-            BoxCollider.Collider = this;
             BoxCollider.Box = new Rectangle(10, 13, 13, 10);
 
             Animation = AddComponent<Animation>();
@@ -273,12 +272,17 @@ namespace MyGame.Game.ECS.Entities
             return false;
         }
 
-        public void OnCollision(EcsEntity collider)
+        public bool OnCollision(object sender, CollisionEvent collisionEvent)
         {
-            if (IsAttacking(Animation.Animator.StateMachine.State))
+            if (collisionEvent.IsColliding(this))
             {
-                BodyAttackComponent.AttackInitiated = true;
+                if (IsAttacking(Animation.Animator.StateMachine.State))
+                {
+                    BodyAttackComponent.AttackInitiated = true;
+                }
+                return true;
             }
+            return false;
         }
     }
 }

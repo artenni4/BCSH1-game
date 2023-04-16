@@ -1,9 +1,8 @@
-﻿using MyGame.Game.ECS.Components.Collider;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyGame.Game.ECS.Components.Collider
+namespace MyGame.Game.ECS.Components
 {
     internal class BoxCollider : EcsComponent
     {
@@ -14,6 +13,5 @@ namespace MyGame.Game.ECS.Components.Collider
         /// </summary>
         public bool IsKinematic { get; set; } = true;
         public Rectangle Box { get; set; }
-        public ICollider Collider { get; set; } = ICollider.Empty;
     }
 }

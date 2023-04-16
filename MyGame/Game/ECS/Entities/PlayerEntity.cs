@@ -1,15 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework.Content;
 using MyGame.Game.Animators;
 using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
 using MyGame.Game.ECS.Components.Attack;
-using MyGame.Game.ECS.Components.Collider;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.StateMachine;
-using System.Diagnostics;
 using System.Linq;
 
 namespace MyGame.Game.ECS.Entities

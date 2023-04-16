@@ -1,17 +1,11 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using MyGame.Game.Configuration;
+﻿using MyGame.Game.Configuration;
 using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
-using MyGame.Game.ECS.Components.Collider;
 using MyGame.Game.ECS.Entities;
 using MyGame.Game.Scenes;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
 namespace MyGame.Game.ECS.Systems
 {

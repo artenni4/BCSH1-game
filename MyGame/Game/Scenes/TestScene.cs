@@ -36,7 +36,7 @@ namespace MyGame.Game.Scenes
                 new Renderer(graphicsDevice, this, configuration), 
                 new AiDetectionSystem(this, eventSystem),
                 new InputSystem(eventSystem, this),
-                new CollisionSystem(this),
+                new CollisionSystem(this, eventSystem),
                 damageSystem,
 #if DEBUG
                 new DebugInputHandler(eventSystem, this, configuration),

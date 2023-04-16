@@ -1,19 +1,19 @@
 ﻿using MyGame.Game.ECS.Components;
-using MyGame.Game.ECS.Components.Collider;
 using MyGame.Game.ECS.Entities;
+using MyGame.Game.ECS.Systems.EventSystem;
+using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.Scenes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MyGame.Game.ECS.Systems
 {
     internal class CollisionSystem : EcsSystem
     {
-        public CollisionSystem(IEntityCollection entityCollection)
+        private readonly IEventSystem _eventSystem;
+
+        public CollisionSystem(IEntityCollection entityCollection, IEventSystem eventSystem)
             : base(entityCollection)
         {
+            _eventSystem = eventSystem;
         }
 
         public override void Update(GameTime gameTime)
@@ -29,9 +29,8 @@ namespace MyGame.Game.ECS.Systems
 
                     if (ResolveCollision(entity, collider))
                     {
-                        // NOTE: maybe send event in both ways: e -> c and c -> e
                         // send collision event
-                        entity.GetComponent<BoxCollider>().Collider.OnCollision(collider);
+                        _eventSystem.Emit(this, new CollisionEvent(gameTime, entity, collider));
                     }
                 }
             }

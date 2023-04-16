@@ -1,11 +1,5 @@
-﻿using MyGame.Game.Animators;
-using MyGame.Game.ECS.Components;
-using MyGame.Game.ECS.Components.Animation;
+﻿using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Attack;
-using MyGame.Game.ECS.Components.Collider;
-using MyGame.Game.ECS.Entities;
-using MyGame.Game.ECS.Systems.EventSystem;
-using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.Scenes;
 using System.Linq;
 

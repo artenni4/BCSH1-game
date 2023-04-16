@@ -1,9 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using MyGame.Game.ECS.Components;
-using MyGame.Game.ECS.Components.Collider;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MyGame.Game.ECS.Entities
 {
