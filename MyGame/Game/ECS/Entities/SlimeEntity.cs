@@ -87,6 +87,11 @@ namespace MyGame.Game.ECS.Entities
                     Strength.Average => 45f,
                     Strength.Weak or _ => 40f,
                 };
+
+                if (SlimeStrength == Strength.Strong)
+                {
+                    Transform.Scale = 1.1f;
+                }
             }
         }
 

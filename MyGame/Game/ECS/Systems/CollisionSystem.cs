@@ -41,15 +41,15 @@ namespace MyGame.Game.ECS.Systems
         {
             var eTransform = entity.GetComponent<Transform>();
             var eBoxCollider = entity.GetComponent<BoxCollider>();
-            var eWidth = (float)eBoxCollider.Box.Width;
-            var eHeight = (float)eBoxCollider.Box.Height;
+            var eWidth = eBoxCollider.Box.Width * eTransform.Scale;
+            var eHeight = eBoxCollider.Box.Height * eTransform.Scale;
             var eX = eTransform.Position.X + eBoxCollider.Box.X;
             var eY = eTransform.Position.Y - eBoxCollider.Box.Y;
 
             var cTransform = collider.GetComponent<Transform>();
             var cBoxCollider = collider.GetComponent<BoxCollider>();
-            var cWidth = (float)cBoxCollider.Box.Width;
-            var cHeight = (float)cBoxCollider.Box.Height;
+            var cWidth = cBoxCollider.Box.Width * cTransform.Scale;
+            var cHeight = cBoxCollider.Box.Height * cTransform.Scale;
             var cX = cTransform.Position.X + cBoxCollider.Box.X;
             var cY = cTransform.Position.Y - cBoxCollider.Box.Y;
 

@@ -39,7 +39,7 @@ namespace MyGame.Game.ECS.Systems
 
         public override void Draw(GameTime gameTime)
         {
-            _graphicsDevice.Clear(Color.Wheat);
+            _graphicsDevice.Clear(new Color(80, 155, 102));
             
             // find camera
             CameraEntity cameraEntity = GetEntityOfType<CameraEntity>();
@@ -82,12 +82,12 @@ namespace MyGame.Game.ECS.Systems
                         animationData.Origin, transform.Scale, animationData.SpriteEffects, transform.ZIndex);
                 }
 
-                DrawDebug(position, entity);
+                DrawDebug(position, transform.Scale, entity);
             }
             _spriteBatch.End();
         }
 
-        private void DrawDebug(Vector2 position, EcsEntity entity)
+        private void DrawDebug(Vector2 position, float scale, EcsEntity entity)
         {
             // TODO extract debug to separate renderer
             // debug box collider
@@ -96,8 +96,8 @@ namespace MyGame.Game.ECS.Systems
                 _spriteBatch.DrawRectangle(
                     position.X + boxCollider.Box.X,
                     position.Y + boxCollider.Box.Y,
-                    boxCollider.Box.Width,
-                    boxCollider.Box.Height,
+                    boxCollider.Box.Width * scale,
+                    boxCollider.Box.Height * scale,
                     Color.LightGreen, 1);
             }
 
