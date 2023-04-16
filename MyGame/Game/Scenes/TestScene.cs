@@ -38,6 +38,7 @@ namespace MyGame.Game.Scenes
                 new InputSystem(eventSystem, this),
                 new CollisionSystem(this, eventSystem),
                 new AnimationSystem(this, eventSystem),
+                new VisualEffectsSystem(this, eventSystem),
                 damageSystem,
 #if DEBUG
                 new DebugInputHandler(eventSystem, this, configuration),

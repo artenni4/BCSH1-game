@@ -11,6 +11,7 @@
         <systems:DebugInputHandler DEBUG="true" />
         <systems:DamageSystem />
         <systems:AttackSystem />
+        <systems:VisualEffectsSystem />
     </Systems>
     <Entities>
         <entities:CameraEntity />

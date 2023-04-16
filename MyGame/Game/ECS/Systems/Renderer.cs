@@ -2,6 +2,7 @@
 using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
+using MyGame.Game.ECS.Components.VisualEffect;
 using MyGame.Game.ECS.Entities;
 using MyGame.Game.Scenes;
 using System.Data;
@@ -60,9 +61,18 @@ namespace MyGame.Game.ECS.Systems
                 // TODO fix Y axis invertion
                 var position = new Vector2(transform.Position.X, -transform.Position.Y); // invert Y pos for camera
 
+                var color = Color.White;
+                if (entity.TryGetComponent<EffectComponent>(out var effect))
+                {
+                    if (effect is BlinkingEffect blinkingEffect)
+                    {
+                        color = blinkingEffect.GetCurrentColor(gameTime.TotalGameTime);
+                    }
+                }
+
                 if (entity.TryGetComponent<Image>(out var image))
                 {
-                    _spriteBatch.Draw(image.Texture2D, position, image.SourceRectangle, Color.White, transform.Rotation,
+                    _spriteBatch.Draw(image.Texture2D, position, image.SourceRectangle, color, transform.Rotation,
                         Vector2.Zero, transform.Scale, SpriteEffects.None, transform.ZIndex);
                 }
 
@@ -71,7 +81,7 @@ namespace MyGame.Game.ECS.Systems
                     animation.StateMachine.Update(gameTime.ElapsedGameTime);
                     var animationData = animation.GetAnimationData();
 
-                    _spriteBatch.Draw(animation.Texture2D, position, animationData.Bounds, Color.White, transform.Rotation,
+                    _spriteBatch.Draw(animation.Texture2D, position, animationData.Bounds, color, transform.Rotation,
                         animationData.Origin, transform.Scale, animationData.SpriteEffects, transform.ZIndex);
                 }
 
