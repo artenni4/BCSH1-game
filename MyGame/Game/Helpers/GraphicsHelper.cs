@@ -56,26 +56,6 @@ namespace MyGame.Game.Helpers
             stateMachine.SetParameter(AnimationKeys.XDirection, 0f);
             stateMachine.SetParameter(AnimationKeys.YDirection, 0f);
         }
-
-        /// <summary>
-        /// If current animation frame is last in sequence
-        /// </summary>
-        /// <param name="animator"></param>
-        /// <returns></returns>
-        public static bool IsLastAnimationFrame(this IAnimator animator)
-        {
-            return animator.GetFrameIndex() >= animator.StateMachine.State.AnimationFrames.Length - 1;
-        }
-
-        /// <summary>
-        /// If current animation frame is first in sequence
-        /// </summary>
-        /// <param name="animator"></param>
-        /// <returns></returns>
-        public static bool IsFirstAnimationFrame(this IAnimator animator)
-        {
-            return animator.GetFrameIndex() <= 1;
-        }
         #endregion
 
         #region Drawing Primitives

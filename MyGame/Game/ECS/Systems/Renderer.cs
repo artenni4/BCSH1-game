@@ -68,9 +68,8 @@ namespace MyGame.Game.ECS.Systems
 
                 if (entity.TryGetComponent<Animation>(out var animation))
                 {
-                    var animator = animation.Animator;
-                    animator.StateMachine.Update(gameTime.ElapsedGameTime);
-                    var animationData = animator.GetAnimationData();
+                    animation.StateMachine.Update(gameTime.ElapsedGameTime);
+                    var animationData = animation.GetAnimationData();
 
                     _spriteBatch.Draw(animation.Texture2D, position, animationData.Bounds, Color.White, transform.Rotation,
                         animationData.Origin, transform.Scale, animationData.SpriteEffects, transform.ZIndex);

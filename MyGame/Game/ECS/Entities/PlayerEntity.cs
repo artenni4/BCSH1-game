@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Content;
-using MyGame.Game.Animators;
 using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
@@ -17,7 +16,7 @@ namespace MyGame.Game.ECS.Entities
 
         public Transform Transform { get; }
         public BoxCollider BoxCollider { get; }
-        public Animation Animation { get; }
+        public PlayerAnimation Animation { get; }
         public EntityHealth EntityHealth { get; }
         public MeleeAttackComponent MeleeAttackComponent { get; }
 
@@ -31,8 +30,7 @@ namespace MyGame.Game.ECS.Entities
             BoxCollider = AddComponent<BoxCollider>();
             BoxCollider.Box = new Rectangle(17, 22, 15, 19);
 
-            Animation = AddComponent<Animation>();
-            Animation.Animator = new PlayerAnimator();
+            Animation = AddComponent<PlayerAnimation>();
 
             EntityHealth = AddComponent<EntityHealth>();
             EntityHealth.MaxHealth = 100f;
@@ -49,7 +47,7 @@ namespace MyGame.Game.ECS.Entities
             _eventSystem.Subscribe<KeyboardEvent>(OnKeyboardEvent);
             _eventSystem.Subscribe<MouseEvent>(OnMouseEvent);
 
-            Animation.Animator.StateMachine.StateChanged += StateMachine_StateChanged;
+            Animation.StateMachine.StateChanged += StateMachine_StateChanged;
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -61,7 +59,7 @@ namespace MyGame.Game.ECS.Entities
         {
             if (IsAttackAnimation(e.CurrentState) && !IsAttackAnimation(e.PreviousState))
             {
-                MeleeAttackComponent.AttackDirection = GetAttackDirection(Animation.Animator.StateMachine.State);
+                MeleeAttackComponent.AttackDirection = GetAttackDirection(Animation.StateMachine.State);
                 MeleeAttackComponent.AttackInitiated = true;
             }
         }
@@ -73,7 +71,7 @@ namespace MyGame.Game.ECS.Entities
                 return false;
             }
 
-            Animation.Animator.StateMachine.SetParameter(AnimationKeys.IsDead, true);
+            Animation.StateMachine.SetParameter(AnimationKeys.IsDead, true);
             BoxCollider.IsKinematic = false;
             return true;
         }
@@ -85,12 +83,12 @@ namespace MyGame.Game.ECS.Entities
 
             var input = InputHelper.GetInputAxisNormalized(_lastKeyboardState);
             handled |= input != Vector2.Zero; // if player moves
-            Animation.Animator.StateMachine.SetDirectionVector(input);
+            Animation.StateMachine.SetDirectionVector(input);
 
             // TODO remove later
             if (keyboardEvent.PressedKeys.Contains(Keys.K))
             {
-                Animation.Animator.StateMachine.SetParameter(AnimationKeys.IsDead, true);
+                Animation.StateMachine.SetParameter(AnimationKeys.IsDead, true);
                 handled = true;
             }
             return handled;
@@ -100,7 +98,7 @@ namespace MyGame.Game.ECS.Entities
         {
             if (mouseEvent.MouseState.LeftButton == ButtonState.Pressed)
             {
-                Animation.Animator.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
+                Animation.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
                 return true;
             }
             return false;
@@ -108,9 +106,7 @@ namespace MyGame.Game.ECS.Entities
 
         public override void Update(GameTime gameTime)
         {
-            var animator = Animation.Animator;
-
-            if (IsMovable(animator.StateMachine.State))
+            if (IsMovable(Animation.StateMachine.State))
             {
                 var input = InputHelper.GetInputAxisNormalized(_lastKeyboardState);
                 Transform.Position += input * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -119,35 +115,35 @@ namespace MyGame.Game.ECS.Entities
 
         private static bool IsMovable(AnimationNode state)
         {
-            return state == PlayerAnimator.WalkDownNode ||
-                state == PlayerAnimator.WalkUpNode ||
-                state == PlayerAnimator.WalkRightNode ||
-                state == PlayerAnimator.WalkLeftNode;
+            return state == PlayerAnimation.WalkDownNode ||
+                state == PlayerAnimation.WalkUpNode ||
+                state == PlayerAnimation.WalkRightNode ||
+                state == PlayerAnimation.WalkLeftNode;
         }
 
         public static bool IsAttackAnimation(AnimationNode state)
         {
-            return state == PlayerAnimator.AttackDownNode ||
-                state == PlayerAnimator.AttackUpNode ||
-                state == PlayerAnimator.AttackRightNode ||
-                state == PlayerAnimator.AttackLeftNode;
+            return state == PlayerAnimation.AttackDownNode ||
+                state == PlayerAnimation.AttackUpNode ||
+                state == PlayerAnimation.AttackRightNode ||
+                state == PlayerAnimation.AttackLeftNode;
         }
 
         private static MeleeAttackComponent.Direction GetAttackDirection(AnimationNode state)
         {
-            if (state == PlayerAnimator.AttackDownNode)
+            if (state == PlayerAnimation.AttackDownNode)
             {
                 return MeleeAttackComponent.Direction.Down;
             }
-            else if (state == PlayerAnimator.AttackUpNode)
+            else if (state == PlayerAnimation.AttackUpNode)
             {
                 return MeleeAttackComponent.Direction.Up;
             }
-            else if (state == PlayerAnimator.AttackLeftNode)
+            else if (state == PlayerAnimation.AttackLeftNode)
             {
                 return MeleeAttackComponent.Direction.Left;
             }
-            else if (state == PlayerAnimator.AttackRightNode)
+            else if (state == PlayerAnimation.AttackRightNode)
             {
                 return MeleeAttackComponent.Direction.Right;
             }

@@ -1,5 +1,4 @@
-﻿using MyGame.Game.Animators;
-using MyGame.Game.Constants.Enums;
+﻿using MyGame.Game.Constants.Enums;
 using MyGame.Game.Constants;
 using MyGame.Game.ECS.Components.Animation;
 using MyGame.Game.ECS.Components;
@@ -37,7 +36,7 @@ namespace MyGame.Game.ECS.Entities
 
         public BoxCollider BoxCollider { get; }
 
-        public Animation Animation { get; }
+        public SlimeAnimation Animation { get; }
 
         public PlayerDetector PlayerDetector { get; }
 
@@ -107,8 +106,7 @@ namespace MyGame.Game.ECS.Entities
             BoxCollider = AddComponent<BoxCollider>();
             BoxCollider.Box = new Rectangle(10, 13, 13, 10);
 
-            Animation = AddComponent<Animation>();
-            Animation.Animator = new SlimeAnimator();
+            Animation = AddComponent<SlimeAnimation>();
 
             PlayerDetector = AddComponent<PlayerDetector>();
             EntityHealth = AddComponent<EntityHealth>();
@@ -125,7 +123,7 @@ namespace MyGame.Game.ECS.Entities
                     .TransitionTo(AiState.WalkAround).OnTrigger(AiTriggers.PlayerLost)
                 .BuildStateMachine(AiState.WalkAround);
 
-            Animation.Animator.StateMachine.StateCycleDone += OnAnimationCycle;
+            Animation.StateMachine.StateCycleDone += OnAnimationCycle;
         }
 
 
@@ -178,12 +176,12 @@ namespace MyGame.Game.ECS.Entities
             EntityHealth.HealthPoints -= damage;
             if (EntityHealth.IsDead)
             {
-                Animation.Animator.StateMachine.SetParameter(AnimationKeys.IsDead, true);
+                Animation.StateMachine.SetParameter(AnimationKeys.IsDead, true);
                 BoxCollider.IsKinematic = false;
             }
             else
             {
-                Animation.Animator.StateMachine.SetTrigger(AnimationKeys.HurtTrigger);
+                Animation.StateMachine.SetTrigger(AnimationKeys.HurtTrigger);
             }
         }
 
@@ -200,8 +198,8 @@ namespace MyGame.Game.ECS.Entities
             // delay between slime jumps
             if (gameTime.TotalGameTime - timeJumped <= MinJumpInterval)
             {
-                Animation.Animator.StateMachine.RemoveDirectionVector();
-                Animation.Animator.StateMachine.RemoveParameter(AnimationKeys.AttackTrigger);
+                Animation.StateMachine.RemoveDirectionVector();
+                Animation.StateMachine.RemoveParameter(AnimationKeys.AttackTrigger);
                 return;
             }
 
@@ -214,11 +212,11 @@ namespace MyGame.Game.ECS.Entities
         private void OnAnimationCycle(object sender, EventArgs e)
         {
             // set last jump right before next animation cycle
-            if (IsMoving(Animation.Animator.StateMachine.State) || IsAttacking(Animation.Animator.StateMachine.State))
+            if (IsMoving(Animation.StateMachine.State) || IsAttacking(Animation.StateMachine.State))
             {
                 timeJumped = _lastGameTime.TotalGameTime;
-                Animation.Animator.StateMachine.RemoveDirectionVector();
-                Animation.Animator.StateMachine.RemoveTrigger(AnimationKeys.AttackTrigger);
+                Animation.StateMachine.RemoveDirectionVector();
+                Animation.StateMachine.RemoveTrigger(AnimationKeys.AttackTrigger);
             }
         }
 
@@ -227,20 +225,20 @@ namespace MyGame.Game.ECS.Entities
             var slimeCenter = this.GetEntityCenter();
             var playerCenter = chasingPlayer.GetEntityCenter();
 
-            bool isIdle = IsIdle(Animation.Animator.StateMachine.State);
-            bool isAttacking = IsAttacking(Animation.Animator.StateMachine.State);
-            bool isMovable = IsMovable(Animation.Animator);
+            bool isIdle = IsIdle(Animation.StateMachine.State);
+            bool isAttacking = IsAttacking(Animation.StateMachine.State);
+            bool isMovable = IsMovable(Animation);
 
             if (isIdle)
             {
                 // trigger attack if needed
                 if (Vector2.Distance(slimeCenter, playerCenter) <= MinJumpDistance)
                 {
-                    Animation.Animator.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
+                    Animation.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
                 }
                 // if idle give direction and exit
                 jumpDirection = playerCenter - slimeCenter;
-                Animation.Animator.StateMachine.SetDirectionVector(jumpDirection);
+                Animation.StateMachine.SetDirectionVector(jumpDirection);
                 return;
             }
             
@@ -252,20 +250,20 @@ namespace MyGame.Game.ECS.Entities
             }
         }
         
-        private static bool IsIdle(AnimationNode state) => state == SlimeAnimator.IdleLeftNode || state == SlimeAnimator.IdleRightNode;
+        private static bool IsIdle(AnimationNode state) => state == SlimeAnimation.IdleLeftNode || state == SlimeAnimation.IdleRightNode;
 
-        private static bool IsMoving(AnimationNode state) => state == SlimeAnimator.MoveLeftNode || state == SlimeAnimator.MoveRightNode;
-        private static bool IsAttacking(AnimationNode state) => state == SlimeAnimator.AttackLeftNode || state == SlimeAnimator.AttackRightNode;
+        private static bool IsMoving(AnimationNode state) => state == SlimeAnimation.MoveLeftNode || state == SlimeAnimation.MoveRightNode;
+        private static bool IsAttacking(AnimationNode state) => state == SlimeAnimation.AttackLeftNode || state == SlimeAnimation.AttackRightNode;
 
-        private static bool IsMovable(IAnimator animator)
+        private static bool IsMovable(SlimeAnimation slimeAnimation)
         {
-            var animState = animator.StateMachine.State;
-            int fi = animator.GetFrameIndex();
-            if (animState == SlimeAnimator.MoveRightNode || animState == SlimeAnimator.MoveLeftNode)
+            var animState = slimeAnimation.StateMachine.State;
+            int fi = slimeAnimation.GetFrameIndex();
+            if (animState == SlimeAnimation.MoveRightNode || animState == SlimeAnimation.MoveLeftNode)
             {
                 return fi >= 1 && fi <= 4;
             }
-            if (animState == SlimeAnimator.AttackRightNode || animState == SlimeAnimator.AttackLeftNode)
+            if (animState == SlimeAnimation.AttackRightNode || animState == SlimeAnimation.AttackLeftNode)
             {
                 return fi >= 1 && fi <= 5;
             }
@@ -276,7 +274,7 @@ namespace MyGame.Game.ECS.Entities
         {
             if (collisionEvent.IsColliding(this))
             {
-                if (IsAttacking(Animation.Animator.StateMachine.State))
+                if (IsAttacking(Animation.StateMachine.State))
                 {
                     BodyAttackComponent.AttackInitiated = true;
                 }
