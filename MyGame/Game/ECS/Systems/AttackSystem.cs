@@ -25,10 +25,10 @@ namespace MyGame.Game.ECS.Systems
         {
             foreach (var attacker in GetEntities<AttackComponent>())
             {
-                var attackComponent = attacker.GetComponent<MeleeAttackComponent>();
+                var attackComponent = attacker.GetComponent<AttackComponent>();
                 if (ShouldAttack(attackComponent, gameTime))
                 {
-                    foreach (var targets in attackComponent.GetTargets(GetEntities<Transform, BoxCollider, EntityHealth>()))
+                    foreach (var targets in attackComponent.GetTargets(GetEntities<Transform, BoxCollider, EntityHealth>().Where(e => e != attacker)))
                     {
                         var amount = attackComponent.CalculateDamage();
                         _damageSystem.AddDamageRequest(new DamageRequest(attacker, targets, amount));
@@ -37,7 +37,7 @@ namespace MyGame.Game.ECS.Systems
             }
         }
 
-        private static bool ShouldAttack(MeleeAttackComponent attackComponent, GameTime gameTime)
+        private static bool ShouldAttack(AttackComponent attackComponent, GameTime gameTime)
         {
             // Check if enough time has passed since the last attack (based on the attack cooldown)
             if (gameTime.TotalGameTime - attackComponent.LastAttackTime >= attackComponent.Cooldown)

@@ -14,11 +14,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)game\Animators\SlimeAnimator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\AiTriggers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\AnimationFlags.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\AttackFactions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\AnimationData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\AnimationNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\IAnimator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\Animators\PlayerAnimator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Attack\AttackComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Attack\BodyAttackComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Attack\MeleeAttackComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Collider\ICollider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\EntityHealth.cs" />

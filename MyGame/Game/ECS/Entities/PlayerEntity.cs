@@ -42,11 +42,13 @@ namespace MyGame.Game.ECS.Entities
             EntityHealth.HealthPoints = 100f;
 
             MeleeAttackComponent = AddComponent<MeleeAttackComponent>();
+            MeleeAttackComponent.Faction = AttackFactions.PlayerFaction;
             MeleeAttackComponent.Cooldown = TimeSpan.FromSeconds(0.5);
             MeleeAttackComponent.Range = 30f;
             MeleeAttackComponent.DamageAmount = 20f;
 
             _eventSystem = eventSystem;
+            _eventSystem.Subscribe<DamageEvent>(OnPlayerDamaged);
             _eventSystem.Subscribe<KeyboardEvent>(OnKeyboardEvent);
             _eventSystem.Subscribe<MouseEvent>(OnMouseEvent);
 
@@ -65,6 +67,18 @@ namespace MyGame.Game.ECS.Entities
                 MeleeAttackComponent.AttackDirection = GetAttackDirection(Animation.Animator.StateMachine.State);
                 MeleeAttackComponent.AttackInitiated = true;
             }
+        }
+
+        private bool OnPlayerDamaged(object sender, DamageEvent damageEvent)
+        {
+            if (damageEvent.Target != this)
+            {
+                return false;
+            }
+
+            Animation.Animator.StateMachine.SetParameter(AnimationKeys.IsDead, true);
+            BoxCollider.IsKinematic = false;
+            return true;
         }
 
         private bool OnKeyboardEvent(object sender, KeyboardEvent keyboardEvent)

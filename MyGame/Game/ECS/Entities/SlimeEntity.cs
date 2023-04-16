@@ -8,8 +8,7 @@ using Microsoft.Xna.Framework.Content;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Components.Collider;
-using System.Diagnostics;
-using Microsoft.Extensions.Logging;
+using MyGame.Game.ECS.Components.Attack;
 
 namespace MyGame.Game.ECS.Entities
 {
@@ -30,9 +29,7 @@ namespace MyGame.Game.ECS.Entities
         private TimeSpan timeJumped = TimeSpan.Zero;
 
         public TimeSpan MinJumpInterval { get; set; }
-        public float AttackingSpeedModifier { get; set; } = 1.8f;
-        public float AttackRadius { get; set; } = 30f;
-        public float AttackDamage { get; set; }
+        public float MinJumpDistance { get; set; } = 40f;
         public float Speed { get; set; }
 
         public StateMachine<AiState> StateMachine { get; }
@@ -46,6 +43,8 @@ namespace MyGame.Game.ECS.Entities
         public PlayerDetector PlayerDetector { get; }
 
         public EntityHealth EntityHealth { get; }
+
+        public BodyAttackComponent BodyAttackComponent { get; }
 
         private Strength _slimeStrength;
         public Strength SlimeStrength 
@@ -69,7 +68,7 @@ namespace MyGame.Game.ECS.Entities
                 };
                 EntityHealth.HealthPoints = EntityHealth.MaxHealth;
 
-                AttackDamage = SlimeStrength switch
+                BodyAttackComponent.DamageAmount = SlimeStrength switch
                 {
                     Strength.Strong => 50f,
                     Strength.Average => 30f,
@@ -110,6 +109,11 @@ namespace MyGame.Game.ECS.Entities
             PlayerDetector = AddComponent<PlayerDetector>();
             EntityHealth = AddComponent<EntityHealth>();
 
+            BodyAttackComponent = AddComponent<BodyAttackComponent>();
+            BodyAttackComponent.Faction = AttackFactions.EnemyFaction;
+            BodyAttackComponent.AttackingSpeedModifier = 1.8f;
+            BodyAttackComponent.Range = 20f;
+
             StateMachine = new StateMachineBuilder<AiState>()
                 .State(AiState.WalkAround)
                     .TransitionTo(AiState.ChasePlayer).OnTrigger(AiTriggers.PlayerDetected)
@@ -143,12 +147,12 @@ namespace MyGame.Game.ECS.Entities
 
         private bool OnSlimeDamaged(object sender, DamageEvent damageEvent)
         {
-            if (damageEvent.Target == this)
+            if (damageEvent.Target != this)
             {
-                HandleDamage(damageEvent.Amount);
-                return true;
+                return false;
             }
-            return false;
+            HandleDamage(damageEvent.Amount);
+            return true;
         }
 
         private void HandleDetection(PlayerDetectionEvent detectionEvent)
@@ -226,7 +230,7 @@ namespace MyGame.Game.ECS.Entities
             if (isIdle)
             {
                 // trigger attack if needed
-                if (Vector2.Distance(slimeCenter, playerCenter) <= AttackRadius)
+                if (Vector2.Distance(slimeCenter, playerCenter) <= MinJumpDistance)
                 {
                     Animation.Animator.StateMachine.SetTrigger(AnimationKeys.AttackTrigger);
                 }
@@ -239,7 +243,7 @@ namespace MyGame.Game.ECS.Entities
             if (isMovable)
             {
                 // increase speed in attack
-                float speed = isAttacking ? Speed * AttackingSpeedModifier : Speed;
+                float speed = isAttacking ? Speed * BodyAttackComponent.AttackingSpeedModifier : Speed;
                 Transform.Position += jumpDirection.GetNormalized() * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
         }
@@ -266,7 +270,10 @@ namespace MyGame.Game.ECS.Entities
 
         public void OnCollision(EcsEntity collider)
         {
-
+            if (IsAttacking(Animation.Animator.StateMachine.State))
+            {
+                BodyAttackComponent.AttackInitiated = true;
+            }
         }
     }
 }

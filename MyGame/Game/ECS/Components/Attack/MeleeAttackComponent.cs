@@ -21,13 +21,15 @@ namespace MyGame.Game.ECS.Components.Attack
 
         private bool IsHit(EcsEntity target)
         {
-            var playerCenter = Entity.GetEntityCenter();
-            var entityCenter = target.GetEntityCenter();
+            if (IsAllyFaction(target)) return false;
 
-            var direction = entityCenter - playerCenter;
+            var attackerCenter = Entity.GetEntityCenter();
+            var targetCenter = target.GetEntityCenter();
+
+            var direction = targetCenter - attackerCenter;
             var angle = MathF.Atan2(direction.Y, direction.X);
 
-            return IsDirectionMatch(angle, AttackDirection) && Vector2.Distance(playerCenter, entityCenter) < Range;
+            return IsDirectionMatch(angle, AttackDirection) && Vector2.Distance(attackerCenter, targetCenter) < Range;
         }
 
         private static bool IsDirectionMatch(float angle, Direction direction)

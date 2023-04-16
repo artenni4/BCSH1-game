@@ -22,6 +22,11 @@ namespace MyGame.Game.ECS.Systems
             {
                 foreach (var collider in GetEntities<Transform, BoxCollider>())
                 {
+                    if (entity == collider)
+                    {
+                        continue;
+                    }
+
                     if (ResolveCollision(entity, collider))
                     {
                         // NOTE: maybe send event in both ways: e -> c and c -> e
