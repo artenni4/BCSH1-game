@@ -47,6 +47,11 @@ namespace MyGame.Game.ECS.Entities
 
         public T AddComponent<T>() where T : EcsComponent, new()
         {
+            if (TryGetComponent<T>(out var comp))
+            {
+                return comp;
+            }
+
             var component = new T()
             {
                 Entity = this

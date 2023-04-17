@@ -37,6 +37,12 @@ namespace MyGame.Game.ECS.Systems
                     // set last damage time
                     entityHealth.LastDamagedTime = gameTime.TotalGameTime;
 
+                    // knock back entity
+                    var appliedForce = request.Target.AddComponent<AppliedForceComponent>();
+                    appliedForce.Direction = request.Target.GetEntityCenter() - request.Attacker.GetEntityCenter();
+                    appliedForce.TimeToLive = TimeSpan.FromSeconds(0.1f);
+                    appliedForce.Amount = 150f;
+
                     // Emit a damage event
                     _eventSystem.Emit(this, new DamageEvent(gameTime, request.Attacker, request.Target, request.Amount));
                 }

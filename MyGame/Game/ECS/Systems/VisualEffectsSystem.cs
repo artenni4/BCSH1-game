@@ -35,7 +35,7 @@ namespace MyGame.Game.ECS.Systems
         private bool OnDamageEvent(object sender, DamageEvent damageEvent)
         {
             var target = damageEvent.Target;
-            if (!target.HasComponent<BlinkingEffect>() && target.TryGetComponent<EntityHealth>(out var health))
+            if (target.TryGetComponent<EntityHealth>(out var health))
             {
                 var blinking = target.AddComponent<BlinkingEffect>();
                 blinking.TimeStarted = damageEvent.GameTime.TotalGameTime;

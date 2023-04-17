@@ -12,6 +12,7 @@
         <systems:DamageSystem />
         <systems:AttackSystem />
         <systems:VisualEffectsSystem />
+        <systems:SimplePhysicsSystem />
     </Systems>
     <Entities>
         <entities:CameraEntity />

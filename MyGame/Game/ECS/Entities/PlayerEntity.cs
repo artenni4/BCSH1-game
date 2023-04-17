@@ -50,6 +50,16 @@ namespace MyGame.Game.ECS.Entities
             _eventSystem.Subscribe<DamageEvent>(OnPlayerDamaged);
             _eventSystem.Subscribe<KeyboardEvent>(OnKeyboardEvent);
             _eventSystem.Subscribe<MouseEvent>(OnMouseEvent);
+
+            Animation.StateMachine.StateChanged += StateMachine_StateChanged;
+        }
+
+        private void StateMachine_StateChanged(object sender, TransitionEventArgs<AnimationNode> e)
+        {
+            if (IsAttackAnimation())
+            {
+                MeleeAttackComponent.AttackDirection = GetAttackDirection();
+            }
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -95,31 +105,34 @@ namespace MyGame.Game.ECS.Entities
 
         public override void Update(GameTime gameTime)
         {
-            if (IsMovable(Animation.StateMachine.State))
+            if (IsMovable())
             {
                 var input = InputHelper.GetInputAxisNormalized(_lastKeyboardState);
                 Transform.Position += input * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
         }
 
-        private static bool IsMovable(AnimationNode state)
+        private bool IsMovable()
         {
+            AnimationNode state = Animation.StateMachine.State;
             return state == PlayerAnimation.WalkDownNode ||
                 state == PlayerAnimation.WalkUpNode ||
                 state == PlayerAnimation.WalkRightNode ||
                 state == PlayerAnimation.WalkLeftNode;
         }
 
-        public static bool IsAttackAnimation(AnimationNode state)
+        public bool IsAttackAnimation()
         {
+            AnimationNode state = Animation.StateMachine.State;
             return state == PlayerAnimation.AttackDownNode ||
                 state == PlayerAnimation.AttackUpNode ||
                 state == PlayerAnimation.AttackRightNode ||
                 state == PlayerAnimation.AttackLeftNode;
         }
 
-        private static MeleeAttackComponent.Direction GetAttackDirection(AnimationNode state)
+        private MeleeAttackComponent.Direction GetAttackDirection()
         {
+            AnimationNode state = Animation.StateMachine.State;
             if (state == PlayerAnimation.AttackDownNode)
             {
                 return MeleeAttackComponent.Direction.Down;

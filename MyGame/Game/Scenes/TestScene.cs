@@ -43,7 +43,8 @@ namespace MyGame.Game.Scenes
 #if DEBUG
                 new DebugInputHandler(eventSystem, this, configuration),
 #endif
-                new AttackSystem(this, damageSystem, eventSystem)
+                new AttackSystem(this, damageSystem, eventSystem),
+                new SimplePhysicsSystem(this)
                 );
         }
     }
