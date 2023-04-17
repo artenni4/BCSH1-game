@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\AttackInitiationEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\CollisionEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\DamageEvent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\EventSystem\Events\PlayerDeathEvent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\VisualEffectsSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Factories\SceneFactory.cs" />
     <Compile Include="..\MyGame\Game\Helpers\Dependencies.cs" />

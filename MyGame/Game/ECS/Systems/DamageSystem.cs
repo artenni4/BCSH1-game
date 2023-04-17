@@ -25,6 +25,7 @@ namespace MyGame.Game.ECS.Systems
             foreach (var request in _damageRequests)
             {
                 if (request.Target.TryGetComponent<EntityHealth>(out var entityHealth) && 
+                    !entityHealth.IsDead &&
                     (gameTime.TotalGameTime - entityHealth.LastDamagedTime >= entityHealth.DamageCooldown))
                 {
                     // Apply damage

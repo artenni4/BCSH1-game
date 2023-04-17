@@ -67,6 +67,7 @@ namespace MyGame.Game.ECS.Entities
             if (EntityHealth.IsDead)
             {
                 BoxCollider.IsKinematic = false;
+                _eventSystem.Emit(this, new PlayerDeathEvent(damageEvent.GameTime, this));
             }
             return false;
         }
