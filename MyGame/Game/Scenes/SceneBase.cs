@@ -1,11 +1,18 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using MyGame.Game.ECS.Entities;
 using MyGame.Game.ECS.Systems;
+using System.Linq;
 
 namespace MyGame.Game.Scenes
 {
+    [Serializable]
     internal class SceneBase : IEntityCollection, ISystemCollection
     {
+        /// <summary>
+        /// Name of scene, used in saves
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         /// List of all entities incorporated on the scene
         /// </summary>
@@ -21,6 +28,14 @@ namespace MyGame.Game.Scenes
             Entities = new List<EcsEntity>();
             Systems = new List<EcsSystem>();
         }
+
+        public SerializableScene ToSerializableScene() =>
+            new()
+            {
+                Name = Name,
+                Entities = Entities.Select(e => e.ToSerializableEntity()).ToList(),
+                Systems = Systems.Select(s => s.ToSerializableSystem()).ToList(),
+            };
 
         public void AddEntities(params EcsEntity[] entities)
         {

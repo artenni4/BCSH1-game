@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework.Graphics;
 using MyGame.Game;
+using MyGame.Game.Constants;
 using MyGame.Game.ECS;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.Factories;
@@ -9,12 +11,12 @@ using System.Xml.Linq;
 
 namespace MyGame
 {
-    public class Game1 : XnaGame
+    public class MyGame : XnaGame
     {
         private readonly GraphicsDeviceManager _graphics;
-        private SceneBase scene;
+        private ISceneManager sceneManager;
 
-        public Game1()
+        public MyGame()
         {
             _graphics = new(this)
             {
@@ -23,29 +25,26 @@ namespace MyGame
                 PreferredBackBufferHeight = 1080
             };
 
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = PersistenceConstants.ContentRootDirectory;
             IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
-            var serviceProvider = new ServiceCollection().AddGameServices(_graphics.GraphicsDevice).BuildServiceProvider();
-            var sceneFactory = new SceneFactory(serviceProvider.GetService<IServiceScopeFactory>());
-            var map = XDocument.Load("Content/maps/test-map.xml");
-            scene = sceneFactory.CreateScene(map);
+            sceneManager = new SceneManager(this);
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            scene.LoadContent(Content);
+            sceneManager.LoadScene("test-map");
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (IsActive)
             {
-                scene.Update(gameTime);
+                sceneManager.Update(gameTime);
                 base.Update(gameTime);
             }
         }
@@ -54,7 +53,7 @@ namespace MyGame
         {
             if (IsActive)
             {
-                scene.Draw(gameTime);
+                sceneManager.Draw(gameTime);
                 base.Draw(gameTime);
             }
         }

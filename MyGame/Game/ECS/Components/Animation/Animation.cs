@@ -1,6 +1,7 @@
 ﻿using MyGame.Game.StateMachine;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace MyGame.Game.ECS.Components.Animation
@@ -75,6 +76,16 @@ namespace MyGame.Game.ECS.Components.Animation
         public bool IsFirstAnimationFrame()
         {
             return GetFrameIndex() <= 1;
+        }
+
+        private protected override bool TrySerializableValue(PropertyInfo propertyInfo, out object value)
+        {
+            if (propertyInfo.PropertyType.IsGenericType && propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(IRealTimeFSM<>))
+            {
+                value = null;
+                return false;
+            }
+            return base.TrySerializableValue(propertyInfo, out value);
         }
     }
 }

@@ -11,10 +11,9 @@ namespace MyGame.Game.Helpers
 {
     internal static class Dependencies
     {
-        public static IServiceCollection AddGameServices(this IServiceCollection services, GraphicsDevice graphicsDevice)
+        public static IServiceCollection AddGameServices(this IServiceCollection services)
         {
             // add other dependecies
-            services.AddSingleton(graphicsDevice);
             services.AddSingleton<IConfiguration, ConfigurationStorage>();
             services.AddLogging(config =>
             {
@@ -27,7 +26,7 @@ namespace MyGame.Game.Helpers
             services.AddScoped<IEntityCollection>(sp => sp.GetRequiredService<SceneBase>());
             services.AddScoped<ISystemCollection>(sp => sp.GetRequiredService<SceneBase>());
 
-            var assemblyTypes = typeof(Game1).Assembly.GetTypes();
+            var assemblyTypes = typeof(MyGame).Assembly.GetTypes();
             // add systems
             var systems = assemblyTypes.Where(t => t.IsSubclassOf(typeof(EcsSystem)) && !t.IsAbstract);
             foreach (var system in systems)

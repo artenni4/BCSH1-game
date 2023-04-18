@@ -10,6 +10,8 @@ namespace MyGame.Game.Scenes
     {
         public TestScene(GraphicsDeviceManager graphics)
         {
+            Name = "TestScene";
+
             var graphicsDevice = graphics.GraphicsDevice;
             var configuration = new ConfigurationStorage();
 

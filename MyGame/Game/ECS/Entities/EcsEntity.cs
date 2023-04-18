@@ -11,7 +11,7 @@ namespace MyGame.Game.ECS.Entities
         /// <summary>
         /// Unique identifier of every entity
         /// </summary>
-        public Guid Id { get; }
+        public Guid Id { get; private set; }
 
         /// <summary>
         /// Components that are attached to the instance
@@ -29,9 +29,29 @@ namespace MyGame.Game.ECS.Entities
 
         public abstract void Update(GameTime gameTime);
 
-        private static Type GetComponentKey<T>() where T : EcsComponent
+        public SerializableEntity ToSerializableEntity() =>
+            new()
+            {
+                Id = Id,
+                EntityType = GetType().FullName,
+                Components = _components.Select(c => c.Value.ToSerializableComponent()).ToList()
+            };
+
+        public void InitializeDeserialized(SerializableEntity serializableEntity)
         {
-            Type componentKey = typeof(T);
+            Id = serializableEntity.Id;
+            foreach (var serializedComponent in serializableEntity.Components)
+            {
+                var component = AddComponent(Type.GetType(serializedComponent.ComponentType));
+                component.InitializeDeserialized(serializedComponent);
+            }
+        }
+
+        private static Type GetComponentKey<T>() where T : EcsComponent => GetComponentKey(typeof(T));
+
+        private static Type GetComponentKey(Type componentType)
+        {
+            Type componentKey = componentType;
             while (componentKey.BaseType != typeof(EcsComponent))
             {
                 componentKey = componentKey.BaseType;
@@ -40,9 +60,11 @@ namespace MyGame.Game.ECS.Entities
             return componentKey;
         }
 
-        public T GetComponent<T>() where T : EcsComponent
+        public T GetComponent<T>() where T : EcsComponent => (T)GetComponent(typeof(T));
+
+        public EcsComponent GetComponent(Type componentType)
         {
-            return _components[GetComponentKey<T>()] as T;
+            return _components[componentType];
         }
 
         public T AddComponent<T>() where T : EcsComponent, new()
@@ -60,21 +82,54 @@ namespace MyGame.Game.ECS.Entities
             return component;
         }
 
-        public void RemoveComponent<T>() where T : EcsComponent
+        public EcsComponent AddComponent(Type componentType)
         {
-            _components.Remove(GetComponentKey<T>());
+            if (TryGetComponent(componentType, out var comp))
+            {
+                return comp;
+            }
+
+            var component = (EcsComponent)Activator.CreateInstance(componentType, null);
+            componentType.GetProperty(nameof(EcsComponent.Entity)).SetValue(component, this);
+
+            _components.Add(GetComponentKey(componentType), component);
+            return component;
         }
 
-        public bool HasComponent<T>() where T : EcsComponent
+        public void RemoveComponent<T>() where T : EcsComponent => RemoveComponent(typeof(T));
+
+        public void RemoveComponent(Type componentType)
         {
-            return _components.ContainsKey(GetComponentKey<T>());
+            _components.Remove(GetComponentKey(componentType));
+        }
+
+        public bool HasComponent<T>() where T : EcsComponent => HasComponent(typeof(T));
+
+        public bool HasComponent(Type componentType)
+        {
+            return _components.ContainsKey(GetComponentKey(componentType));
         }
 
         public bool TryGetComponent<T>(out T component) where T : EcsComponent
         {
-            var res = _components.TryGetValue(GetComponentKey<T>(), out var compValue);
-            component = compValue as T;
-            return res;
+            if (TryGetComponent(typeof(T), out var compValue))
+            {
+                component = compValue as T;
+                return true;
+            }
+            component = null;
+            return false;
+        }
+
+        public bool TryGetComponent(Type componentType, out EcsComponent component)
+        {
+            if (_components.TryGetValue(GetComponentKey(componentType), out var compValue))
+            {
+                component = compValue;
+                return true;
+            }
+            component = null;
+            return false;
         }
     }
 }

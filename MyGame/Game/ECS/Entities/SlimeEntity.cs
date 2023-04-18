@@ -13,13 +13,6 @@ namespace MyGame.Game.ECS.Entities
 {
     internal class SlimeEntity : EcsEntity
     {
-        public enum Strength
-        {
-            Weak,
-            Average,
-            Strong
-        }
-
         private readonly IEventSystem _eventSystem;
 
         private PlayerEntity chasingPlayer;
@@ -45,49 +38,49 @@ namespace MyGame.Game.ECS.Entities
 
         public BodyAttackComponent BodyAttackComponent { get; }
 
-        private Strength _slimeStrength;
-        public Strength SlimeStrength 
+        private SlimeStrength _slimeStrength;
+        public SlimeStrength Strength 
         {
             get => _slimeStrength;
             set
             {
                 _slimeStrength = value;
-                PlayerDetector.DetectionRadius = SlimeStrength switch
+                PlayerDetector.DetectionRadius = Strength switch
                 {
-                    Strength.Strong => 200f,
-                    Strength.Average => 150f,
-                    Strength.Weak or _ => 100f,
+                    SlimeStrength.Strong => 200f,
+                    SlimeStrength.Average => 150f,
+                    SlimeStrength.Weak or _ => 100f,
                 };
 
-                EntityHealth.MaxHealth = SlimeStrength switch
+                EntityHealth.MaxHealth = Strength switch
                 {
-                    Strength.Strong => 150f,
-                    Strength.Average => 120f,
-                    Strength.Weak or _ => 70f,
+                    SlimeStrength.Strong => 150f,
+                    SlimeStrength.Average => 120f,
+                    SlimeStrength.Weak or _ => 70f,
                 };
                 EntityHealth.HealthPoints = EntityHealth.MaxHealth;
 
-                BodyAttackComponent.DamageAmount = SlimeStrength switch
+                BodyAttackComponent.DamageAmount = Strength switch
                 {
-                    Strength.Strong => 50f,
-                    Strength.Average => 30f,
-                    Strength.Weak or _ => 20f,
+                    SlimeStrength.Strong => 50f,
+                    SlimeStrength.Average => 30f,
+                    SlimeStrength.Weak or _ => 20f,
                 };
 
-                MinJumpInterval = SlimeStrength switch
+                MinJumpInterval = Strength switch
                 {
-                    Strength.Strong => TimeSpan.FromSeconds(0.8f),
-                    Strength.Average => TimeSpan.FromSeconds(0.9f),
-                    Strength.Weak or _ => TimeSpan.FromSeconds(1.0f),
+                    SlimeStrength.Strong => TimeSpan.FromSeconds(0.8f),
+                    SlimeStrength.Average => TimeSpan.FromSeconds(0.9f),
+                    SlimeStrength.Weak or _ => TimeSpan.FromSeconds(1.0f),
                 };
-                Speed = SlimeStrength switch
+                Speed = Strength switch
                 {
-                    Strength.Strong => 50f,
-                    Strength.Average => 45f,
-                    Strength.Weak or _ => 40f,
+                    SlimeStrength.Strong => 50f,
+                    SlimeStrength.Average => 45f,
+                    SlimeStrength.Weak or _ => 40f,
                 };
 
-                if (SlimeStrength == Strength.Strong)
+                if (Strength == SlimeStrength.Strong)
                 {
                     Transform.Scale = 1.1f;
                 }
@@ -133,11 +126,11 @@ namespace MyGame.Game.ECS.Entities
 
         public override void LoadContent(ContentManager contentManager)
         {
-            Animation.Texture2D = SlimeStrength switch
+            Animation.Texture2D = Strength switch
             {
-                Strength.Strong => contentManager.Load<Texture2D>("sprites/characters/slime3"),
-                Strength.Average => contentManager.Load<Texture2D>("sprites/characters/slime2"),
-                Strength.Weak or _ => contentManager.Load<Texture2D>("sprites/characters/slime1"),
+                SlimeStrength.Strong => contentManager.Load<Texture2D>("sprites/characters/slime3"),
+                SlimeStrength.Average => contentManager.Load<Texture2D>("sprites/characters/slime2"),
+                SlimeStrength.Weak or _ => contentManager.Load<Texture2D>("sprites/characters/slime1"),
             };
         }
 

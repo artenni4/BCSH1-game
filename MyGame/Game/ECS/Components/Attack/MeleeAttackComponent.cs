@@ -16,7 +16,7 @@ namespace MyGame.Game.ECS.Components.Attack
         /// </summary>
         public float DamageDealtThreshhold { get; set; }
 
-        public bool DamageDealt { get; private set; }
+        public bool DamageDealt { get; set; }
 
         public override float CalculateDamage() => DamageAmount;
 

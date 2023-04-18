@@ -13,6 +13,7 @@
         <systems:AttackSystem />
         <systems:VisualEffectsSystem />
         <systems:SimplePhysicsSystem />
+        <systems:SaveSystem />
     </Systems>
     <Entities>
         <entities:CameraEntity />

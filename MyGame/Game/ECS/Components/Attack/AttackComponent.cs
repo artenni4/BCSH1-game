@@ -8,12 +8,12 @@ namespace MyGame.Game.ECS.Components.Attack
         public TimeSpan Cooldown { get; set; }
         public TimeSpan LastAttackTime { get; set; }
         public TimeSpan AttackDuration { get; set; }
-        public bool IsAttacking { get; private set; }
+        public bool IsAttacking { get; set; }
 
         /// <summary>
         /// A value between 0 and 1 representing the attack progress
         /// </summary>
-        public float AttackProgress { get; private set; }
+        public float AttackProgress { get; set; }
 
         /// <summary>
         /// Faction of attacker

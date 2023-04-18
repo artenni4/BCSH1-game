@@ -17,6 +17,32 @@ namespace MyGame.Game.ECS.Systems
             this.entityCollection = entityCollection;
         }
 
+        public SerializableSystem ToSerializableSystem() =>
+            new()
+            {
+                SystemType = GetType().FullName,
+                Properties = SaveProperties(),
+            };
+
+        public void InitializeDeserialized(SerializableSystem serializableSystem)
+        {
+            if (serializableSystem.Properties is not null)
+            {
+                LoadProperties(serializableSystem.Properties);
+            }
+        }
+
+        private protected virtual Dictionary<string, object> SaveProperties()
+        {
+            return null;
+        }
+
+        private protected virtual void LoadProperties(Dictionary<string, object> properties)
+        {
+
+        }
+
+
         public IEnumerable<T> GetEntitiesOfType<T>() => entityCollection.Entities.OfType<T>();
 
         public T GetEntityOfType<T>() => GetEntitiesOfType<T>().FirstOrDefault();

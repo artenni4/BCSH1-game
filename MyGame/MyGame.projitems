@@ -9,10 +9,19 @@
     <Import_RootNamespace>MyGame</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\SlimeStrength.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\SerializableComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SerializableEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\SerializableSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Scenes\SerializableScene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\SerializableTypes\SerializableRectangle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\SerializableTypes\SerializableTexture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\SerializableTypes\SerializableVector.cs" />
+    <Compile Include="..\MyGame\MyGame.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\AiTriggers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\AnimationFlags.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\AttackFactions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\PersistenceConstants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\AnimationData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)game\ECS\Components\Animation\AnimationNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Animation\PlayerAnimation.cs" />
@@ -21,7 +30,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Attack\BodyAttackComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\Attack\MeleeAttackComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\EntityHealth.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\SaveSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\SimplePhysicsSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Helpers\SaveHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Scenes\GameSave.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Scenes\SceneManager.cs" />
+    <Compile Include="..\MyGame\Game\Scenes\ISceneManager.cs" />
     <Compile Include="..\MyGame\Game\ECS\Components\AppliedForceComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerDetector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\VisualEffect\BlinkingEffect.cs" />
