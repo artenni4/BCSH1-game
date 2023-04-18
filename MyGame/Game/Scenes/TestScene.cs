@@ -13,6 +13,7 @@ namespace MyGame.Game.Scenes
             Name = "TestScene";
 
             var graphicsDevice = graphics.GraphicsDevice;
+            var spriteBatch = new SpriteBatch(graphicsDevice);
             var configuration = new ConfigurationStorage();
 
             var loggerFactory = LoggerFactory.Create(config =>
@@ -35,7 +36,7 @@ namespace MyGame.Game.Scenes
 
             // add systems
             AddSystems(
-                new Renderer(graphicsDevice, this, configuration), 
+                new Renderer(graphicsDevice, spriteBatch, this, configuration), 
                 new AiDetectionSystem(this, eventSystem),
                 new InputSystem(eventSystem, this),
                 new CollisionSystem(this, eventSystem),

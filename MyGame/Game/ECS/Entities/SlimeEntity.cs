@@ -20,9 +20,7 @@ namespace MyGame.Game.ECS.Entities
         private Vector2 jumpDirection;
         private TimeSpan timeJumped = TimeSpan.Zero;
 
-        public TimeSpan MinJumpInterval { get; set; }
-        public float MinJumpDistance { get; set; } = 40f;
-        public float Speed { get; set; }
+        
 
         public StateMachine<AiState> StateMachine { get; }
 
@@ -38,13 +36,15 @@ namespace MyGame.Game.ECS.Entities
 
         public BodyAttackComponent BodyAttackComponent { get; }
 
-        private SlimeStrength _slimeStrength;
+        public SlimeComponent SlimeComponent { get; }
+
+
         public SlimeStrength Strength 
         {
-            get => _slimeStrength;
+            get => SlimeComponent.SlimeStrength;
             set
             {
-                _slimeStrength = value;
+                SlimeComponent.SlimeStrength = value;
                 PlayerDetector.DetectionRadius = Strength switch
                 {
                     SlimeStrength.Strong => 200f,
@@ -67,13 +67,13 @@ namespace MyGame.Game.ECS.Entities
                     SlimeStrength.Weak or _ => 20f,
                 };
 
-                MinJumpInterval = Strength switch
+                SlimeComponent.JumpInterval = Strength switch
                 {
                     SlimeStrength.Strong => TimeSpan.FromSeconds(0.8f),
                     SlimeStrength.Average => TimeSpan.FromSeconds(0.9f),
                     SlimeStrength.Weak or _ => TimeSpan.FromSeconds(1.0f),
                 };
-                Speed = Strength switch
+                SlimeComponent.Speed = Strength switch
                 {
                     SlimeStrength.Strong => 50f,
                     SlimeStrength.Average => 45f,
@@ -112,6 +112,9 @@ namespace MyGame.Game.ECS.Entities
             BodyAttackComponent.Faction = AttackFactions.EnemyFaction;
             BodyAttackComponent.AttackingSpeedModifier = 1.8f;
             BodyAttackComponent.Range = 20f;
+
+            SlimeComponent = AddComponent<SlimeComponent>();
+            SlimeComponent.AttackDistance = 40f;
 
             StateMachine = new StateMachineBuilder<AiState>()
                 .State(AiState.WalkAround)
@@ -183,7 +186,7 @@ namespace MyGame.Game.ECS.Entities
             _lastGameTime = gameTime;
 
             // delay between slime jumps
-            if (gameTime.TotalGameTime - timeJumped <= MinJumpInterval)
+            if (gameTime.TotalGameTime - timeJumped <= SlimeComponent.JumpInterval)
             {
                 Animation.StateMachine.RemoveDirectionVector();
                 Animation.StateMachine.RemoveParameter(AnimationKeys.AttackTrigger);
@@ -219,7 +222,7 @@ namespace MyGame.Game.ECS.Entities
             if (isIdle)
             {
                 // trigger attack if needed
-                if (Vector2.Distance(slimeCenter, playerCenter) <= MinJumpDistance)
+                if (Vector2.Distance(slimeCenter, playerCenter) <= SlimeComponent.AttackDistance)
                 {
                     _eventSystem.Emit(this, new AttackInitiationEvent(gameTime, this));
                 }
@@ -232,7 +235,7 @@ namespace MyGame.Game.ECS.Entities
             if (isMovable)
             {
                 // increase speed in attack
-                float speed = isAttacking ? Speed * BodyAttackComponent.AttackingSpeedModifier : Speed;
+                float speed = isAttacking ? SlimeComponent.Speed * BodyAttackComponent.AttackingSpeedModifier : SlimeComponent.Speed;
                 Transform.Position += jumpDirection.GetNormalized() * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
         }

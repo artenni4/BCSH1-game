@@ -24,12 +24,12 @@ namespace MyGame.Game.ECS.Systems
 
         private bool OnKeyboardEvent(object sender, KeyboardEvent keyboardEvent)
         {
-            if (keyboardEvent.PressedKeys.Contains(Keys.F5))
+            if (keyboardEvent.ReleasedKeys.Contains(Keys.F5))
             {
                 _sceneManager.SaveGame("tmp-save");
                 return true;
             }
-            else if (keyboardEvent.PressedKeys.Contains(Keys.F6))
+            else if (keyboardEvent.ReleasedKeys.Contains(Keys.F6))
             {
                 _sceneManager.LoadGame("tmp-save");
                 return true;

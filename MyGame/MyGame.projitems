@@ -10,7 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\SlimeStrength.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\SerializableComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\SlimeComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SerializableEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\SerializableSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Scenes\SerializableScene.cs" />

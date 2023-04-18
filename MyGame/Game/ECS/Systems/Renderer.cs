@@ -23,13 +23,13 @@ namespace MyGame.Game.ECS.Systems
         private const float virtualWidth = 384f;
         private const float virtualHeight = 216f;
 
-        public Renderer(GraphicsDevice graphicsDevice, IEntityCollection entityCollection, IConfiguration configuration)
+        public Renderer(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, IEntityCollection entityCollection, IConfiguration configuration)
             : base(entityCollection)
         {
             _configuration = configuration;
             _entityCollection = entityCollection;
             _graphicsDevice = graphicsDevice;
-            _spriteBatch = new SpriteBatch(_graphicsDevice);
+            _spriteBatch = spriteBatch;
         }
 
         public override void Draw(GameTime gameTime)

@@ -31,6 +31,7 @@ namespace MyGame.Game.Scenes
             var serviceProvider = new ServiceCollection()
                 .AddSingleton<ISceneManager>(this)
                 .AddSingleton(game.GraphicsDevice)
+                .AddSingleton(sp => new SpriteBatch(sp.GetRequiredService<GraphicsDevice>()))
                 .AddGameServices().BuildServiceProvider();
             sceneFactory = new SceneFactory(serviceProvider.GetService<IServiceScopeFactory>());
             SavedScenes = new Dictionary<string, SceneBase>();
@@ -43,6 +44,7 @@ namespace MyGame.Game.Scenes
             {
                 SavedScenes[sceneName] = sceneFactory.CreateSceneFromXml(sceneName);
             }
+            game.Content.Unload();
             CurrentScene.LoadContent(game.Content);
         }
 

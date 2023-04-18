@@ -13,13 +13,12 @@ namespace MyGame.Game.ECS.Entities
 {
     internal class PlayerEntity : EcsEntity
     {
-        public float Speed { get; set; } = 100f;
-
         public Transform Transform { get; }
         public BoxCollider BoxCollider { get; }
         public PlayerAnimation Animation { get; }
         public EntityHealth EntityHealth { get; }
         public MeleeAttackComponent MeleeAttackComponent { get; }
+        public PlayerComponent PlayerComponent { get; }
 
         private readonly IEventSystem _eventSystem;
         private KeyboardState _lastKeyboardState;
@@ -45,6 +44,9 @@ namespace MyGame.Game.ECS.Entities
             MeleeAttackComponent.DamageDealtThreshhold = 0.25f;
             MeleeAttackComponent.Range = 30f;
             MeleeAttackComponent.DamageAmount = 20f;
+
+            PlayerComponent = AddComponent<PlayerComponent>();
+            PlayerComponent.Speed = 100f;
 
             _eventSystem = eventSystem;
             _eventSystem.Subscribe<DamageEvent>(OnPlayerDamaged);
@@ -108,7 +110,7 @@ namespace MyGame.Game.ECS.Entities
             if (IsMovable())
             {
                 var input = InputHelper.GetInputAxisNormalized(_lastKeyboardState);
-                Transform.Position += input * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Transform.Position += input * PlayerComponent.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
         }
 
