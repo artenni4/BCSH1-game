@@ -56,7 +56,7 @@ namespace MyGame.Game.ECS.Systems
 
             // NOTE: SamplerState.PointClamp - pixelates textures on scale
             _spriteBatch.Begin(sortMode: SpriteSortMode.BackToFront, samplerState: SamplerState.PointClamp, transformMatrix: cameraMatrix);
-            foreach (var entity in _entityCollection.Entities.Where(e => e.HasComponent<Transform>()))
+            foreach (var entity in GetEntities<Transform>())
             {
                 var transform = entity.GetComponent<Transform>();
                 // TODO fix Y axis invertion
@@ -97,9 +97,9 @@ namespace MyGame.Game.ECS.Systems
         private float CalculateZIndex(ZIndex zIndex, float yPos)
         {
             // normalized position
-            float nPos = 1f - (yPos / float.MaxValue + 1f) / 2f;
+            float nPos = (yPos / 10e6f + 1f) / 2f;
             // segmented z index
-            return ((float)zIndex + nPos)/ 4f;
+            return ((float)zIndex + nPos) / 4f;
         }
 
         private void DrawDebug(Vector2 position, float scale, EcsEntity entity)

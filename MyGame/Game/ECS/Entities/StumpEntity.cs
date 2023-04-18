@@ -13,7 +13,7 @@ namespace MyGame.Game.ECS.Entities
         public StumpEntity()
         {
             Transform = AddComponent<Transform>();
-            Transform.ZIndex = ZIndex.Background;
+            Transform.ZIndex = ZIndex.Middleground;
 
             Image = AddComponent<Image>();
             Image.SourceRectangle = new Rectangle(160, 112, 32, 32);

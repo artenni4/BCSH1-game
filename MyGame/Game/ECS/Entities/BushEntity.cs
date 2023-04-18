@@ -13,7 +13,7 @@ namespace MyGame.Game.ECS.Entities
         public BushEntity()
         {
             Transform = AddComponent<Transform>();
-            Transform.ZIndex = ZIndex.Background;
+            Transform.ZIndex = ZIndex.Middleground;
 
             Image = AddComponent<Image>();
             Image.SourceRectangle = new Rectangle(96, 112, 32, 32);
