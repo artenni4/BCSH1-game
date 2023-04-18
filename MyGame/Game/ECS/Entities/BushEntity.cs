@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content;
+using MyGame.Game.Constants.Enums;
 using MyGame.Game.ECS.Components;
 
 namespace MyGame.Game.ECS.Entities
@@ -12,6 +13,7 @@ namespace MyGame.Game.ECS.Entities
         public BushEntity()
         {
             Transform = AddComponent<Transform>();
+            Transform.ZIndex = ZIndex.Background;
 
             Image = AddComponent<Image>();
             Image.SourceRectangle = new Rectangle(96, 112, 32, 32);

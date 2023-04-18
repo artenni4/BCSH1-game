@@ -1,5 +1,6 @@
 ﻿using MyGame.Game.Configuration;
 using MyGame.Game.Constants;
+using MyGame.Game.Constants.Enums;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
 using MyGame.Game.ECS.Components.VisualEffect;
@@ -61,6 +62,9 @@ namespace MyGame.Game.ECS.Systems
                 // TODO fix Y axis invertion
                 var position = new Vector2(transform.Position.X, -transform.Position.Y); // invert Y pos for camera
 
+                // calculate z index
+                float zIndex = CalculateZIndex(transform.ZIndex, transform.Position.Y); // not inverted y
+
                 var color = Color.White;
                 if (entity.TryGetComponent<EffectComponent>(out var effect))
                 {
@@ -73,7 +77,7 @@ namespace MyGame.Game.ECS.Systems
                 if (entity.TryGetComponent<Image>(out var image))
                 {
                     _spriteBatch.Draw(image.Texture2D, position, image.SourceRectangle, color, transform.Rotation,
-                        Vector2.Zero, transform.Scale, SpriteEffects.None, transform.ZIndex);
+                        Vector2.Zero, transform.Scale, SpriteEffects.None, zIndex);
                 }
 
                 if (entity.TryGetComponent<Animation>(out var animation))
@@ -82,12 +86,20 @@ namespace MyGame.Game.ECS.Systems
                     var animationData = animation.GetAnimationData();
 
                     _spriteBatch.Draw(animation.Texture2D, position, animationData.Bounds, color, transform.Rotation,
-                        animationData.Origin, transform.Scale, animationData.SpriteEffects, transform.ZIndex);
+                        animationData.Origin, transform.Scale, animationData.SpriteEffects, zIndex);
                 }
 
                 DrawDebug(position, transform.Scale, entity);
             }
             _spriteBatch.End();
+        }
+
+        private float CalculateZIndex(ZIndex zIndex, float yPos)
+        {
+            // normalized position
+            float nPos = 1f - (yPos / float.MaxValue + 1f) / 2f;
+            // segmented z index
+            return ((float)zIndex + nPos)/ 4f;
         }
 
         private void DrawDebug(Vector2 position, float scale, EcsEntity entity)

@@ -9,7 +9,9 @@
     <Import_RootNamespace>MyGame</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\MeleeAttackDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\SlimeStrength.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\ZIndex.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\SerializableComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\SlimeComponent.cs" />

@@ -1,15 +1,14 @@
-﻿using MyGame.Game.ECS.Entities;
+﻿using MyGame.Game.Constants.Enums;
+using MyGame.Game.ECS.Entities;
 using System.Linq;
 
 namespace MyGame.Game.ECS.Components.Attack
 {
     internal class MeleeAttackComponent : AttackComponent
     {
-        public enum Direction { Left, Right, Up, Down }
-
         public float Range { get; set; }
         public float DamageAmount { get; set; }
-        public Direction AttackDirection { get; set; }
+        public MeleeAttackDirection AttackDirection { get; set; }
 
         /// <summary>
         /// A value between 0 and 1 that represents attack progress theshold when damage should be dealt
@@ -41,15 +40,15 @@ namespace MyGame.Game.ECS.Components.Attack
             return IsDirectionMatch(angle, AttackDirection) && Vector2.Distance(attackerCenter, targetCenter) < Range;
         }
 
-        private static bool IsDirectionMatch(float angle, Direction direction)
+        private static bool IsDirectionMatch(float angle, MeleeAttackDirection direction)
         {
             var pi4 = MathF.PI / 4f;
             return direction switch
             {
-                Direction.Up => angle >= pi4 && angle <= 3f * pi4,
-                Direction.Down => angle >= -3f * pi4 && angle <= -pi4,
-                Direction.Right => angle >= -pi4 && angle <= pi4,
-                Direction.Left => angle >= 3f * pi4 || angle <= -3f * pi4,
+                MeleeAttackDirection.Up => angle >= pi4 && angle <= 3f * pi4,
+                MeleeAttackDirection.Down => angle >= -3f * pi4 && angle <= -pi4,
+                MeleeAttackDirection.Right => angle >= -pi4 && angle <= pi4,
+                MeleeAttackDirection.Left => angle >= 3f * pi4 || angle <= -3f * pi4,
                 _ => false
             };
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using MyGame.Game.Constants;
+using MyGame.Game.Constants.Enums;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
 using MyGame.Game.ECS.Components.Attack;
@@ -26,6 +27,7 @@ namespace MyGame.Game.ECS.Entities
         public PlayerEntity(IEventSystem eventSystem)
         {
             Transform = AddComponent<Transform>();
+            Transform.ZIndex = ZIndex.Middleground;
 
             BoxCollider = AddComponent<BoxCollider>();
             BoxCollider.Box = new Rectangle(17, 22, 15, 19);
@@ -132,24 +134,24 @@ namespace MyGame.Game.ECS.Entities
                 state == PlayerAnimation.AttackLeftNode;
         }
 
-        private MeleeAttackComponent.Direction GetAttackDirection()
+        private MeleeAttackDirection GetAttackDirection()
         {
             AnimationNode state = Animation.StateMachine.State;
             if (state == PlayerAnimation.AttackDownNode)
             {
-                return MeleeAttackComponent.Direction.Down;
+                return MeleeAttackDirection.Down;
             }
             else if (state == PlayerAnimation.AttackUpNode)
             {
-                return MeleeAttackComponent.Direction.Up;
+                return MeleeAttackDirection.Up;
             }
             else if (state == PlayerAnimation.AttackLeftNode)
             {
-                return MeleeAttackComponent.Direction.Left;
+                return MeleeAttackDirection.Left;
             }
             else if (state == PlayerAnimation.AttackRightNode)
             {
-                return MeleeAttackComponent.Direction.Right;
+                return MeleeAttackDirection.Right;
             }
             throw new ArgumentException($"{nameof(state)} is not attack animation state");
         }

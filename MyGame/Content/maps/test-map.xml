@@ -33,7 +33,7 @@
         </entities:SlimeEntity>
 
         <entities:SlimeEntity>
-            <Position X="-50" Y="60"/>
+            <Position X="-100" Y="80"/>
             <Strength>Strong</Strength>
         </entities:SlimeEntity>
 

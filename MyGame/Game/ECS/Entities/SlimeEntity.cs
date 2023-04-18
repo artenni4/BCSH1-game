@@ -80,6 +80,13 @@ namespace MyGame.Game.ECS.Entities
                     SlimeStrength.Weak or _ => 40f,
                 };
 
+                SlimeComponent.AttackDistance = Strength switch
+                {
+                    SlimeStrength.Strong => 60f,
+                    SlimeStrength.Average => 50f,
+                    SlimeStrength.Weak or _ => 40f,
+                };
+
                 if (Strength == SlimeStrength.Strong)
                 {
                     Transform.Scale = 1.1f;
@@ -95,7 +102,7 @@ namespace MyGame.Game.ECS.Entities
             _eventSystem.Subscribe<DamageEvent>(OnSlimeDamaged);
 
             Transform = AddComponent<Transform>();
-            Transform.ZIndex = 1f;
+            Transform.ZIndex = ZIndex.Middleground;
 
             BoxCollider = AddComponent<BoxCollider>();
             BoxCollider.Box = new Rectangle(10, 13, 13, 10);
@@ -114,7 +121,6 @@ namespace MyGame.Game.ECS.Entities
             BodyAttackComponent.Range = 20f;
 
             SlimeComponent = AddComponent<SlimeComponent>();
-            SlimeComponent.AttackDistance = 40f;
 
             StateMachine = new StateMachineBuilder<AiState>()
                 .State(AiState.WalkAround)
