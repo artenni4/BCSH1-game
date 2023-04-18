@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SceneBase 
+    xmlns:systems="Systems"
+    xmlns:entities="Entities">
+    <Systems>
+        <systems:Renderer />
+        <systems:AiDetectionSystem />
+        <systems:InputSystem />
+        <systems:CollisionSystem />
+        <systems:AnimationSystem />
+        <systems:DebugInputHandler DEBUG="true" />
+        <systems:DamageSystem />
+        <systems:AttackSystem />
+        <systems:VisualEffectsSystem />
+        <systems:SimplePhysicsSystem />
+        <systems:SaveSystem />
+    </Systems>
+    <Entities>
+        <entities:CameraEntity />
+
+        <entities:PlayerEntity>
+            <Position X="0" Y="20"/>
+        </entities:PlayerEntity>
+
+        <entities:SlimeEntity>
+            <Position X="100" Y="100"/>
+            <Strength>Weak</Strength>
+        </entities:SlimeEntity>
+
+        <entities:SlimeEntity>
+            <Position X="100" Y="-60"/>
+            <Strength>Weak</Strength>
+        </entities:SlimeEntity>
+
+        <entities:SlimeEntity>
+            <Position X="-100" Y="80"/>
+            <Strength>Weak</Strength>
+        </entities:SlimeEntity>
+
+        <entities:SlimeEntity>
+            <Position X="-100" Y="100"/>
+            <Strength>Weak</Strength>
+        </entities:SlimeEntity>
+
+        <entities:StumpEntity>
+            <Position X="-100" Y="30"/>
+        </entities:StumpEntity>
+
+        <entities:StumpEntity>
+            <Position X="-20" Y="-40"/>
+        </entities:StumpEntity>
+
+        <entities:StumpEntity>
+            <Position X="10" Y="-40"/>
+        </entities:StumpEntity>
+
+        <entities:BushEntity>
+            <Position X="-70" Y="-10"/>
+        </entities:BushEntity>
+
+        <entities:BushEntity>
+            <Position X="70" Y="40"/>
+        </entities:BushEntity>
+    </Entities>
+</SceneBase>

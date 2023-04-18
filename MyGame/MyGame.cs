@@ -37,7 +37,7 @@ namespace MyGame
 
         protected override void LoadContent()
         {
-            sceneManager.LoadScene("test-map");
+            sceneManager.LoadScene("level1");
         }
 
         protected override void Update(GameTime gameTime)

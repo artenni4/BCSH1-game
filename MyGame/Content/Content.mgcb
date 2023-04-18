@@ -13,6 +13,9 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin maps/level1.xml
+/copy:maps/level1.xml
+
 #begin maps/test-map.xml
 /copy:maps/test-map.xml
 

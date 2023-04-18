@@ -44,6 +44,8 @@ namespace MyGame.Game.StateMachine
             HandleStateChange();
         }
 
+        public bool ContainTrigger(string trigger) => _triggers.Contains(trigger);
+
         public virtual void RemoveTrigger(string trigger)
         {
             _triggers.Remove(trigger);
@@ -53,6 +55,15 @@ namespace MyGame.Game.StateMachine
         {
             _parameters[name] = value;
             HandleStateChange();
+        }
+
+        public T GetParameter<T>(string name)
+        {
+            if (_parameters.TryGetValue(name, out var value))
+            {
+                return (T)value;
+            }
+            return default;
         }
 
         public virtual void RemoveParameter(string parameter)

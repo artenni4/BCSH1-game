@@ -42,9 +42,10 @@ namespace MyGame.Game.ECS.Components
         private protected virtual void LoadData(Dictionary<string, object> data)
         {
             var componentType = GetType();
-            foreach (var (propName, value) in data)
+            foreach (var (propName, serialized) in data)
             {
-                componentType.GetProperty(propName).SetValue(this, DeserializableValue(value));
+                if (TryDeserializableValue(propName, serialized, out var deserialized))
+                componentType.GetProperty(propName).SetValue(this, deserialized);
             }
         }
 
@@ -55,7 +56,7 @@ namespace MyGame.Game.ECS.Components
             var data = new Dictionary<string, object>();
             foreach (var property in properties.Where(p => p.Name != nameof(Entity)))
             {
-                if (TrySerializableValue(property, out var value))
+                if (TrySerializeValue(property, out var value))
                 {
                     data[property.Name] = value;
                 }
@@ -64,7 +65,7 @@ namespace MyGame.Game.ECS.Components
             return data;
         }
 
-        private protected virtual bool TrySerializableValue(PropertyInfo propertyInfo, out object value)
+        private protected virtual bool TrySerializeValue(PropertyInfo propertyInfo, out object value)
         {
             if (propertyInfo.PropertyType == typeof(Vector2?) || propertyInfo.PropertyType == typeof(Vector2))
             {
@@ -88,20 +89,21 @@ namespace MyGame.Game.ECS.Components
             return true;
         }
 
-        private protected virtual object DeserializableValue(object value)
+        private protected virtual bool TryDeserializableValue(string propertyName, object serialized, out object deserialized)
         {
-            if (value is SerializableVector vector)
+            if (serialized is SerializableVector vector)
             {
-                return vector.ToVector2();
+                deserialized = vector.ToVector2();
             }
-            else if (value is SerializableRectangle rectangle)
+            else if (serialized is SerializableRectangle rectangle)
             {
-                return rectangle.ToRectangle();
+                deserialized = rectangle.ToRectangle();
             }
             else
             {
-                return value;
+                deserialized = serialized;
             }
+            return true;
         }
     }
 }

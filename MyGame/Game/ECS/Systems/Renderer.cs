@@ -17,7 +17,6 @@ namespace MyGame.Game.ECS.Systems
     internal class Renderer : EcsSystem
     {
         private readonly IConfiguration _configuration;
-        private readonly IEntityCollection _entityCollection;
         private readonly GraphicsDevice _graphicsDevice;
         private readonly SpriteBatch _spriteBatch;
 
@@ -28,7 +27,6 @@ namespace MyGame.Game.ECS.Systems
             : base(entityCollection)
         {
             _configuration = configuration;
-            _entityCollection = entityCollection;
             _graphicsDevice = graphicsDevice;
             _spriteBatch = spriteBatch;
         }
@@ -94,10 +92,10 @@ namespace MyGame.Game.ECS.Systems
             _spriteBatch.End();
         }
 
-        private float CalculateZIndex(ZIndex zIndex, float yPos)
+        private static float CalculateZIndex(ZIndex zIndex, float yPos)
         {
             // normalized position
-            float nPos = (yPos / 10e6f + 1f) / 2f;
+            float nPos = (yPos / 10e4f + 1f) / 2f;
             // segmented z index
             return ((float)zIndex + nPos) / 4f;
         }

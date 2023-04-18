@@ -8,7 +8,7 @@ namespace MyGame.Game.Constants.Enums
     {
         HUD,
         Foreground,
-        Background,
         Middleground,
+        Background,
     }
 }

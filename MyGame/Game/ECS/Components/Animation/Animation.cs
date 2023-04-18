@@ -1,4 +1,5 @@
-﻿using MyGame.Game.StateMachine;
+﻿using MyGame.Game.Constants;
+using MyGame.Game.StateMachine;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -78,14 +79,26 @@ namespace MyGame.Game.ECS.Components.Animation
             return GetFrameIndex() <= 1;
         }
 
-        private protected override bool TrySerializableValue(PropertyInfo propertyInfo, out object value)
+        private protected override bool TrySerializeValue(PropertyInfo propertyInfo, out object value)
         {
             if (propertyInfo.PropertyType.IsGenericType && propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(IRealTimeFSM<>))
             {
-                value = null;
+                var stateStorage = (IStateStorage)propertyInfo.GetValue(this, null);
+                value = stateStorage.GetParameter<bool>(AnimationKeys.IsDead);
+                return true;
+            }
+            return base.TrySerializeValue(propertyInfo, out value);
+        }
+
+        private protected override bool TryDeserializableValue(string propertyName, object serialized, out object deserialized)
+        {
+            if (propertyName == nameof(StateMachine))
+            {
+                StateMachine.SetParameter(AnimationKeys.IsDead, (bool)serialized);
+                deserialized = null;
                 return false;
             }
-            return base.TrySerializableValue(propertyInfo, out value);
+            return base.TryDeserializableValue(propertyName, serialized, out deserialized);
         }
     }
 }
