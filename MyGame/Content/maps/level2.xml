@@ -31,7 +31,7 @@
         <!-- slimes -->
 
         <entities:SlimeEntity>
-            <Position X="100" Y="100"/>
+            <Position X="150" Y="70"/>
             <Strength>Strong</Strength>
         </entities:SlimeEntity>
 
@@ -43,6 +43,11 @@
         <entities:SlimeEntity>
             <Position X="-100" Y="80"/>
             <Strength>Average</Strength>
+        </entities:SlimeEntity>
+
+        <entities:SlimeEntity>
+            <Position X="-100" Y="100"/>
+            <Strength>Weak</Strength>
         </entities:SlimeEntity>
 
         <entities:SlimeEntity>

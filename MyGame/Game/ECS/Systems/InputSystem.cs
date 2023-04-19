@@ -14,8 +14,8 @@ namespace MyGame.Game.ECS.Systems
     {
         private readonly IEventSystem _eventSystem;
 
-        private KeyboardState _previousKeyboardState;
-        private MouseState _previousMouseState;
+        private KeyboardState? _previousKeyboardState;
+        private MouseState? _previousMouseState;
 
         public InputSystem(IEventSystem eventSystem, IEntityCollection entityCollection)
             : base(entityCollection)
@@ -26,22 +26,38 @@ namespace MyGame.Game.ECS.Systems
         public override void Update(GameTime gameTime)
         {
             // keyboard input
-            var keyboardState = Keyboard.GetState();
-            var pressedKeys = keyboardState.GetPressedKeys().Except(_previousKeyboardState.GetPressedKeys()).ToArray();
-            var releasedKeys = _previousKeyboardState.GetPressedKeys().Except(keyboardState.GetPressedKeys()).ToArray();
-            if (pressedKeys.Length > 0 || releasedKeys.Length > 0)
+            if (_previousKeyboardState.HasValue)
             {
-                _eventSystem.Emit(this, new KeyboardEvent(gameTime, keyboardState, pressedKeys, releasedKeys));
+                var prevState = _previousKeyboardState.Value;
+                var keyboardState = Keyboard.GetState();
+                var pressedKeys = keyboardState.GetPressedKeys().Except(prevState.GetPressedKeys()).ToArray();
+                var releasedKeys = prevState.GetPressedKeys().Except(keyboardState.GetPressedKeys()).ToArray();
+                if (pressedKeys.Length > 0 || releasedKeys.Length > 0)
+                {
+                    _eventSystem.Emit(this, new KeyboardEvent(gameTime, keyboardState, pressedKeys, releasedKeys));
+                }
+                _previousKeyboardState = keyboardState;
             }
-            _previousKeyboardState = keyboardState;
+            else
+            {
+                _previousKeyboardState = Keyboard.GetState();
+            }
 
             // mouse input
-            var mouseState = Mouse.GetState();
-            if (TryGetMouseStateChange(mouseState, _previousMouseState, gameTime, out var mouseEvent))
+            if (_previousMouseState.HasValue)
             {
-                _eventSystem.Emit(this, mouseEvent);
+                var prevState = _previousMouseState.Value;
+                var mouseState = Mouse.GetState();
+                if (TryGetMouseStateChange(mouseState, prevState, gameTime, out var mouseEvent))
+                {
+                    _eventSystem.Emit(this, mouseEvent);
+                }
+                _previousMouseState = mouseState;
             }
-            _previousMouseState = mouseState;
+            else
+            {
+                _previousMouseState = Mouse.GetState();
+            }
         }
 
         public static bool TryGetMouseStateChange(MouseState current, MouseState prev, GameTime gameTime, out MouseEvent mouseEvent)
@@ -49,7 +65,7 @@ namespace MyGame.Game.ECS.Systems
             if (current.LeftButton != prev.LeftButton || current.RightButton != prev.RightButton || current.MiddleButton != prev.MiddleButton ||
                 current.Position != prev.Position || current.ScrollWheelValue != prev.ScrollWheelValue)
             {
-                mouseEvent = new MouseEvent(gameTime, current);
+                mouseEvent = new MouseEvent(gameTime, current, current.ScrollWheelValue - prev.ScrollWheelValue);
                 return true;
             }
             mouseEvent = null;

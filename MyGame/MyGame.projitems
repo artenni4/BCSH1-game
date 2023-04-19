@@ -22,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SmallTreeEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\MenuSystem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\QuestSystem\IQuestSystem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\SerializableTypes\SerializableColor.cs" />
     <Compile Include="..\MyGame\Game\ECS\Components\HUD\HUDText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\ScoreEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SerializableEntity.cs" />

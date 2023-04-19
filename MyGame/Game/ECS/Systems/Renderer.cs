@@ -44,8 +44,8 @@ namespace MyGame.Game.ECS.Systems
             }
 
             // render entities
-            var camera = cameraEntity.GetComponent<TopDownCamera>();
-            var cameraTransform = cameraEntity.GetComponent<Transform>();
+            var camera = cameraEntity.TopDownCamera;
+            var cameraTransform = cameraEntity.Transform;
             var viewport = _graphicsDevice.Viewport;
 
             // create transform matrix for a camera, basically how camera sees the world

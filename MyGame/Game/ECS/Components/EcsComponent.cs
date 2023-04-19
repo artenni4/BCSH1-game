@@ -77,6 +77,11 @@ namespace MyGame.Game.ECS.Components
                 var rect = (Rectangle?)propertyInfo.GetValue(this, null);
                 value = rect.HasValue ? new SerializableRectangle(rect.Value) : (object)null;
             }
+            else if (propertyInfo.PropertyType == typeof(Color?) || propertyInfo.PropertyType == typeof(Color))
+            {
+                var col = (Color?)propertyInfo.GetValue(this, null);
+                value = col.HasValue ? new SerializableColor(col.Value) : (object)null;
+            }
             else if (propertyInfo.PropertyType == typeof(Texture2D))
             {
                 value = null;

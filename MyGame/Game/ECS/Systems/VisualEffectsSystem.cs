@@ -38,7 +38,7 @@ namespace MyGame.Game.ECS.Systems
                 blinking.TimeStarted = damageEvent.GameTime.TotalGameTime;
                 blinking.Duration = health.DamageCooldown;
                 blinking.BlinkColor = new Color(255, 100, 100, 200); // red transparent
-                blinking.BlinkInterval = TimeSpan.FromSeconds(0.5f);
+                blinking.BlinkInterval = TimeSpan.FromSeconds(0.4f);
             }
             return false;
         }

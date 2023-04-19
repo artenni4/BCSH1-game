@@ -32,7 +32,7 @@ namespace MyGame.Game.Scenes
                 new SlimeEntity(eventSystem), // new(100, -60), SlimeEntity.Strength.Average
                 new StumpEntity(), //new(-100, 30)
                 new BushEntity(), //new(-50, -10)
-                new CameraEntity(this));
+                new CameraEntity(this, eventSystem));
 
             // add systems
             AddSystems(

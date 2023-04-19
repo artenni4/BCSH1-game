@@ -10,9 +10,12 @@ namespace MyGame.Game.ECS.Systems.EventSystem.Events
 
         public MouseState MouseState { get; }
 
-        public MouseEvent(GameTime gameTime, MouseState mouseState) : base(gameTime)
+        public int ScrollDelta { get; }
+
+        public MouseEvent(GameTime gameTime, MouseState mouseState, int scrollDelta) : base(gameTime)
         {
             MouseState = mouseState;
+            ScrollDelta = scrollDelta;
         }
     }
 }
