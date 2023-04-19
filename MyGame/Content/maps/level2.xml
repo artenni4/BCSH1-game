@@ -31,27 +31,27 @@
         <!-- slimes -->
 
         <entities:SlimeEntity>
-            <Position X="150" Y="70"/>
+            <Position X="200" Y="70"/>
             <Strength>Strong</Strength>
         </entities:SlimeEntity>
 
         <entities:SlimeEntity>
-            <Position X="100" Y="-60"/>
+            <Position X="30" Y="-160"/>
             <Strength>Average</Strength>
         </entities:SlimeEntity>
 
         <entities:SlimeEntity>
-            <Position X="-100" Y="80"/>
+            <Position X="-170" Y="45"/>
             <Strength>Average</Strength>
         </entities:SlimeEntity>
 
         <entities:SlimeEntity>
-            <Position X="-100" Y="100"/>
+            <Position X="-130" Y="110"/>
             <Strength>Weak</Strength>
         </entities:SlimeEntity>
 
         <entities:SlimeEntity>
-            <Position X="-100" Y="100"/>
+            <Position X="170" Y="120"/>
             <Strength>Weak</Strength>
         </entities:SlimeEntity>
 
