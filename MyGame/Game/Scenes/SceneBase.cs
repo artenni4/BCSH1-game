@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace MyGame.Game.Scenes
 {
-    [Serializable]
     internal class SceneBase : IEntityCollection, ISystemCollection
     {
         /// <summary>

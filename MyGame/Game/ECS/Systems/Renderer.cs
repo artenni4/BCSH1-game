@@ -3,11 +3,10 @@ using MyGame.Game.Constants;
 using MyGame.Game.Constants.Enums;
 using MyGame.Game.ECS.Components;
 using MyGame.Game.ECS.Components.Animation;
+using MyGame.Game.ECS.Components.HUD;
 using MyGame.Game.ECS.Components.VisualEffect;
 using MyGame.Game.ECS.Entities;
 using MyGame.Game.Scenes;
-using System.Data;
-using System.Linq;
 
 namespace MyGame.Game.ECS.Systems
 {
@@ -72,6 +71,7 @@ namespace MyGame.Game.ECS.Systems
                     }
                 }
 
+
                 if (entity.TryGetComponent<Image>(out var image))
                 {
                     _spriteBatch.Draw(image.Texture2D, position, image.SourceRectangle, color, transform.Rotation,
@@ -88,6 +88,19 @@ namespace MyGame.Game.ECS.Systems
                 }
 
                 DrawDebug(position, transform.Scale, entity);
+            }
+            _spriteBatch.End();
+
+            _spriteBatch.Begin(sortMode: SpriteSortMode.BackToFront);
+            foreach (var entity in GetEntities<HUDText>())
+            {
+                var textHUD = entity.GetComponent<HUDText>();
+                if (textHUD is null)
+                {
+                    continue;
+                }
+
+                _spriteBatch.DrawString(textHUD.Font, textHUD.Text, textHUD.ScreenPosition * new Vector2(viewport.Width, viewport.Height), Color.White);
             }
             _spriteBatch.End();
         }

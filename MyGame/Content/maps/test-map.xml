@@ -18,6 +18,8 @@
     <Entities>
         <entities:CameraEntity />
 
+        <entities:ScoreEntity />
+
         <entities:PlayerEntity>
             <Position X="0" Y="100"/>
         </entities:PlayerEntity>

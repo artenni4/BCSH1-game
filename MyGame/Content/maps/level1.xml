@@ -14,9 +14,14 @@
         <systems:VisualEffectsSystem />
         <systems:SimplePhysicsSystem />
         <systems:SaveSystem />
+        <systems:QuestProgressSystem />
     </Systems>
     <Entities>
         <entities:CameraEntity />
+
+        <entities:ScoreEntity>
+            <ScreenPosition X="0,01" Y="0,01"/>
+        </entities:ScoreEntity>
 
         <entities:PlayerEntity>
             <Position X="0" Y="20"/>

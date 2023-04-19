@@ -27,17 +27,20 @@ namespace MyGame.Game.ECS.Systems
             _eventSystem = eventSystem;
             _detectedEntities = new HashSet<EcsEntity>();
 
-            _eventSystem.Subscribe<PlayerDeathEvent>(OnPlayerDeath);
+            _eventSystem.Subscribe<EntityKilledEvent>(OnPlayerDeath);
         }
 
-        private bool OnPlayerDeath(object sender, PlayerDeathEvent playerDeath)
+        private bool OnPlayerDeath(object sender, EntityKilledEvent entityKilled)
         {
-            playerDead = true;
-            foreach (var entity in _detectedEntities)
+            if (entityKilled.Killed is PlayerEntity player)
             {
-                _eventSystem.Emit(this, new PlayerDetectionEvent(playerDeath.GameTime, entity, playerDeath.Player, false));
+                playerDead = true;
+                foreach (var entity in _detectedEntities)
+                {
+                    _eventSystem.Emit(this, new PlayerDetectionEvent(entityKilled.GameTime, entity, player, false));
+                }
+                _detectedEntities.Clear();
             }
-            _detectedEntities.Clear();
             return false;
         }
 

@@ -82,6 +82,11 @@ namespace MyGame.Game.ECS.Components
                 value = null;
                 return false;
             }
+            else if (propertyInfo.PropertyType == typeof(SpriteFont))
+            {
+                value = null;
+                return false;
+            }
             else
             {
                 value = propertyInfo.GetValue(this, null);

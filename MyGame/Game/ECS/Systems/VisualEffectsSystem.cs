@@ -3,9 +3,6 @@ using MyGame.Game.ECS.Components.VisualEffect;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
 using MyGame.Game.Scenes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MyGame.Game.ECS.Systems
 {
@@ -35,7 +32,7 @@ namespace MyGame.Game.ECS.Systems
         private bool OnDamageEvent(object sender, DamageEvent damageEvent)
         {
             var target = damageEvent.Target;
-            if (target.TryGetComponent<EntityHealth>(out var health))
+            if (!damageEvent.Killed && target.TryGetComponent<EntityHealth>(out var health))
             {
                 var blinking = target.AddComponent<BlinkingEffect>();
                 blinking.TimeStarted = damageEvent.GameTime.TotalGameTime;

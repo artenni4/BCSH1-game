@@ -2,6 +2,7 @@
 using MyGame.Game.Constants;
 using MyGame.Game.Constants.Enums;
 using MyGame.Game.ECS.Components;
+using MyGame.Game.ECS.Components.HUD;
 using MyGame.Game.ECS.Entities;
 using MyGame.Game.ECS.Systems;
 using MyGame.Game.ECS.Systems.EventSystem;
@@ -92,6 +93,12 @@ namespace MyGame.Game.Factories
                     var x = float.Parse(property.Attribute("X").Value);
                     var y = float.Parse(property.Attribute("Y").Value);
                     entity.GetComponent<Transform>().Position = new Vector2(x, y);
+                }
+                else if (property.Name.LocalName == "ScreenPosition")
+                {
+                    var x = float.Parse(property.Attribute("X").Value);
+                    var y = float.Parse(property.Attribute("Y").Value);
+                    entity.GetComponent<HUDElement>().ScreenPosition = new Vector2(x, y);
                 }
                 else if (entity is SlimeEntity slime && property.Name.LocalName == "Strength")
                 {

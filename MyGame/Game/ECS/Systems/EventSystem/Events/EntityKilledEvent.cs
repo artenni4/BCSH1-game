@@ -5,15 +5,15 @@ using System.Text;
 
 namespace MyGame.Game.ECS.Systems.EventSystem.Events
 {
-    internal class PlayerDeathEvent : EventBase
+    internal class EntityKilledEvent : EventBase
     {
         public override EventGroup EventGroup => EventGroup.GameEvent;
 
-        public PlayerEntity Player { get; }
+        public EcsEntity Killed { get; }
 
-        public PlayerDeathEvent(GameTime gameTime, PlayerEntity player) : base(gameTime)
+        public EntityKilledEvent(GameTime gameTime, EcsEntity killed) : base(gameTime)
         {
-            Player = player;
+            Killed = killed;
         }
     }
 }

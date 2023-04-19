@@ -12,12 +12,14 @@ namespace MyGame.Game.ECS.Systems.EventSystem.Events
         public EcsEntity Attacker { get; }
         public EcsEntity Target { get; }
         public float Amount { get; }
+        public bool Killed { get; }
 
-        public DamageEvent(GameTime gameTime, EcsEntity damager, EcsEntity damaged, float damage) : base(gameTime)
+        public DamageEvent(GameTime gameTime, EcsEntity damager, EcsEntity damaged, float damage, bool killed) : base(gameTime)
         {
             Attacker = damager;
             Target = damaged;
             Amount = damage;
+            Killed = killed;
         }
     }
 }

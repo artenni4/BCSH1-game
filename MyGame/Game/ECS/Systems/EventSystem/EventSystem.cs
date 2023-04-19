@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MyGame.Game.ECS.Systems.EventSystem.Events;
+using System.Collections.Generic;
 
 namespace MyGame.Game.ECS.Systems.EventSystem
 {
@@ -18,7 +19,7 @@ namespace MyGame.Game.ECS.Systems.EventSystem
             if (_eventHandlers.TryGetValue(typeof(TEvent), out var stack))
             {
                 stack.Remove(handler);
-                if (stack.Count == 0 )
+                if (stack.Count == 0)
                 {
                     _eventHandlers.Remove(typeof(TEvent));
                 }
@@ -43,10 +44,9 @@ namespace MyGame.Game.ECS.Systems.EventSystem
         {
             _logger.LogDebug("Event {@event} sent by {sender}", @event, sender);
 
-            // NOTE: some events can push new handlers, so maybe making copy of currently registered handlers is good idea
-            if (_eventHandlers.TryGetValue(typeof(TEvent), out var stack))
+            if (_eventHandlers.TryGetValue(typeof(TEvent), out var eventHandlersStack))
             {
-                foreach (var handler in stack)
+                foreach (var handler in eventHandlersStack)
                 {
                     var ecsHandler = (EcsEventHandler<TEvent>)handler;
                     // interrupt propagation if handled

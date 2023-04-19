@@ -4,6 +4,7 @@ using MyGame.Game.Configuration;
 using MyGame.Game.ECS.Entities;
 using MyGame.Game.ECS.Systems;
 using MyGame.Game.ECS.Systems.EventSystem;
+using MyGame.Game.ECS.Systems.QuestSystem;
 using MyGame.Game.Scenes;
 using System.Linq;
 
@@ -31,6 +32,10 @@ namespace MyGame.Game.Helpers
             var systems = assemblyTypes.Where(t => t.IsSubclassOf(typeof(EcsSystem)) && !t.IsAbstract);
             foreach (var system in systems)
             {
+                if (system.IsAssignableTo(typeof(IQuestSystem))) // add quest system if present
+                {
+                    services.AddScoped(sp => (IQuestSystem)sp.GetRequiredService(system));
+                }
                 services.AddScoped(system);
             }
 

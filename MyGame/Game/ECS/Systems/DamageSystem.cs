@@ -44,7 +44,11 @@ namespace MyGame.Game.ECS.Systems
                     appliedForce.Amount = 150f;
 
                     // Emit a damage event
-                    _eventSystem.Emit(this, new DamageEvent(gameTime, request.Attacker, request.Target, request.Amount));
+                    _eventSystem.Emit(this, new DamageEvent(gameTime, request.Attacker, request.Target, request.Amount, entityHealth.IsDead));
+                    if (entityHealth.IsDead)
+                    {
+                        _eventSystem.Emit(this, new EntityKilledEvent(gameTime, request.Target));
+                    }
                 }
             }
 

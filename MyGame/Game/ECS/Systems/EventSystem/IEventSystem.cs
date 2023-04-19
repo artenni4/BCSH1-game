@@ -7,13 +7,13 @@ namespace MyGame.Game.ECS.Systems.EventSystem
     internal interface IEventSystem
     {
         /// <summary>
-        /// Represents operation on the stack of event handlers.
+        /// Pushes handler to handlers stack
         /// Every event should be propagated throug the stack until it's handled by one of handlers
         /// </summary>
         void Subscribe<TEvent>(EcsEventHandler<TEvent> handler) where TEvent : EventBase;
 
         /// <summary>
-        /// Represents operation on the stack of event handlers.
+        /// Pops handler to handlers stack
         /// Every event should be propagated throug the stack until it's handled by one of handlers
         /// </summary>
         void Unsubscribe<TEvent>(EcsEventHandler<TEvent> handler) where TEvent : EventBase;

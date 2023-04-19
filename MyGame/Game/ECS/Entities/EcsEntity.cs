@@ -25,9 +25,15 @@ namespace MyGame.Game.ECS.Entities
             Id = id;
         }
 
-        public abstract void LoadContent(ContentManager contentManager);
+        public virtual void LoadContent(ContentManager contentManager)
+        {
 
-        public abstract void Update(GameTime gameTime);
+        }
+
+        public virtual void Update(GameTime gameTime)
+        {
+
+        }
 
         public SerializableEntity ToSerializableEntity() =>
             new()
@@ -47,8 +53,6 @@ namespace MyGame.Game.ECS.Entities
             }
         }
 
-        private static Type GetComponentKey<T>() where T : EcsComponent => GetComponentKey(typeof(T));
-
         private static Type GetComponentKey(Type componentType)
         {
             Type componentKey = componentType;
@@ -64,23 +68,10 @@ namespace MyGame.Game.ECS.Entities
 
         public EcsComponent GetComponent(Type componentType)
         {
-            return _components[componentType];
+            return _components[GetComponentKey(componentType)];
         }
 
-        public T AddComponent<T>() where T : EcsComponent, new()
-        {
-            if (TryGetComponent<T>(out var comp))
-            {
-                return comp;
-            }
-
-            var component = new T()
-            {
-                Entity = this
-            };
-            _components.Add(GetComponentKey<T>(), component);
-            return component;
-        }
+        public T AddComponent<T>() where T : EcsComponent, new() => (T)AddComponent(typeof(T));
 
         public EcsComponent AddComponent(Type componentType)
         {
@@ -114,13 +105,12 @@ namespace MyGame.Game.ECS.Entities
         {
             if (TryGetComponent(typeof(T), out var compValue))
             {
-                component = compValue as T;
+                component = (T)compValue;
                 return true;
             }
             component = null;
             return false;
         }
-
         public bool TryGetComponent(Type componentType, out EcsComponent component)
         {
             if (_components.TryGetValue(GetComponentKey(componentType), out var compValue))
