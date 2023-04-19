@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace MyGame.Game.ECS.Components
@@ -18,5 +19,15 @@ namespace MyGame.Game.ECS.Components
         /// Amount of time that entity will be resistent to damage
         /// </summary>
         public TimeSpan DamageCooldown { get; set; }
+
+        private protected override bool TrySerializeValue(PropertyInfo propertyInfo, out object value)
+        {
+            if (propertyInfo.Name == nameof(LastDamagedTime))
+            {
+                value = null;
+                return false;
+            }
+            return base.TrySerializeValue(propertyInfo, out value);
+        }
     }
 }

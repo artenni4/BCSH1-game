@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using MyGame.Game.ECS.Entities;
+using System.Reflection;
 
 namespace MyGame.Game.ECS.Components.Attack
 {
@@ -46,5 +47,15 @@ namespace MyGame.Game.ECS.Components.Attack
         public abstract bool IsDealingDamage(GameTime gameTime);
         public abstract IEnumerable<EcsEntity> GetTargets(IEnumerable<EcsEntity> potentialTargets);
         public abstract float CalculateDamage();
+
+        private protected override bool TrySerializeValue(PropertyInfo propertyInfo, out object value)
+        {
+            if (propertyInfo.Name == nameof(LastAttackTime))
+            {
+                value = null;
+                return false;
+            }
+            return base.TrySerializeValue(propertyInfo, out value);
+        }
     }
 }
