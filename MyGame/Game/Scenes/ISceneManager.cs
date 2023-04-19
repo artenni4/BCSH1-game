@@ -6,6 +6,7 @@ namespace MyGame.Game.Scenes
 {
     internal interface ISceneManager
     {
+        public string CurrentSceneName { get; }
         public void LoadScene(string sceneName);
         public void SaveGame(string saveName);
         public void LoadGame(string saveName);

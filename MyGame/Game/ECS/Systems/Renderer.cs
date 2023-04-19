@@ -60,7 +60,7 @@ namespace MyGame.Game.ECS.Systems
                 var position = new Vector2(transform.Position.X, -transform.Position.Y); // invert Y pos for camera
 
                 // calculate z index
-                float zIndex = CalculateZIndex(transform.ZIndex, transform.Position.Y); // not inverted y
+                float zIndex = CalculateZIndex(transform.ZIndex, entity.GetEntityCenter().Y); // not inverted y
 
                 var color = Color.White;
                 if (entity.TryGetComponent<EffectComponent>(out var effect))
@@ -95,7 +95,7 @@ namespace MyGame.Game.ECS.Systems
             foreach (var entity in GetEntities<HUDText>())
             {
                 var textHUD = entity.GetComponent<HUDText>();
-                if (textHUD is null)
+                if (textHUD.Text is null)
                 {
                     continue;
                 }

@@ -48,7 +48,7 @@
         </entities:SlimeEntity>
 
         <entities:StumpEntity>
-            <Position X="-100" Y="30"/>
+            <Position X="-150" Y="30"/>
         </entities:StumpEntity>
 
         <entities:StumpEntity>
@@ -60,11 +60,16 @@
         </entities:StumpEntity>
 
         <entities:BushEntity>
-            <Position X="-70" Y="-10"/>
+            <Position X="-80" Y="-30"/>
         </entities:BushEntity>
 
         <entities:BushEntity>
             <Position X="70" Y="40"/>
         </entities:BushEntity>
+
+        <entities:SmallTreeEntity>
+            <Position X="-70" Y="40"/>
+        </entities:SmallTreeEntity>
+
     </Entities>
 </SceneBase>
