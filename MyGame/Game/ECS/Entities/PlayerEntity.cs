@@ -44,7 +44,7 @@ namespace MyGame.Game.ECS.Entities
             MeleeAttackComponent.Faction = AttackFactions.PlayerFaction;
             MeleeAttackComponent.Cooldown = TimeSpan.FromSeconds(1);
             MeleeAttackComponent.DamageDealtThreshhold = 0.25f;
-            MeleeAttackComponent.Range = 30f;
+            MeleeAttackComponent.Range = 18f;
             MeleeAttackComponent.DamageAmount = 20f;
 
             PlayerComponent = AddComponent<PlayerComponent>();

@@ -23,6 +23,12 @@
 #begin maps/level1.xml
 /copy:maps/level1.xml
 
+#begin maps/level2.xml
+/copy:maps/level2.xml
+
+#begin maps/level3.xml
+/copy:maps/level3.xml
+
 #begin maps/test-map.xml
 /copy:maps/test-map.xml
 

@@ -31,17 +31,17 @@
 
         <entities:SlimeEntity>
             <Position X="100" Y="100"/>
-            <Strength>Weak</Strength>
+            <Strength>Strong</Strength>
         </entities:SlimeEntity>
 
         <entities:SlimeEntity>
-            <Position X="160" Y="-70"/>
+            <Position X="100" Y="-60"/>
             <Strength>Average</Strength>
         </entities:SlimeEntity>
 
         <entities:SlimeEntity>
             <Position X="-100" Y="80"/>
-            <Strength>Weak</Strength>
+            <Strength>Average</Strength>
         </entities:SlimeEntity>
 
         <entities:SlimeEntity>

@@ -37,7 +37,7 @@ namespace MyGame.Game.ECS.Components.Attack
             var direction = targetCenter - attackerCenter;
             var angle = MathF.Atan2(direction.Y, direction.X);
 
-            return IsDirectionMatch(angle, AttackDirection) && Vector2.Distance(attackerCenter, targetCenter) < Range;
+            return IsDirectionMatch(angle, AttackDirection) && GameplayHelper.IsColliding(Entity, target, Range);
         }
 
         private static bool IsDirectionMatch(float angle, MeleeAttackDirection direction)
