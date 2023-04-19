@@ -55,7 +55,7 @@ namespace MyGame.Game.ECS.Systems
             var dx = MathF.Abs((eX + eWidth / 2.0f) - (cX + cWidth / 2.0f));
             var dy = MathF.Abs((eY - eHeight / 2.0f) - (cY - cHeight / 2.0f));
 
-            if (dx < (eWidth + cWidth) / 2.0f && dy < (eHeight + cHeight) / 2.0f)
+            if (GameplayHelper.IsColliding(entity, collider))
             {
                 if (!eBoxCollider.IsKinematic || !cBoxCollider.IsKinematic || (eBoxCollider.IsStatic && cBoxCollider.IsStatic)) // do not move static objects
                 {

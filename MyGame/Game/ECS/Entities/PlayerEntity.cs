@@ -30,7 +30,7 @@ namespace MyGame.Game.ECS.Entities
             Transform.ZIndex = ZIndex.Middleground;
 
             BoxCollider = AddComponent<BoxCollider>();
-            BoxCollider.Box = new Rectangle(17, 22, 15, 19);
+            BoxCollider.Box = new Rectangle(19, 25, 11, 15);
 
             Animation = AddComponent<PlayerAnimation>();
 

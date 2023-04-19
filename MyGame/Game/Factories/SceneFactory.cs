@@ -91,12 +91,12 @@ namespace MyGame.Game.Factories
         private void AddGrass(SceneBase scene, IServiceProvider serviceProvider)
         {
             var rand = new Random(scene.Name.GetHashCode()); // init random with scene name
-            int grassCount = rand.Next(30, 50);
+            int grassCount = rand.Next(60, 100);
             for (int i = 0; i < grassCount; i++)
             {
                 var grass = serviceProvider.GetRequiredService<GrassEntity>();
                 grass.GrassVariation = (GrassVariation)rand.Next((int)GrassVariation.Fourth + 1);
-                grass.Transform.Position = new Vector2(rand.NextSingle() * 400 - 200, rand.NextSingle() * 400 - 200);
+                grass.Transform.Position = new Vector2(rand.NextSingle() * 600 - 300, rand.NextSingle() * 600 - 300);
                 grass.Transform.ZIndex = ZIndex.Background;
                 scene.AddEntities(grass);
             }

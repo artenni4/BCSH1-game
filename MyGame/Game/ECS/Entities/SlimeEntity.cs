@@ -118,7 +118,7 @@ namespace MyGame.Game.ECS.Entities
             BodyAttackComponent.AttackDuration = SlimeAnimation.AttackLeftNode.Duration;
             BodyAttackComponent.Faction = AttackFactions.EnemyFaction;
             BodyAttackComponent.AttackingSpeedModifier = 1.8f;
-            BodyAttackComponent.Range = 20f;
+            BodyAttackComponent.Delta = 1f;
 
             SlimeComponent = AddComponent<SlimeComponent>();
 

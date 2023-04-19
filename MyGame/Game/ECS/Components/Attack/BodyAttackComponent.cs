@@ -10,7 +10,11 @@ namespace MyGame.Game.ECS.Components.Attack
     internal class BodyAttackComponent : AttackComponent
     {
         public float AttackingSpeedModifier { get; set; }
-        public float Range { get; set; }
+
+        /// <summary>
+        /// padding around box collider that represents attack range
+        /// </summary>
+        public float Delta { get; set; }
         public float DamageAmount { get; set; }
 
         public override float CalculateDamage() => DamageAmount;
@@ -23,10 +27,7 @@ namespace MyGame.Game.ECS.Components.Attack
         {
             if (target == Entity || IsAllyFaction(target)) return false;
 
-            var attackerCenter = Entity.GetEntityCenter();
-            var targetCenter = target.GetEntityCenter();
-
-            return Vector2.Distance(attackerCenter, targetCenter) < Range;
+            return GameplayHelper.IsColliding(Entity, target, Delta);
         }
     }
 }

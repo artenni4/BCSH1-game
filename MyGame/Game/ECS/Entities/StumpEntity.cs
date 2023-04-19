@@ -19,7 +19,7 @@ namespace MyGame.Game.ECS.Entities
             Image.SourceRectangle = new Rectangle(161, 113, 30, 30);
 
             BoxCollider = AddComponent<BoxCollider>();
-            BoxCollider.Box = new Rectangle(4, 8, 24, 18);
+            BoxCollider.Box = new Rectangle(2, 8, 26, 18);
             BoxCollider.IsStatic = true;
         }
 
