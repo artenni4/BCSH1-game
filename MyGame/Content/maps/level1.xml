@@ -27,6 +27,8 @@
             <Position X="0" Y="20"/>
         </entities:PlayerEntity>
 
+        <!-- slimes -->
+
         <entities:SlimeEntity>
             <Position X="100" Y="100"/>
             <Strength>Weak</Strength>
@@ -47,17 +49,33 @@
             <Strength>Weak</Strength>
         </entities:SlimeEntity>
 
+        <!-- stumps -->
+
         <entities:StumpEntity>
             <Position X="-150" Y="30"/>
         </entities:StumpEntity>
 
         <entities:StumpEntity>
-            <Position X="-20" Y="-40"/>
+            <Position X="-30" Y="-50"/>
         </entities:StumpEntity>
 
         <entities:StumpEntity>
             <Position X="10" Y="-40"/>
         </entities:StumpEntity>
+
+        <entities:StumpEntity>
+            <Position X="-25" Y="100"/>
+        </entities:StumpEntity>
+
+        <entities:StumpEntity>
+            <Position X="120" Y="-80"/>
+        </entities:StumpEntity>
+
+        <entities:StumpEntity>
+            <Position X="150" Y="80"/>
+        </entities:StumpEntity>
+
+        <!-- bushes -->
 
         <entities:BushEntity>
             <Position X="-80" Y="-30"/>
@@ -67,8 +85,38 @@
             <Position X="70" Y="40"/>
         </entities:BushEntity>
 
+        <entities:BushEntity>
+            <Position X="-160" Y="-60"/>
+        </entities:BushEntity>
+
+        <entities:BushEntity>
+            <Position X="70" Y="-160"/>
+        </entities:BushEntity>
+
+        <!-- small trees -->
+
         <entities:SmallTreeEntity>
             <Position X="-70" Y="40"/>
+        </entities:SmallTreeEntity>
+
+        <entities:SmallTreeEntity>
+            <Position X="130" Y="-20"/>
+        </entities:SmallTreeEntity>
+
+        <entities:SmallTreeEntity>
+            <Position X="-140" Y="90"/>
+        </entities:SmallTreeEntity>
+
+        <entities:SmallTreeEntity>
+            <Position X="-40" Y="-120"/>
+        </entities:SmallTreeEntity>
+
+        <entities:SmallTreeEntity>
+            <Position X="-50" Y="150"/>
+        </entities:SmallTreeEntity>
+
+        <entities:SmallTreeEntity>
+            <Position X="-190" Y="-10"/>
         </entities:SmallTreeEntity>
 
     </Entities>
