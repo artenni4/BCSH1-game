@@ -45,7 +45,9 @@ namespace MyGame.Game.ECS.Components
             foreach (var (propName, serialized) in data)
             {
                 if (TryDeserializableValue(propName, serialized, out var deserialized))
-                componentType.GetProperty(propName).SetValue(this, deserialized);
+                {
+                    componentType.GetProperty(propName).SetValue(this, deserialized);
+                }
             }
         }
 
@@ -108,6 +110,10 @@ namespace MyGame.Game.ECS.Components
             else if (serialized is SerializableRectangle rectangle)
             {
                 deserialized = rectangle.ToRectangle();
+            }
+            else if (serialized is SerializableColor color)
+            {
+                deserialized = color.ToColor();
             }
             else
             {
