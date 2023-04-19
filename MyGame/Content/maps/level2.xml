@@ -15,6 +15,7 @@
         <systems:SimplePhysicsSystem />
         <systems:SaveSystem />
         <systems:QuestProgressSystem />
+        <systems:MenuSystem />
     </Systems>
     <Entities>
         <entities:CameraEntity />

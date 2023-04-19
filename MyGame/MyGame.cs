@@ -13,24 +13,27 @@ namespace MyGame
 {
     public class MyGame : XnaGame
     {
-        private readonly GraphicsDeviceManager _graphics;
         private ISceneManager sceneManager;
+        private GraphicsDeviceManager graphics;
 
         public MyGame()
         {
-            _graphics = new(this)
-            {
-                GraphicsProfile = GraphicsProfile.HiDef,
-                PreferredBackBufferWidth = 1920,
-                PreferredBackBufferHeight = 1080
-            };
-
-            Content.RootDirectory = PersistenceConstants.ContentRootDirectory;
-            IsMouseVisible = true;
+            graphics = new GraphicsDeviceManager(this);
         }
 
         protected override void Initialize()
         {
+            Window.AllowUserResizing = true;
+            Window.AllowAltF4 = true;
+            IsMouseVisible = true;
+            Content.RootDirectory = PersistenceConstants.ContentRootDirectory;
+
+            graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
+            graphics.IsFullScreen = false;
+            graphics.ApplyChanges();
+
             sceneManager = new SceneManager(this);
             base.Initialize();
         }

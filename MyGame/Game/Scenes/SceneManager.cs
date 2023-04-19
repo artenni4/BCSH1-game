@@ -29,6 +29,7 @@ namespace MyGame.Game.Scenes
             this.game = game;
 
             var serviceProvider = new ServiceCollection()
+                .AddSingleton(game)
                 .AddSingleton<ISceneManager>(this)
                 .AddSingleton(game.GraphicsDevice)
                 .AddSingleton(sp => new SpriteBatch(sp.GetRequiredService<GraphicsDevice>()))

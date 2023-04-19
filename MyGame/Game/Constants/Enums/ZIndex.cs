@@ -6,9 +6,9 @@ namespace MyGame.Game.Constants.Enums
 {
     internal enum ZIndex
     {
-        HUD,
         Foreground,
         Middleground,
+        Dead,
         Background,
     }
 }

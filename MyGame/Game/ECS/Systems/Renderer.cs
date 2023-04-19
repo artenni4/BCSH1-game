@@ -110,7 +110,7 @@ namespace MyGame.Game.ECS.Systems
             // normalized position
             float nPos = (yPos / 10e4f + 1f) / 2f;
             // segmented z index
-            return ((float)zIndex + nPos) / 4f;
+            return ((float)zIndex + nPos) / ((int)ZIndex.Background + 1);
         }
 
         private void DrawDebug(Vector2 position, float scale, EcsEntity entity)

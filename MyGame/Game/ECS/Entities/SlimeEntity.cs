@@ -163,7 +163,7 @@ namespace MyGame.Game.ECS.Entities
             if (EntityHealth.IsDead)
             {
                 BoxCollider.IsKinematic = false;
-                Transform.ZIndex = ZIndex.Background;
+                Transform.ZIndex = ZIndex.Dead;
             }
             return false;
         }

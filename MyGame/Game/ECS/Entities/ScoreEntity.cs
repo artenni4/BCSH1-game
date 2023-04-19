@@ -12,17 +12,11 @@ namespace MyGame.Game.ECS.Entities
     internal class ScoreEntity : EcsEntity
     {
         private readonly IQuestSystem _questSystem;
-
-        public Transform Transform { get; }
         public HUDText ScoreText { get; }
 
         public ScoreEntity(IQuestSystem questSystem)
         {
             _questSystem = questSystem;
-
-            Transform = AddComponent<Transform>();
-            Transform.ZIndex = ZIndex.Background;
-
             ScoreText = AddComponent<HUDText>();
         }
 
