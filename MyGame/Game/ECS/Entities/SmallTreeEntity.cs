@@ -19,7 +19,7 @@ namespace MyGame.Game.ECS.Entities
             Transform.ZIndex = ZIndex.Middleground;
 
             Image = AddComponent<Image>();
-            Image.SourceRectangle = new Rectangle(128, 96, 32, 48);
+            Image.SourceRectangle = new Rectangle(129, 97, 30, 46);
 
             BoxCollider = AddComponent<BoxCollider>();
             BoxCollider.Box = new Rectangle(8, 34, 15, 13);

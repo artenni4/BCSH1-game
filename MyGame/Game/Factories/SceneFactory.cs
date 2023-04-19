@@ -7,6 +7,7 @@ using MyGame.Game.ECS.Entities;
 using MyGame.Game.ECS.Systems;
 using MyGame.Game.ECS.Systems.EventSystem;
 using MyGame.Game.Scenes;
+using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,7 +52,9 @@ namespace MyGame.Game.Factories
             scene.AddEntities(entities);
 
             return scene;
+
         }
+
 
         /// <summary>
         /// Creates scene from xml map definition
@@ -81,7 +84,22 @@ namespace MyGame.Game.Factories
             }).ToArray();
             scene.AddEntities(entities);
 
+            AddGrass(scene, serviceProvider); // TODO maybe consider other way of adding decor
             return scene;
+        }
+
+        private void AddGrass(SceneBase scene, IServiceProvider serviceProvider)
+        {
+            var rand = new Random(scene.Name.GetHashCode()); // init random with scene name
+            int grassCount = rand.Next(30, 50);
+            for (int i = 0; i < grassCount; i++)
+            {
+                var grass = serviceProvider.GetRequiredService<GrassEntity>();
+                grass.GrassVariation = (GrassVariation)rand.Next((int)GrassVariation.Fourth + 1);
+                grass.Transform.Position = new Vector2(rand.NextSingle() * 400 - 200, rand.NextSingle() * 400 - 200);
+                grass.Transform.ZIndex = ZIndex.Background;
+                scene.AddEntities(grass);
+            }
         }
 
         private static void SetupEntity(EcsEntity entity, IEnumerable<XElement> properties)

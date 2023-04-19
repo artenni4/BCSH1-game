@@ -9,13 +9,16 @@
     <Import_RootNamespace>MyGame</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\GrassVariation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\MeleeAttackDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\SlimeStrength.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\ZIndex.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\GrassComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\HUD\HUDElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\SerializableComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\SlimeComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\GrassEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Entities\SmallTreeEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Systems\QuestSystem\IQuestSystem.cs" />
     <Compile Include="..\MyGame\Game\ECS\Components\HUD\HUDText.cs" />
