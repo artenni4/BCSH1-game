@@ -16,7 +16,7 @@ namespace MyGame.Game.ECS.Entities
         public Transform Transform { get; }
         public HUDText ScoreText { get; }
 
-        public ScoreEntity(IEventSystem eventSystem, IQuestSystem questSystem)
+        public ScoreEntity(IQuestSystem questSystem)
         {
             _questSystem = questSystem;
 

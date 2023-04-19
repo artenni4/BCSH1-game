@@ -54,5 +54,17 @@ namespace MyGame.Game.ECS.Systems
             }
             return false;
         }
+
+        private protected override Dictionary<string, object> SaveProperties() =>
+            new()
+            {
+                { nameof(ActiveQuest), ActiveQuest.SaveData() }
+            };
+
+        private protected override void LoadProperties(Dictionary<string, object> properties)
+        {
+            var questData = (Dictionary<string, object>)properties[nameof(ActiveQuest)];
+            ActiveQuest.LoadData(questData);
+        }
     }
 }

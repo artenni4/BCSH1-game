@@ -11,5 +11,7 @@ namespace MyGame.Game.ECS.Systems.QuestSystem.Quests
         public abstract bool IsComplete { get; }
         public abstract void Update(GameTime gameTime);
         public abstract string GetDescription();
+        public abstract Dictionary<string, object> SaveData();
+        public abstract void LoadData(Dictionary<string, object> data);
     }
 }

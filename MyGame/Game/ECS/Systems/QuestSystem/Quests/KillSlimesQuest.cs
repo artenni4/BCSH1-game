@@ -42,5 +42,16 @@ namespace MyGame.Game.ECS.Systems.QuestSystem.Quests
         {
             toKill = _entityCollection.Entities.OfType<SlimeEntity>().Count();
         }
+
+        public override Dictionary<string, object> SaveData() =>
+            new()
+            {
+                { nameof(killed), killed },
+            };
+
+        public override void LoadData(Dictionary<string, object> data)
+        {
+            killed = (int)data[nameof(killed)];
+        }
     }
 }
