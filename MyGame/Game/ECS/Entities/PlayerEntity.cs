@@ -98,7 +98,7 @@ namespace MyGame.Game.ECS.Entities
 
         private bool OnMouseEvent(object sender, MouseEvent mouseEvent)
         {
-            if (mouseEvent.MouseState.LeftButton == ButtonState.Pressed)
+            if (mouseEvent.MouseState.LeftButton == ButtonState.Pressed && !EntityHealth.IsDead)
             {
                 _eventSystem.Emit(this, new AttackInitiationEvent(mouseEvent.GameTime, this));
                 return true;
