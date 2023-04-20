@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\MeleeAttackDirection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\SlimeStrength.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\Constants\Enums\ZIndex.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\AudioSourceComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\GrassComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\HUD\HUDElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Game\ECS\Components\PlayerComponent.cs" />

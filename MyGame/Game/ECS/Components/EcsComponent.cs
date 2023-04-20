@@ -1,4 +1,5 @@
-﻿using MyGame.Game.ECS.Entities;
+﻿using Microsoft.Xna.Framework.Media;
+using MyGame.Game.ECS.Entities;
 using MyGame.Game.SerializableTypes;
 using MyGame.Game.StateMachine;
 using SharpDX.WIC;
@@ -84,12 +85,10 @@ namespace MyGame.Game.ECS.Components
                 var col = (Color?)propertyInfo.GetValue(this, null);
                 value = col.HasValue ? new SerializableColor(col.Value) : (object)null;
             }
-            else if (propertyInfo.PropertyType == typeof(Texture2D))
-            {
-                value = null;
-                return false;
-            }
-            else if (propertyInfo.PropertyType == typeof(SpriteFont))
+            else if (
+                propertyInfo.PropertyType == typeof(Texture2D) ||
+                propertyInfo.PropertyType == typeof(SpriteFont) ||
+                propertyInfo.PropertyType == typeof(Song))
             {
                 value = null;
                 return false;
